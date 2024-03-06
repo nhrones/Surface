@@ -5,7 +5,6 @@ import type {
    Configuration,
    ElementDescriptor,
    Manifest,
-   WinCFG,
 } from '../types.ts'
 
 /** 

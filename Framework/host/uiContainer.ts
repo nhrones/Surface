@@ -39,7 +39,7 @@ export function containerInit(
 /** 
  * central render function 
  */
-export const render = async () => {
+export const render = () => {
    // refresh the view - render views
    renderNodes()
 }
@@ -60,7 +60,6 @@ export const hydrateUI = () => {
 
    // get our view factories from our auto-generated `/views_manifest.ts`
    factories = getFactories()
-
    // loop over each elementDescriptor  
    for (const el of elementDescriptors) {
       addElement(el)

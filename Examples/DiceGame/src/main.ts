@@ -19,7 +19,7 @@ import type { DiceEvents } from "./diceGameTypes.ts";
 // Unpack configuration files
 import { cfg } from "./cfg.ts";
 import manifest from './view_manifest.ts'
-
+console.info('manifest', manifest)
 /** 
  * Use a factory function to create a new EventBus service 
  * using an intersection type from `Base` and `Local` types. 
@@ -29,7 +29,7 @@ export const eventBus = buildEventBus<DiceEvents>()
 /** initialize the button */
 initCloseButton('closebutton')
 
-const AudioContext = window.AudioContext
+const AudioContext = globalThis.AudioContext
 const context = new AudioContext();
 // initialize or sounds
 PlaySound.init(context)
@@ -51,7 +51,7 @@ hydrateUI() // REQUIRED - after the App is initialized
 
 // Add our single player 
 const id = '1'
-const name = "Player1"
+const name = "Score:"
 thisPlayer.id = id
 thisPlayer.playerName = name
 setThisPlayer(thisPlayer)

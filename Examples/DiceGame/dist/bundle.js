@@ -1173,7 +1173,7 @@ function containerInit(canvas2, cfg2, manifest2) {
   initHostEvents();
 }
 __name(containerInit, "containerInit");
-var render = /* @__PURE__ */ __name(async () => {
+var render = /* @__PURE__ */ __name(() => {
   renderNodes();
 }, "render");
 var hydrateUI = /* @__PURE__ */ __name(() => {
@@ -1314,7 +1314,7 @@ var state = {
   fill: true,
   fillColor: "snow",
   fontColor: "Brown",
-  text: "Player1"
+  text: "Score:"
 };
 var init2 = /* @__PURE__ */ __name(() => {
   eventBus.on("UpdatePlayer", "0", (data) => {
@@ -1329,11 +1329,9 @@ var update = /* @__PURE__ */ __name(() => {
 
 // src/ViewModels/players.ts
 var MAXPLAYERS = 2;
-var game;
 var thisColor = "snow";
 var players = /* @__PURE__ */ new Set();
-var init3 = /* @__PURE__ */ __name((thisgame, color) => {
-  game = thisgame;
+var init3 = /* @__PURE__ */ __name((color) => {
   thisColor = color;
   players.clear();
   thisPlayer = {
@@ -1944,7 +1942,7 @@ var App = class {
   }
   /** private singleton constructor, called from init() */
   constructor() {
-    init3(this, snowColor);
+    init3(snowColor);
     this.players = players;
     this.scoreItems = [];
     this.leftBonus = 0;
@@ -2219,44 +2217,8 @@ var cfg = {
       tabOrder: 0,
       location: { left: 5, top: 20 },
       size: { width: 100, height: 25 },
-      text: "Nick",
+      text: "Score:",
       fontColor: "brown",
-      hasBoarder: false,
-      bind: true
-    },
-    {
-      kind: "Text",
-      id: "player2",
-      idx: 1,
-      tabOrder: 0,
-      location: { left: 5, top: 45 },
-      size: { width: 100, height: 25 },
-      text: "Sue",
-      fontColor: "green",
-      hasBoarder: false,
-      bind: true
-    },
-    {
-      kind: "Text",
-      id: "player3",
-      idx: 1,
-      tabOrder: 0,
-      location: { left: 270, top: 20 },
-      size: { width: 100, height: 25 },
-      text: "Carter",
-      fontColor: "blue",
-      hasBoarder: false,
-      bind: true
-    },
-    {
-      kind: "Text",
-      id: "player4",
-      idx: 1,
-      tabOrder: 0,
-      location: { left: 270, top: 45 },
-      size: { width: 100, height: 25 },
-      text: "Marie",
-      fontColor: "red",
       hasBoarder: false,
       bind: true
     },
@@ -3032,9 +2994,10 @@ var manifest = {
 var view_manifest_default = manifest;
 
 // src/main.ts
+console.info("manifest", view_manifest_default);
 var eventBus = buildEventBus();
 initCloseButton("closebutton");
-var AudioContext = window.AudioContext;
+var AudioContext = globalThis.AudioContext;
 var context2 = new AudioContext();
 init(context2);
 var can = document.getElementById("surface");
@@ -3047,7 +3010,7 @@ containerInit(
 App.init();
 hydrateUI();
 var id2 = "1";
-var name = "Player1";
+var name = "Score:";
 thisPlayer.id = id2;
 thisPlayer.playerName = name;
 setThisPlayer(thisPlayer);

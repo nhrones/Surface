@@ -18,7 +18,7 @@ import * as rollButton from './rollButton.ts'
 const SHORTCUT_GAMEOVER = false;
 
 const snowColor = 'snow'
-const grayColor = 'gray'
+//const grayColor = 'gray'
 
 //================================================
 //      exported const for faster resolution
@@ -50,7 +50,7 @@ export class App {
    /** private singleton constructor, called from init() */
    private constructor() {
 
-      Players.init(this, snowColor)
+      Players.init( snowColor )
       this.players = Players.players
       this.scoreItems = []
       this.leftBonus = 0

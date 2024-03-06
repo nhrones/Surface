@@ -1,7 +1,6 @@
 
 
 import { eventBus } from '../main.ts'
-import { App } from './diceGame.ts'
 
 const MAXPLAYERS = 2
 
@@ -15,12 +14,11 @@ export type Player = {
     lastScore: string
 }
 
-let game: App;
 let thisColor = 'snow';
 export const players: Set<Player> = new Set();
 
-export const init = (thisgame: App, color: string) => {
-    game = thisgame
+export const init = ( color: string ) => {
+
     thisColor = color
     players.clear()
 
@@ -97,23 +95,6 @@ export const addPlayer = (id: string, playerName: string) => {
     }
 }
 
-/** removes a Player    
- * called when the players webSocket has closed    
- * @param {string} id - the id of the player to be removed
- */
-const removePlayer = (id: string) => {
-    const p = getById(id)
-    if (p) players.delete(p)
-    refreshPlayerColors();
-    setThisPlayer([...players][0])
-}
-
-const getById = (id: string): Player | null => {
-    for (const player of players) {
-        if (player.id === id) return player;
-    }
-    return null
-}
 
 export const getNextPlayer = (player: Player) => {
     let next = player.idx + 1
@@ -122,17 +103,6 @@ export const getNextPlayer = (player: Player) => {
     }
     return [...players][next]
 }
-
-/** reassigns index and unique color for each active player */
-const refreshPlayerColors = () => {
-    let i = 0
-    for (const player of players) {
-        player.idx = i;
-        player.color = playerColors[i]
-        i++
-    }
-}
-//}
 
 /** an array of player colors */
 const playerColors = ["Brown", "Green", "RoyalBlue", "Red"]

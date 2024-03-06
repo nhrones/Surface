@@ -9,7 +9,7 @@ export const state = {
    fill: true,  
    fillColor: "snow", 
    fontColor: "Brown",
-   text: "Player1"
+   text: "Score:"
 }
 
 /** PlayerName ViewModel initialization

@@ -1,5 +1,4 @@
 Clean up Players next
 
-Single player first
-   add - add name (textbox) left
+Single player first Score:
    add - Your high score    right

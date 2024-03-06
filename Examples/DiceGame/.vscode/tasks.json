@@ -2,6 +2,14 @@
    "version": "2.0.0",
    "tasks": [
       {
+         "label": "DEV",
+         "type": "shell",
+         "command": "run ./src/dev.ts",
+         "problemMatcher": [
+            "$deno"
+         ]
+      },
+      {
          "label": "BUILD",
          "type": "shell",
          "command": "build",
