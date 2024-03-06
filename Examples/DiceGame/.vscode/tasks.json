@@ -1,0 +1,21 @@
+{
+   "version": "2.0.0",
+   "tasks": [
+      {
+         "label": "BUILD",
+         "type": "shell",
+         "command": "build",
+         "problemMatcher": [
+            "$deno"
+         ]
+      },
+      {
+         "label": "RUN",
+         "type": "shell",
+         "command": "serve",
+         "problemMatcher": [
+            "$deno"
+         ]
+      }
+   ]
+}
