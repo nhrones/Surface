@@ -7,12 +7,22 @@ import * as PlaySound from './ViewModels/sounds.ts'
 
 import { App, appInstance } from './ViewModels/diceGame.ts';
 
-import { 
-   addPlayer,
-   setThisPlayer, 
-   setCurrentPlayer, 
-   thisPlayer 
-} from './ViewModels/players.ts';
+// import { 
+//    addPlayer,
+//    setThisPlayer, 
+//    setCurrentPlayer, 
+//    thisPlayer 
+// } from './ViewModels/players.ts';
+
+/** a type that describes a Player object */
+export type Player = {
+    id: string
+    idx: number
+    playerName: string
+    color: string
+    score: number
+    lastScore: string
+}
 
 import type { DiceEvents } from "./diceGameTypes.ts";
 
@@ -49,14 +59,23 @@ App.init();
 // Load hydrate, and display the Apps GUI
 hydrateUI() // REQUIRED - after the App is initialized
 
+export const thisPlayer: Player = {
+    id: "0",
+    idx: 0,
+    playerName: 'Nick',
+    color: 'brown',
+    score: 0,
+    lastScore: ''
+}
+
 // Add our single player 
 const id = '1'
 const name = "Score:"
 thisPlayer.id = id
 thisPlayer.playerName = name
-setThisPlayer(thisPlayer)
-setCurrentPlayer(thisPlayer)
-addPlayer(id, name)
+//setThisPlayer(thisPlayer)
+//setCurrentPlayer(thisPlayer)
+//addPlayer(id, name)
 
 // Reset for a fresh start 
 appInstance.resetTurn()

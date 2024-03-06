@@ -1222,10 +1222,6 @@ var Woohoo = /* @__PURE__ */ __name(() => {
   if (loaded && woohooBuf)
     playBuffer(woohooBuf);
 }, "Woohoo");
-var Nooo = /* @__PURE__ */ __name(() => {
-  if (loaded && noooBuf)
-    playBuffer(noooBuf);
-}, "Nooo");
 function playBuffer(buffer) {
   if (canPlay) {
     const source = context.createBufferSource();
@@ -1270,102 +1266,6 @@ var init2 = /* @__PURE__ */ __name(() => {
 var update = /* @__PURE__ */ __name(() => {
   events.fire("UpdateText", id, state);
 }, "update");
-
-// src/ViewModels/players.ts
-var MAXPLAYERS = 2;
-var thisColor = "snow";
-var players = /* @__PURE__ */ new Set();
-var init3 = /* @__PURE__ */ __name((color) => {
-  thisColor = color;
-  players.clear();
-  thisPlayer = {
-    id: "",
-    idx: 0,
-    playerName: "",
-    color: "brown",
-    score: 0,
-    lastScore: ""
-  };
-}, "init");
-var resetScoreLabels = /* @__PURE__ */ __name(() => {
-  for (let i = 0; i < MAXPLAYERS; i++) {
-    updatePlayer(i, thisColor, "");
-  }
-}, "resetScoreLabels");
-var resetPlayers = /* @__PURE__ */ __name(() => {
-  for (const player of players) {
-    player.score = 0;
-    updatePlayer(player.idx, player.color, player.playerName);
-  }
-}, "resetPlayers");
-var addScore = /* @__PURE__ */ __name((player, value) => {
-  player.score += value;
-  const text = player.score === 0 ? player.playerName : `${player.playerName} = ${player.score}`;
-  updatePlayer(player.idx, player.color, text);
-}, "addScore");
-var updatePlayer = /* @__PURE__ */ __name((index, color, text) => {
-  eventBus.fire(
-    "UpdatePlayer",
-    index.toString(),
-    {
-      index,
-      color,
-      text
-    }
-  );
-}, "updatePlayer");
-var addPlayer = /* @__PURE__ */ __name((id3, playerName) => {
-  if (playerName === "Player") {
-    const num = players.size + 1;
-    playerName = "Player" + num;
-  }
-  if (thisPlayer.id === "") {
-    thisPlayer.id = id3;
-    thisPlayer.playerName = playerName;
-    players.add(thisPlayer);
-  } else {
-    players.add(
-      {
-        id: id3,
-        idx: players.size,
-        playerName,
-        color: playerColors[players.size],
-        score: 0,
-        lastScore: ""
-      }
-    );
-  }
-}, "addPlayer");
-var getNextPlayer = /* @__PURE__ */ __name((player) => {
-  let next = player.idx + 1;
-  if (next === players.size) {
-    next = 0;
-  }
-  return [...players][next];
-}, "getNextPlayer");
-var playerColors = ["Brown", "Green", "RoyalBlue", "Red"];
-var setThisPlayer = /* @__PURE__ */ __name((player) => {
-  thisPlayer = player;
-}, "setThisPlayer");
-var thisPlayer = {
-  id: "0",
-  idx: 0,
-  playerName: "Nick",
-  color: "brown",
-  score: 0,
-  lastScore: ""
-};
-var currentPlayer = {
-  id: "0",
-  idx: 0,
-  playerName: "Nick",
-  color: "brown",
-  score: 0,
-  lastScore: ""
-};
-var setCurrentPlayer = /* @__PURE__ */ __name((player) => {
-  currentPlayer = player;
-}, "setCurrentPlayer");
 
 // src/ViewModels/diceEvaluator.ts
 var smallLow = 15;
@@ -1488,7 +1388,7 @@ var setfiveOfaKindWasSacrificed = /* @__PURE__ */ __name((val) => {
 var setfiveOfaKindCount = /* @__PURE__ */ __name((val) => {
   fiveOfaKindCount = val;
 }, "setfiveOfaKindCount");
-var init4 = /* @__PURE__ */ __name(() => {
+var init3 = /* @__PURE__ */ __name(() => {
   eventBus.on(`DieTouched`, "", (data) => {
     const { index } = data;
     const thisDie = die[index];
@@ -1672,7 +1572,7 @@ var ScoreElement = class {
   setOwned(value) {
     this.owned = value;
     if (this.owned) {
-      this.owner = currentPlayer;
+      this.owner = thisPlayer;
       this.updateScoreElement(this.owner.color, this.possibleValue.toString());
     } else {
       this.owner = null;
@@ -1731,13 +1631,13 @@ var ScoreElement = class {
     let scoreTaken = false;
     if (!this.owned) {
       if (this.possibleValue === 0) {
-        currentPlayer.lastScore = `sacrificed ${this.name} ${toString()}`;
-        this.updateInfo(`${currentPlayer.playerName} ${currentPlayer.lastScore}`);
+        thisPlayer.lastScore = `sacrificed ${this.name} ${toString()}`;
+        this.updateInfo(`${thisPlayer.playerName} ${thisPlayer.lastScore}`);
       } else {
-        const wasItYou = currentPlayer.id === thisPlayer.id;
+        const wasItYou = thisPlayer.id === thisPlayer.id;
         const wasTaken = wasItYou ? "choose" : "took";
-        currentPlayer.lastScore = `${wasTaken} ${this.name} ${toString()}`;
-        this.updateInfo(`${wasItYou ? "You" : currentPlayer.playerName} ${currentPlayer.lastScore}`);
+        thisPlayer.lastScore = `${wasTaken} ${this.name} ${toString()}`;
+        this.updateInfo(`${wasItYou ? "You" : thisPlayer.playerName} ${thisPlayer.lastScore}`);
       }
       if (this.index === FiveOfaKindIndex) {
         if (isFiveOfaKind) {
@@ -1751,8 +1651,8 @@ var ScoreElement = class {
       this.setValue();
       scoreTaken = true;
     } else if (this.available) {
-      currentPlayer.lastScore = `stole ${this.name} ${toString()} was: ${this.scoringDieset.toString()}`;
-      this.updateInfo(`${currentPlayer.playerName} ${currentPlayer.lastScore}`);
+      thisPlayer.lastScore = `stole ${this.name} ${toString()} was: ${this.scoringDieset.toString()}`;
+      this.updateInfo(`${thisPlayer.playerName} ${thisPlayer.lastScore}`);
       this.setOwned(false);
       Heehee();
       this.setValue();
@@ -1801,7 +1701,7 @@ var ScoreElement = class {
         this.renderValue(this.possibleValue.toString());
       }
       this.setAvailable(true);
-    } else if (currentPlayer !== this.owner) {
+    } else if (thisPlayer !== this.owner) {
       if (this.possibleValue > this.finalValue) {
         if (!this.hasFiveOfaKind) {
           this.setAvailable(true);
@@ -1844,7 +1744,7 @@ __name(ScoreElement, "ScoreElement");
 // src/ViewModels/rollButton.ts
 var thisID2 = "rollbutton";
 var state2 = { text: "", color: "", enabled: true };
-var init5 = /* @__PURE__ */ __name(() => {
+var init4 = /* @__PURE__ */ __name(() => {
   events.on("ButtonTouched", thisID2, () => {
     roll(null);
     updateRollState();
@@ -1874,27 +1774,43 @@ var update2 = /* @__PURE__ */ __name(() => {
 
 // src/ViewModels/diceGame.ts
 var SHORTCUT_GAMEOVER = false;
-var snowColor = "snow";
 var appInstance;
 var App = class {
-  /** singleton initialization */
-  static init() {
-    if (!App._instance) {
-      App._instance = new App();
-      appInstance = App._instance;
-    }
-  }
   /** private singleton constructor, called from init() */
   constructor() {
-    init3(snowColor);
-    this.players = players;
+    // getPlayer(index: number) {
+    //    for (const player of this.players) {
+    //       if (player.idx === index) {
+    //          return player
+    //       }
+    //    }
+    //    return [...this.players][index];
+    // }
+    /** add a score value for this player */
+    this.addScore = (value) => {
+      thisPlayer.score += value;
+      const text = thisPlayer.score === 0 ? thisPlayer.playerName : `${thisPlayer.playerName} = ${thisPlayer.score}`;
+      this.updatePlayer(thisPlayer.idx, thisPlayer.color, text);
+    };
+    /** broadcast an update message to the view element */
+    this.updatePlayer = (index, color, text) => {
+      eventBus.fire(
+        "UpdatePlayer",
+        index.toString(),
+        {
+          index,
+          color,
+          text
+        }
+      );
+    };
     this.scoreItems = [];
     this.leftBonus = 0;
     this.fiveOkindBonus = 0;
     this.leftTotal = 0;
     this.rightTotal = 0;
+    init3();
     init4();
-    init5();
     init2();
     if (!this.isGameComplete()) {
       this.resetTurn();
@@ -1908,7 +1824,7 @@ var App = class {
         this.clearPossibleScores();
         this.setLeftScores();
         this.setRightScores();
-        this.showFinalScore(this.getWinner());
+        this.showFinalScore();
       } else {
         this.resetTurn();
       }
@@ -1919,20 +1835,16 @@ var App = class {
       }
     });
   }
+  /** singleton initialization */
+  static init() {
+    if (!App._instance) {
+      App._instance = new App();
+      appInstance = App._instance;
+    }
+  }
   /** check score total and determin the winner of this game */
   getWinner() {
-    if (this.players.size === 1) {
-      return this.getPlayer(0);
-    }
-    let thisWinner = this.getPlayer(0);
-    let highscore = 0;
-    for (const player of this.players) {
-      if (player.score > highscore) {
-        highscore = player.score;
-        thisWinner = player;
-      }
-    }
-    return thisWinner;
+    return thisPlayer;
   }
   /** clear all scoreElements possible score value */
   clearPossibleScores() {
@@ -1948,9 +1860,8 @@ var App = class {
   }
   /** resets the turn by resetting values and state */
   resetTurn() {
-    setCurrentPlayer(getNextPlayer(currentPlayer));
-    enabled(currentPlayer.id === thisPlayer.id);
-    state2.color = currentPlayer.color;
+    enabled(true);
+    state2.color = thisPlayer.color;
     state2.enabled = true;
     state2.text = "Roll Dice";
     update2();
@@ -1962,12 +1873,19 @@ var App = class {
   /** resets game state to start a new game */
   resetGame() {
     events.fire(`HidePopup`, "", null);
-    setCurrentPlayer(this.getPlayer(0));
     resetGame();
     for (const scoreItem of this.scoreItems) {
       scoreItem.reset();
     }
-    resetScoreLabels();
+    eventBus.fire(
+      "UpdatePlayer",
+      "1",
+      {
+        index: 0,
+        color: "brown",
+        text: ""
+      }
+    );
     this.leftBonus = 0;
     this.fiveOkindBonus = 0;
     this.leftTotal = 0;
@@ -1983,22 +1901,17 @@ var App = class {
         text: "^ total = 0"
       }
     );
-    resetPlayers();
     state2.color = "brown";
     state2.text = "Roll Dice";
     state2.enabled = true;
     update2();
   }
   /** show a popup with winner and final score */
-  showFinalScore(winner) {
+  showFinalScore() {
     let winMsg;
-    if (winner.id !== thisPlayer.id) {
-      Nooo();
-      winMsg = winner.playerName + " wins!";
-    } else {
-      Woohoo();
-      winMsg = "You won!";
-    }
+    winMsg = thisPlayer.playerName + " wins!";
+    Woohoo();
+    winMsg = "You won!";
     state2.color = "black";
     state2.text = winMsg;
     update2();
@@ -2010,7 +1923,7 @@ var App = class {
         fill: true,
         fillColor: "snow",
         fontColor: "black",
-        text: winMsg + " " + winner.score
+        text: winMsg + " " + thisPlayer.score
       }
     );
     events.fire("ShowPopup", "", { title: "Game Over!", msg: "You Won!" });
@@ -2032,33 +1945,22 @@ var App = class {
   /** sum and show left scoreElements total value */
   setLeftScores() {
     this.leftTotal = 0;
-    for (const player of this.players) {
-      player.score = 0;
-    }
+    thisPlayer.score = 0;
     let val;
     for (let i = 0; i < 6; i++) {
       val = this.scoreItems[i].finalValue;
       if (val > 0) {
         this.leftTotal += val;
-        const owner = this.scoreItems[i].owner;
-        if (owner) {
-          addScore(owner, val);
-          if (this.scoreItems[i].hasFiveOfaKind && fiveOfaKindCount > 1) {
-            addScore(owner, 100);
-          }
+        thisPlayer.score += val;
+        const text = thisPlayer.score === 0 ? thisPlayer.playerName : `${thisPlayer.playerName} = ${thisPlayer.score}`;
+        this.updatePlayer(thisPlayer.idx, thisPlayer.color, text);
+        if (this.scoreItems[i].hasFiveOfaKind && fiveOfaKindCount > 1) {
+          this.addScore(100);
         }
       }
     }
     if (this.leftTotal > 62) {
-      let bonusWinner = this.getPlayer(0);
-      let highleft = 0;
-      for (const player of this.players) {
-        if (player.score > highleft) {
-          highleft = player.score;
-          bonusWinner = player;
-        }
-      }
-      addScore(bonusWinner, 35);
+      this.addScore(35);
       events.fire(
         "UpdateText",
         "leftscore",
@@ -2106,21 +2008,13 @@ var App = class {
       if (val > 0) {
         const owner = this.scoreItems[i].owner;
         if (owner) {
-          addScore(owner, val);
+          this.addScore(val);
           if (this.scoreItems[i].hasFiveOfaKind && fiveOfaKindCount > 1 && i !== FiveOfaKindIndex) {
-            addScore(owner, 100);
+            this.addScore(100);
           }
         }
       }
     }
-  }
-  getPlayer(index) {
-    for (const player of this.players) {
-      if (player.idx === index) {
-        return player;
-      }
-    }
-    return [...this.players][index];
   }
 };
 __name(App, "App");
@@ -2953,15 +2847,21 @@ containerInit(
 );
 App.init();
 hydrateUI();
+var thisPlayer = {
+  id: "0",
+  idx: 0,
+  playerName: "Nick",
+  color: "brown",
+  score: 0,
+  lastScore: ""
+};
 var id2 = "1";
 var name = "Score:";
 thisPlayer.id = id2;
 thisPlayer.playerName = name;
-setThisPlayer(thisPlayer);
-setCurrentPlayer(thisPlayer);
-addPlayer(id2, name);
 appInstance.resetTurn();
 render();
 export {
-  eventBus
+  eventBus,
+  thisPlayer
 };

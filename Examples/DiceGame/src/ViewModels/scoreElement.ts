@@ -1,10 +1,10 @@
 import { events } from '../deps.ts'
 import * as PlaySound from './sounds.ts'
 
-import {eventBus } from '../main.ts'
+import {eventBus, Player,  thisPlayer } from '../main.ts'
 
-import type { Player } from './players.ts'
-import { currentPlayer, thisPlayer } from './players.ts'
+//import type { Player } from './players.ts'
+//import { currentPlayer, thisPlayer } from './players.ts'
 import * as dice from './dice.ts'
 import * as Possible from './possible.ts'
 
@@ -25,7 +25,7 @@ const FullHouse = 10
 
 const emptyString = ''
 const black = 'black'
-const snow = 'snow'
+//const snow = 'snow'
 
 /** ScoreElement Controller */
 export default class ScoreElement {
@@ -119,7 +119,7 @@ export default class ScoreElement {
    setOwned(value: boolean) {
       this.owned = value
       if (this.owned) {
-         this.owner = currentPlayer
+         this.owner = thisPlayer
          this.updateScoreElement(this.owner.color, this.possibleValue.toString())
       }
       else {
@@ -185,13 +185,13 @@ export default class ScoreElement {
       // and it's not taken yet
       if (!this.owned) {
          if (this.possibleValue === 0) {
-            currentPlayer.lastScore = `sacrificed ${this.name} ${dice.toString()}`
-            this.updateInfo(`${currentPlayer.playerName} ${currentPlayer.lastScore}`)
+            thisPlayer.lastScore = `sacrificed ${this.name} ${dice.toString()}`
+            this.updateInfo(`${thisPlayer.playerName} ${thisPlayer.lastScore}`)
          } else {
-            const wasItYou = currentPlayer.id === thisPlayer.id
+            const wasItYou = thisPlayer.id === thisPlayer.id
             const wasTaken = (wasItYou) ? 'choose' : 'took'
-            currentPlayer.lastScore = `${wasTaken} ${this.name} ${dice.toString()}`
-            this.updateInfo(`${(wasItYou) ? 'You' : currentPlayer.playerName} ${currentPlayer.lastScore}`)
+            thisPlayer.lastScore = `${wasTaken} ${this.name} ${dice.toString()}`
+            this.updateInfo(`${(wasItYou) ? 'You' : thisPlayer.playerName} ${thisPlayer.lastScore}`)
          }
          if (this.index === Possible.FiveOfaKindIndex) {
             if (dice.isFiveOfaKind) {
@@ -208,8 +208,8 @@ export default class ScoreElement {
 
       } // it's been taken
       else if (this.available) {
-         currentPlayer.lastScore = `stole ${this.name} ${dice.toString()} was: ${this.scoringDieset.toString()}`;
-         this.updateInfo(`${currentPlayer.playerName} ${currentPlayer.lastScore}`)
+         thisPlayer.lastScore = `stole ${this.name} ${dice.toString()} was: ${this.scoringDieset.toString()}`;
+         this.updateInfo(`${thisPlayer.playerName} ${thisPlayer.lastScore}`)
          this.setOwned(false)
          PlaySound.Heehee()
          this.setValue()
@@ -266,7 +266,7 @@ export default class ScoreElement {
          }
          this.setAvailable(true)
       }
-      else if (currentPlayer !== this.owner) {
+      else if (thisPlayer !== this.owner) {
          if (this.possibleValue > this.finalValue) {
             if (!this.hasFiveOfaKind) {
                this.setAvailable(true)

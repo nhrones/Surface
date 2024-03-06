@@ -4,12 +4,13 @@ import * as PlaySound from './sounds.ts'
 import { eventBus } from '../main.ts'
 
 import * as playerOne from './playerName.ts'
-import * as Players from './players.ts'
-import { Player } from './players.ts'
+//import * as Players from './players.ts'
+//import { Player } from './players.ts'
 import * as dice from './dice.ts'
 import * as Possible from './possible.ts'
 import ScoreElement from './scoreElement.ts'
 import * as rollButton from './rollButton.ts'
+import { thisPlayer } from '../main.ts';
 
 //================================================
 //         local const for faster resolution
@@ -17,7 +18,7 @@ import * as rollButton from './rollButton.ts'
 
 const SHORTCUT_GAMEOVER = false;
 
-const snowColor = 'snow'
+//const snowColor = 'snow'
 //const grayColor = 'gray'
 
 //================================================
@@ -29,7 +30,7 @@ export let appInstance: App
 /** the main controller for the dice game */
 export class App {
 
-   players: Set<Player>
+   //players: Set<Player>
    scoreItems: ScoreElement[]
    leftBonus: number
    fiveOkindBonus: number
@@ -50,8 +51,8 @@ export class App {
    /** private singleton constructor, called from init() */
    private constructor() {
 
-      Players.init( snowColor )
-      this.players = Players.players
+      //Players.init( snowColor )
+      //this.players = Players.players
       this.scoreItems = []
       this.leftBonus = 0
       this.fiveOkindBonus = 0
@@ -79,7 +80,7 @@ export class App {
             this.clearPossibleScores()
             this.setLeftScores()
             this.setRightScores()
-            this.showFinalScore(this.getWinner())
+            this.showFinalScore()
          } else {
             this.resetTurn()
          }
@@ -94,18 +95,18 @@ export class App {
 
    /** check score total and determin the winner of this game */
    getWinner() {
-      if (this.players.size === 1) {
-         return this.getPlayer(0)
-      }
-      let thisWinner = this.getPlayer(0)
-      let highscore = 0
-      for (const player of this.players) {
-         if (player.score > highscore) {
-            highscore = player.score
-            thisWinner = player
-         }
-      }
-      return thisWinner
+      //if (this.players.size === 1) {
+      //   return this.getPlayer(0)
+      //}
+      //let thisWinner = thisPlayer //this.getPlayer(0)
+      //let highscore = 0
+      //for (const player of this.players) {
+      //if (player.score > highscore) {
+      //let highscore = thisPlayer.score //player.score
+      //thisWinner = thisPlayer //player
+      //}
+      //}
+      return thisPlayer //thisWinner
    }
 
    /** clear all scoreElements possible score value */
@@ -124,9 +125,9 @@ export class App {
 
    /** resets the turn by resetting values and state */
    resetTurn() {
-      Players.setCurrentPlayer(Players.getNextPlayer(Players.currentPlayer))
-      PlaySound.enabled(Players.currentPlayer.id === Players.thisPlayer.id)
-      rollButton.state.color = Players.currentPlayer.color
+      //Players.setCurrentPlayer(Players.getNextPlayer(Players.currentPlayer))
+      PlaySound.enabled(true)//(Players.currentPlayer.id === Players.thisPlayer.id)
+      rollButton.state.color = thisPlayer.color //Players.currentPlayer.color
       rollButton.state.enabled = true
       rollButton.state.text = 'Roll Dice'
       rollButton.update()
@@ -139,13 +140,21 @@ export class App {
    /** resets game state to start a new game */
    resetGame() {
       events.fire(`HidePopup`, "", null)
-      Players.setCurrentPlayer(this.getPlayer(0))
+      //Players.setCurrentPlayer(this.getPlayer(0))
       dice.resetGame()
       for (const scoreItem of this.scoreItems) {
          scoreItem.reset()
       }
       // clear the view
-      Players.resetScoreLabels()
+      //Players.resetScoreLabels()
+
+      eventBus.fire('UpdatePlayer', "1", {
+         index: 0,
+         color: "brown",
+         text: ""
+      }
+      )
+
       this.leftBonus = 0
       this.fiveOkindBonus = 0
       this.leftTotal = 0
@@ -161,7 +170,7 @@ export class App {
          }
       )
 
-      Players.resetPlayers()
+      //Players.resetPlayers()
       rollButton.state.color = 'brown'
       rollButton.state.text = 'Roll Dice'
       rollButton.state.enabled = true
@@ -169,16 +178,16 @@ export class App {
    }
 
    /** show a popup with winner and final score */
-   showFinalScore(winner: Player) {
+   showFinalScore() {
       let winMsg
-      if (winner.id !== Players.thisPlayer.id) {
-         PlaySound.Nooo()
-         winMsg = winner.playerName + ' wins!'
-      }
-      else {
-         PlaySound.Woohoo()
-         winMsg = 'You won!'
-      }
+      //if (winner.id !== Players.thisPlayer.id) {
+      //   PlaySound.Nooo()
+      winMsg = thisPlayer.playerName + ' wins!'
+      //}
+      //else {
+      PlaySound.Woohoo()
+      winMsg = 'You won!'
+      //}
       rollButton.state.color = 'black'
       rollButton.state.text = winMsg
       rollButton.update()
@@ -189,7 +198,7 @@ export class App {
             fill: true,
             fillColor: "snow",
             fontColor: 'black',
-            text: winMsg + ' ' + winner.score
+            text: winMsg + ' ' + thisPlayer.score
          }
       )
       events.fire('ShowPopup', "", { title: 'Game Over!', msg: 'You Won!' })
@@ -213,34 +222,37 @@ export class App {
    /** sum and show left scoreElements total value */
    setLeftScores() {
       this.leftTotal = 0
-      for (const player of this.players) {
-         player.score = 0
-      }
+      //for (const player of this.players) {
+      thisPlayer.score = 0
+      //}
       let val
       for (let i = 0; i < 6; i++) {
          val = this.scoreItems[i].finalValue
          if (val > 0) {
             this.leftTotal += val
-            const owner = this.scoreItems[i].owner
-            if (owner) {
-               Players.addScore(owner, val)
-               if (this.scoreItems[i].hasFiveOfaKind && (dice.fiveOfaKindCount > 1)) {
-                  Players.addScore(owner, 100)
-               }
+            //const owner = thisPlayer //this.scoreItems[i].owner
+            //if (owner) {
+            //Players.addScore(owner, val)
+            thisPlayer.score += val
+            const text = (thisPlayer.score === 0) ? thisPlayer.playerName : `${thisPlayer.playerName} = ${thisPlayer.score}`
+            this.updatePlayer(thisPlayer.idx, thisPlayer.color, text)
+            if (this.scoreItems[i].hasFiveOfaKind && (dice.fiveOfaKindCount > 1)) {
+               this.addScore( 100 )
             }
+            //}
          }
       }
       if (this.leftTotal > 62) {
-         let bonusWinner = this.getPlayer(0)
-         let highleft = 0
-         for (const player of this.players) {
-            if (player.score > highleft) {
-               highleft = player.score
-               bonusWinner = player
-            }
-         }
+         //let bonusWinner = thisPlayer
+         //let highleft = 0
+         //for (const player of this.players) {
+            //if (thisPlayer.score > highleft) {
+               //highleft = thisPlayer.score
+               //bonusWinner = thisPlayer
+            //}
+         //}
 
-         Players.addScore(bonusWinner, 35)
+         this.addScore(35)
          events.fire('UpdateText', 'leftscore',
             {
                border: true,
@@ -254,7 +266,7 @@ export class App {
       else {
          events.fire('UpdateText', 'leftscore',
             {
-               border: true, 
+               border: true,
                fill: true,
                fillColor: 'grey',
                fontColor: 'snow',
@@ -265,7 +277,7 @@ export class App {
       if (this.leftTotal === 0) {
          events.fire('UpdateText', 'leftscore',
             {
-               border: true, 
+               border: true,
                fill: true,
                fillColor: 'grey',
                fontColor: 'snow',
@@ -284,24 +296,41 @@ export class App {
          if (val > 0) {
             const owner = this.scoreItems[i].owner
             if (owner) {
-               Players.addScore(owner, val)
+               this.addScore(val)
                if (this.scoreItems[i].hasFiveOfaKind
                   && (dice.fiveOfaKindCount > 1)
                   && (i !== Possible.FiveOfaKindIndex)
                ) {
-                  Players.addScore(owner, 100)
+                  this.addScore(100)
                }
             }
          }
       }
    }
 
-   getPlayer(index: number) {
-      for (const player of this.players) {
-         if (player.idx === index) {
-            return player
-         }
+   // getPlayer(index: number) {
+   //    for (const player of this.players) {
+   //       if (player.idx === index) {
+   //          return player
+   //       }
+   //    }
+   //    return [...this.players][index];
+   // }
+
+   /** add a score value for this player */
+   addScore = (value: number) => {
+      thisPlayer.score += value
+      const text = (thisPlayer.score === 0) ? thisPlayer.playerName : `${thisPlayer.playerName} = ${thisPlayer.score}`
+      this.updatePlayer(thisPlayer.idx, thisPlayer.color, text)
+   }
+
+   /** broadcast an update message to the view element */
+   updatePlayer = (index: number, color: string, text: string) => {
+      eventBus.fire('UpdatePlayer', index.toString(), {
+         index: index,
+         color: color,
+         text: text
       }
-      return [...this.players][index];
+      )
    }
 }
