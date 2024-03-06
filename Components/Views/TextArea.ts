@@ -7,7 +7,6 @@ import {
    View,
    ctx,
    events,
-   logThis,
    tickCount,
    TextLine
 } from '../deps.ts'
@@ -123,14 +122,6 @@ export default class TextArea extends Container implements View {
             str += `${JSON.stringify(line)}
             `
          }
-         const A = false
-         if (A) logThis(` 
-         focused: ${this.focused} insertionRow: ${this.insertionRow} 
-         highlighted text: ${text.substring(this.selectStart, this.selectEnd)}
-         selection -- start: ${this.selectStart}, end: ${this.selectEnd} 
-         insertion -- row: ${this.insertionRow}, column: ${this.insertionColumn}
-         ${str}`, "TextArea.UpdateTextArea")
-
          this.render()
       })
 

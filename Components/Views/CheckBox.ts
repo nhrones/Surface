@@ -2,11 +2,9 @@
 import {   
    ElementDescriptor, 
    Location, 
-   View, 
-   Host, 
+   View,
    ctx, 
-   events, 
-   logThis 
+   events
 } from '../deps.ts'
 
 /** 
@@ -85,8 +83,6 @@ export default class CheckBox implements View {
     * fires an event on the eventBus to inform VMs 
     */
    touched() {
-      const A = false
-      if (A) logThis(" touched!", "CheckBox " + this.name)
       if (this.enabled) {
          events.fire('CheckBoxTouched', this.name, { checked: this.enabled })
       }

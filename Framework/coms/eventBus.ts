@@ -11,13 +11,13 @@ import type {
  * A factory function that returns a generic strongly-typed EventBus instance 
  * @typeParam T - type that extends EventContract\<T\>
  * @returns EventBus<T> - a strongly-typed EventBus object with the following two methods:   
- * @method when - registers a callback function to be called when the named event is sent (emmited). 
- * @method fire - fires (emmits) the named event, triggering the execution of any registered callback functions 
+ * @method on - registers a callback function to be called when the named event is fired. 
+ * @method fire - fires (emmits) the event, triggering the execution of registered callbacks. 
  */
 export function buildEventBus<T extends EventContract<T>>(): EventBus<T> {
 
    /** 
-    * holds an array of event handler for each registered event name 
+    * holds an array of eventhandler for each registered event name 
     */
    const eventHandlers: Map<string, EventHandler[]> = new Map()
 
@@ -84,6 +84,6 @@ export function buildEventBus<T extends EventContract<T>>(): EventBus<T> {
 
 /** 
  * We use this factory function to create a new EventBus service. 
- * use an intersection type from `Base` and `Local` types. 
+ * We could use an intersection type from `CoreEvents` and `LocalEvents` types. 
  */
 export const events = buildEventBus<CoreEvents>()

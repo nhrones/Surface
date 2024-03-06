@@ -1,5 +1,5 @@
 
-import { Editor, logThis, WindowKeyboardEvent } from '../deps.ts'
+import { Editor } from '../deps.ts'
 import { PLACEHOLDER, Insert } from './constants.ts'
 
 //================================================
@@ -16,7 +16,7 @@ export function setClipboard(txt: string) {
 /** 
  * text edit event handler 
  */
-export function handleEditEvents(editor: Editor, evt: WindowKeyboardEvent) {
+export function handleEditEvents(editor: Editor, evt: KeyboardEvent) {
 
    // handle Select-All command
    if (evt.code === 'KeyA') {

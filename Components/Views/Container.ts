@@ -2,8 +2,7 @@
 import {
    ElementDescriptor,
    ctx,
-   events,
-   logThis,
+   events
 } from '../deps.ts'
 
 import Scrollbar from './Scrollbar.ts'

@@ -1,9 +1,5 @@
-import {
-   logThis,
-   Size,
-   WindowKeyboardEvent,
-   WindowInputEvent
-} from '../deps.ts'
+// deno-lint-ignore-file no-explicit-any
+/// <reference lib="dom" />
 
 import type { Editor, TextLine } from '../../Framework/types.ts'
 
@@ -58,7 +54,7 @@ export class TextEditor implements Editor {
    rowCapacity = 0;
 
    /** size of the View container (pixels) */
-   containerSize: Size = { width: 0, height: 0 };
+   containerSize = { width: 0, height: 0 };
 
    //================================
    //   strings
@@ -122,12 +118,12 @@ export class TextEditor implements Editor {
       })
 
       // Input eventhandler -> data: string
-      events.on(`WindowInput`, this.id, (evt: WindowInputEvent) => {
-         insertChars(this, evt.data)
+      events.on(`WindowInput`, this.id, (evt: InputEvent) => {
+         insertChars(this, evt.data as string)
       })
 
       // KeyDown eventhandler for: enter, backspace, delete, arrows, shiftKey, ctrlKey  
-      events.on('WindowKeyDown', this.id, (evt: WindowKeyboardEvent) => { // OK
+      events.on('WindowKeyDown', this.id, (evt: KeyboardEvent) => { // OK
          const { ctrlKey, shiftKey } = evt
          // a `ctrlKey` implies an edit command 
          // trap and handle the edit commands 
@@ -400,9 +396,6 @@ export class TextEditor implements Editor {
                   this.insertionIndex = line.start + this.insertionColumn
                }
             }
-            const A = true
-            if (A) logThis(`insertionRow ${this.insertionRow}, insertionColumn ${this.insertionColumn}`, `updateInsertionPoint-Calc:` )
-
             break;
          }
 

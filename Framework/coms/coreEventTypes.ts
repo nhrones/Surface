@@ -1,14 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 
-// import {  //HACK
-//    Size, 
-//    WindowKeyboardEvent, 
-//    WindowInputEvent 
-// }  from "../mod.ts"
-
 import { TextLine } from "../types.ts";
-
-//export type {Rect} from "../mod.ts"
 
 /** 
  * Named Event types    

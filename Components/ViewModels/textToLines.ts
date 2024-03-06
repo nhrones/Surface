@@ -1,4 +1,4 @@
-import { TextLine, ctx , logThis, events } from  '../deps.ts'
+import { TextLine, ctx } from  '../deps.ts'
 import { PLACEHOLDER } from './constants.ts'
 
 /** 
@@ -6,12 +6,11 @@ import { PLACEHOLDER } from './constants.ts'
  * Will attempt to split at word boundries.
  */
 export function getLines(text: string, width: number) {
-   let lines: string[] = []
-   let maxWidth = width
+   const lines: string[] = []
+   const maxWidth = width
    let currentLine = ""
    let finalWidth = 0
    if (text.length <= 1 )  {
-      logThis(`less than zero length ${text.length} text = "${text}"`, 'getLines',)
       text = PLACEHOLDER;
    }
       
@@ -66,9 +65,7 @@ function buildTextLines(lineStrings: string[]): TextLine[] {
    let lastLength = 0
    const lines: TextLine[] = []
    let i = 0 /* index */
-   for (let txt of lineStrings) {
-      const A = false
-      if(A) logThis(`txt: ${txt} code: ${txt.charCodeAt(txt.length-1)}`, "buildTextLines")
+   for (const txt of lineStrings) {
       if ( txt.length > 1 ) {
          if (txt.startsWith(PLACEHOLDER)) {
             //todo

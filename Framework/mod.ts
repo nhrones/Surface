@@ -39,7 +39,6 @@ export {
    fontColor,
    getFactories, 
    hasVisiblePopup,
-   hostCanvas as Host,
    incrementTickCount,
    initCFG, 
    refreshCanvasContext,
@@ -54,7 +53,6 @@ export {
 //======================================
 
 export { events, buildEventBus } from './coms/eventBus.ts'
-export { logThis } from './coms/logger.ts'
 export { initHostEvents } from './coms/systemEvents.ts'
 export type { CoreEvents } from './coms/coreEventTypes.ts'
 export * from './types.ts'

@@ -1,6 +1,6 @@
 
 /// <reference lib="dom" />
-import { ctx, logThis } from '../deps.ts'
+import { ctx } from '../deps.ts'
 import ScrollableContainer from './Container.ts'
 
 /** 
@@ -71,11 +71,6 @@ export default class Scrollbar {
       const ratio = capacity / ItemsLength
       this.cursor.length = 100 //hack this.height * ratio
 
-      const B = true
-      if (B) logThis(`capacity ${toInt(capacity)}, cursor.height ${toInt(ItemsLength)}`
-         , 'Scrollbar-Render')
-
-
       ctx.save()
 
       //fill the scrollbar
@@ -114,10 +109,8 @@ export default class Scrollbar {
       // remember cursor.top is zero based
       const newTop = (this.cursor.index * lineHeight);
       if (newTop + this.cursor.length >= height + top) {
-         //this.cursor.top = (height - this.cursor.length)
-         logThis('clamped Top')
+         // ??
       } else {
-         logThis(`set new Top ${newTop}`)
          this.cursor.top = newTop
       }
 
@@ -125,13 +118,6 @@ export default class Scrollbar {
 
       //const ratio = this.cursor.length / height;
       //this.cursor.top = (this.cursor.top * ratio);
-      const A = true
-      if (A) logThis(`cursor - index ${this.cursor.index}, 
-         top ${this.cursor.top}, 
-         length ${this.cursor.length}`,
-         "Scrollbar-Scroll"
-      )
-
       this.container.render()
    }
 

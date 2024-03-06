@@ -315,12 +315,6 @@ var Scrollbar = class {
   render(ItemsLength, capacity) {
     const ratio = capacity / ItemsLength;
     this.cursor.length = 100;
-    const B = true;
-    if (B)
-      logThis(
-        `capacity ${toInt(capacity)}, cursor.height ${toInt(ItemsLength)}`,
-        "Scrollbar-Render"
-      );
     ctx.save();
     ctx.fillStyle = this.fill;
     ctx.fill(this.path);
@@ -346,29 +340,15 @@ var Scrollbar = class {
       this.cursor.index = 0;
     const newTop = this.cursor.index * lineHeight;
     if (newTop + this.cursor.length >= height + top3) {
-      logThis("clamped Top");
     } else {
-      logThis(`set new Top ${newTop}`);
       this.cursor.top = newTop;
     }
     if (this.cursor.top < 0)
       this.cursor.top = 0;
-    const A = true;
-    if (A)
-      logThis(
-        `cursor - index ${this.cursor.index}, 
-         top ${this.cursor.top}, 
-         length ${this.cursor.length}`,
-        "Scrollbar-Scroll"
-      );
     this.container.render();
   }
 };
 __name(Scrollbar, "Scrollbar");
-function toInt(num) {
-  return num | 0;
-}
-__name(toInt, "toInt");
 
 // ../../Components/Views/Container.ts
 var Container = class {
@@ -646,14 +626,6 @@ var TextArea = class extends Container {
         str += `${JSON.stringify(line)}
             `;
       }
-      const A = false;
-      if (A)
-        logThis(` 
-         focused: ${this.focused} insertionRow: ${this.insertionRow} 
-         highlighted text: ${text.substring(this.selectStart, this.selectEnd)}
-         selection -- start: ${this.selectStart}, end: ${this.selectEnd} 
-         insertion -- row: ${this.insertionRow}, column: ${this.insertionColumn}
-         ${str}`, "TextArea.UpdateTextArea");
       this.render();
     });
     this.render();
@@ -817,9 +789,6 @@ var CheckBox = class {
    * fires an event on the eventBus to inform VMs 
    */
   touched() {
-    const A = false;
-    if (A)
-      logThis(" touched!", "CheckBox " + this.name);
     if (this.enabled) {
       events.fire("CheckBoxTouched", this.name, { checked: this.enabled });
     }
@@ -1195,31 +1164,6 @@ Make sure your view_manifest is up to date!`;
   }
 }
 __name(addElement, "addElement");
-
-// ../../Framework/coms/logger.ts
-var logTxt = "";
-var logThis = /* @__PURE__ */ __name((thisMsg, from, clear = false) => {
-  if (clear) {
-    logTxt = "";
-  }
-  const newTxt = from ? from + " -- " + thisMsg : thisMsg;
-  logTxt = newTxt + `
-${logTxt}`;
-  const maxChars = 600;
-  if (logTxt.length > maxChars)
-    logTxt = logTxt.substring(0, maxChars);
-  events.fire(
-    "UpdateText",
-    "logger",
-    {
-      border: true,
-      fill: true,
-      fillColor: "white",
-      fontColor: "black",
-      text: logTxt
-    }
-  );
-}, "logThis");
 
 // src/ViewModels/sounds.ts
 var context;

@@ -1,4 +1,4 @@
-import { events, logThis } from  '../deps.ts'
+import { events } from  '../deps.ts'
 
 // used to recognize events from a (decoupled) view
 let thisID: string;
@@ -21,8 +21,6 @@ export const initCheckbox = (id: string) => {
    events.on('CheckBoxTouched', thisID, () => {
       checked = !checked
       txt = (checked) ? checkmark : empty
-      const A = true
-      if (A) logThis(txt, thisID)
       events.fire('UpdateButton', thisID,
          { text: txt, color: "green", enabled: true }
       )

@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
 /// <reference lib="dom" />
 
-import { activeNodes  } from '../render/activeNodes.ts'
+import { activeNodes } from '../render/activeNodes.ts'
 import { canvas, ctx, hasVisiblePopup } from '../render/renderContext.ts'
 
 import type { View } from '../types.ts';
@@ -9,7 +9,7 @@ import { events } from './eventBus.ts'
 
 //====================================================
 //                Sytem Events Module
-//  Watch for all host window generated events.
+//  Watch for all host generated events.
 //  When appropriate, propagate these host events
 //  to our central eventBus - events. 
 //
@@ -20,12 +20,11 @@ import { events } from './eventBus.ts'
 //====================================================
 
 const left = 0
-//let canvas: HTMLCanvasElement
 
 // values re-used repeatedly in event handlers
-// -- we reuse these to reduce pressure on GC
+// -- we reuse these to reduce GC pressure
 let x = 0
-let y = 0// values re-used repeatedly in event handlers
+let y = 0
 let boundingRect: DOMRect | null = null
 let hit = false
 let node: View | null = null
@@ -41,10 +40,10 @@ let focusedNode: View | null = null
  *     mousedown + touchstart => handleClickOrTouch()    
  *     mousemove => handleMouseMove     
  */
-export function initHostEvents( ): void {
+export function initHostEvents(): void {
 
    // handle all host window `input` events 
-  addEventListener("input", (evt: any) => {
+   addEventListener("input", (evt: any) => {
       // look for a focused node, if none, just ignore the event
       if (focusedNode !== null) {
          // we'll fire this event directly to amy focused node
@@ -79,7 +78,7 @@ export function initHostEvents( ): void {
             focusedNode.touched()
          }
       }
-      
+
       // look for a currently `focused` node
       if (focusedNode !== null) {
          // we'll signal only the node with focus
@@ -94,7 +93,7 @@ export function initHostEvents( ): void {
          if (hasVisiblePopup === false) {
             // we'll hit-test all activeNodes 
             handleClickOrTouch(evt.pageX, evt.pageY)
-         } // a popup iwas open, just close it
+         } // a popup was open -> just close it
          else {
             events.fire(`PopupReset`, "", null)
          }
@@ -109,7 +108,7 @@ export function initHostEvents( ): void {
          handleMouseMove(evt)
       }
    })
-   
+
    // we send all scroll events unconditionally 
    // to service any scrollable containers
    addEventListener('scroll', (evt: any) => {
@@ -131,19 +130,16 @@ export function initHostEvents( ): void {
  * Uses the canvasContexts 'isPointInPath' method for hit-testing.    
  * @param {MouseEvent} evt - from canvas.mousemove event  
  */
-function handleMouseMove(evt: any,) {
+function handleMouseMove(evt: MouseEvent,) {
    boundingRect = canvas.getBoundingClientRect()
    x = evt.clientX - boundingRect.x
    y = evt.clientY - boundingRect.y
-   //x = evt.clientX
-   //y = evt.clientY
 
    // test for hovered
    node = null
 
    for (const n of activeNodes) {
       if (ctx.isPointInPath(n.path, x, y)) {
-         // going from bottom to top, top-most object wins
          node = n
       }
    }
@@ -154,8 +150,8 @@ function handleMouseMove(evt: any,) {
          node.hovered = true           // set this nodes `hovered` flag
          node.update()                 // command to update the hovered node
          hoveredNode = node            // register this node as currently hovered
-         //HACK dwmWindow.setCursor("hand")   // change the cursor
-         //HACK Host.dirty()                  // force a flush and swap
+         //HACK setCursor("hand")      // change the cursor
+
       }
    } else {                            // no node was hit
       if (hoveredNode !== null) {      // is there a hovered node?
@@ -173,12 +169,10 @@ function handleMouseMove(evt: any,) {
  * When called, the elements `touched()` method will then broadcast 
  * a `touched` event to any registered subscribers.   
  * 
- * @param {number} x - horizontal location of this event
- * @param {number} y - vertical location of this event
+ * @param {number} mX - horizontal location of this event
+ * @param {number} mY - vertical location of this event
  */
 function handleClickOrTouch(mX: number, mY: number) {
-    // we reject all local click-events during a competitors turns
-    //if (currentPlayer.id === thisPlayer.id) {
    x = mX - canvas.offsetLeft
    y = mY - canvas.offsetTop
    hit = false
@@ -194,7 +188,7 @@ function handleClickOrTouch(mX: number, mY: number) {
             focusedNode = node
             // tell others about this newly focused node
             if (focusedNode)
-            events.fire('Focused', focusedNode.name, true);
+               events.fire('Focused', focusedNode.name, true);
             hit = true
          }
       }
@@ -215,7 +209,7 @@ function clearFocused() {
 
 /** clear last hovered object */
 function clearHovered() {
-   //dwmWindow.setCursor("arrow")
+   //HACK setCursor("arrow")
    if (hoveredNode !== null) {
       hoveredNode.hovered = false
       hoveredNode.update()       // re-render the node
