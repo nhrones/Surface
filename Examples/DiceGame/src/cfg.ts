@@ -226,7 +226,7 @@ export const cfg = {
          idx: 0,
          tabOrder: 0,
          location: { left: 20, top: 100 },
-         size: { width: 400, height: 400 },
+         size: { width: 350, height: 350 },
          fontSize: 24,
          text: ""
       },  

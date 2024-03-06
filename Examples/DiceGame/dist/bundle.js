@@ -1778,14 +1778,6 @@ var appInstance;
 var App = class {
   /** private singleton constructor, called from init() */
   constructor() {
-    // getPlayer(index: number) {
-    //    for (const player of this.players) {
-    //       if (player.idx === index) {
-    //          return player
-    //       }
-    //    }
-    //    return [...this.players][index];
-    // }
     /** add a score value for this player */
     this.addScore = (value) => {
       thisPlayer.score += value;
@@ -1816,7 +1808,6 @@ var App = class {
       this.resetTurn();
     }
     events.on(`PopupReset`, "", () => {
-      events.fire(`HidePopup`, "", null);
       this.resetGame();
     });
     eventBus.on(`ScoreElementResetTurn`, "", () => {
@@ -1906,7 +1897,7 @@ var App = class {
     state2.enabled = true;
     update2();
   }
-  /** show a popup with winner and final score */
+  /** show a popup with final score */
   showFinalScore() {
     let winMsg;
     winMsg = thisPlayer.playerName + " wins!";
@@ -1915,6 +1906,7 @@ var App = class {
     state2.color = "black";
     state2.text = winMsg;
     update2();
+    this.updatePlayer(0, "snow", "");
     events.fire(
       `UpdateText`,
       "infolabel",
@@ -2244,7 +2236,7 @@ var cfg = {
       idx: 0,
       tabOrder: 0,
       location: { left: 20, top: 100 },
-      size: { width: 400, height: 400 },
+      size: { width: 350, height: 350 },
       fontSize: 24,
       text: ""
     }
@@ -2497,6 +2489,7 @@ var Popup2 = class {
     this.focused = false;
     this.color = "black";
     this.text = "";
+    this.title = "";
     this.textAlign = "center";
     this.visible = true;
     this.buffer = null;
@@ -2512,7 +2505,7 @@ var Popup2 = class {
     this.path = this.hiddenPath;
     this.fontSize = el.fontSize || 8;
     events.on("ShowPopup", "", (data) => {
-      this.show(data.msg);
+      this.show(data);
     });
     events.on("HidePopup", "", () => this.hide());
   }
@@ -2523,9 +2516,10 @@ var Popup2 = class {
     return path;
   }
   /** show the virtual Popup view */
-  show(msg) {
+  show(data) {
     events.fire("FocusPopup", " ", this);
-    this.text = msg;
+    this.text = data.msg;
+    this.title = data.title;
     left3 = this.location.left;
     top2 = this.location.top;
     this.path = this.shownPath;
@@ -2549,7 +2543,8 @@ var Popup2 = class {
   saveScreenToBuffer() {
     const { left: left4, top: top3 } = this.location;
     const { width, height } = this.size;
-    this.buffer = ctx.getImageData(left4, top3, width, height);
+    console.log(`Buffer = left:${left4}, top:${top3}, width:${width}, height:${height}`);
+    this.buffer = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
   /** paint the canvas with our current snapshot */
   restoreScreenFromBuffer() {
@@ -2584,7 +2579,8 @@ var Popup2 = class {
     ctx.stroke(this.path);
     ctx.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
     ctx.textAlign = this.textAlign;
-    ctx.strokeText(this.text + " ", left3 + 200, top2 + 200);
+    ctx.strokeText(this.title + " ", left3 + 175, top2 + 100);
+    ctx.strokeText(this.text + " ", left3 + 175, top2 + 175);
     ctx.restore();
     this.visible = true;
   }

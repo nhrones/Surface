@@ -7,13 +7,6 @@ import * as PlaySound from './ViewModels/sounds.ts'
 
 import { App, appInstance } from './ViewModels/diceGame.ts';
 
-// import { 
-//    addPlayer,
-//    setThisPlayer, 
-//    setCurrentPlayer, 
-//    thisPlayer 
-// } from './ViewModels/players.ts';
-
 /** a type that describes a Player object */
 export type Player = {
     id: string
@@ -45,9 +38,9 @@ const context = new AudioContext();
 PlaySound.init(context)
 
 const can = document.getElementById('surface') as HTMLCanvasElement
-// REQUIRED - must be first call
+
 // Initialize the Host Container 
-containerInit( // REQUIRED - must be first call in main.ts
+containerInit(
    can,
    cfg,
    manifest
@@ -57,7 +50,7 @@ containerInit( // REQUIRED - must be first call in main.ts
 App.init();
 
 // Load hydrate, and display the Apps GUI
-hydrateUI() // REQUIRED - after the App is initialized
+hydrateUI()
 
 export const thisPlayer: Player = {
     id: "0",
@@ -73,9 +66,6 @@ const id = '1'
 const name = "Score:"
 thisPlayer.id = id
 thisPlayer.playerName = name
-//setThisPlayer(thisPlayer)
-//setCurrentPlayer(thisPlayer)
-//addPlayer(id, name)
 
 // Reset for a fresh start 
 appInstance.resetTurn()

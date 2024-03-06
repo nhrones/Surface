@@ -3,8 +3,6 @@ import * as PlaySound from './sounds.ts'
 
 import {eventBus, Player,  thisPlayer } from '../main.ts'
 
-//import type { Player } from './players.ts'
-//import { currentPlayer, thisPlayer } from './players.ts'
 import * as dice from './dice.ts'
 import * as Possible from './possible.ts'
 
@@ -25,7 +23,6 @@ const FullHouse = 10
 
 const emptyString = ''
 const black = 'black'
-//const snow = 'snow'
 
 /** ScoreElement Controller */
 export default class ScoreElement {

@@ -31,6 +31,7 @@ export default class Popup implements View {
    size: { height:number, width: number }
    color = "black"
    text = ""
+   title = ''
    textAlign = "center"
    visible = true
    buffer: ImageData | null = null
@@ -54,7 +55,7 @@ export default class Popup implements View {
 
       // Our game controller broadcasts this ShowPopup event at the end of a game
       events.on('ShowPopup',"", (data: { title: string, msg: string }) => {
-         this.show(data.msg)
+         this.show(data)
       })
 
       events.on('HidePopup', "", () => this.hide())
@@ -66,9 +67,10 @@ export default class Popup implements View {
       return path
    }
    /** show the virtual Popup view */
-   show(msg: string) {
+   show(data:{ title: string, msg: string }) {
       events.fire('FocusPopup'," ", this)
-      this.text = msg
+      this.text = data.msg
+      this.title = data.title
       left = this.location.left
       top = this.location.top
       this.path = this.shownPath
@@ -94,14 +96,13 @@ export default class Popup implements View {
    saveScreenToBuffer() {
       const { left, top } = this.location
       const { width, height } = this.size
-      //@ts-ignore
-      this.buffer = ctx.getImageData(left, top, width, height)
+      console.log(`Buffer = left:${left}, top:${top}, width:${width}, height:${height}`)
+      this.buffer = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
    }
 
    /** paint the canvas with our current snapshot */
    restoreScreenFromBuffer() {
       if (this.buffer) {
-          //@ts-ignore
          return ctx.putImageData(this.buffer, 0, 0)
       }
    }
@@ -134,7 +135,8 @@ export default class Popup implements View {
       ctx.stroke(this.path)
       ctx.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
       ctx.textAlign = this.textAlign as "center" | "left" | "right" | "start" | "end"
-      ctx.strokeText(this.text + ' ', left + 200, top + 200)
+      ctx.strokeText(this.title + ' ', left + 175, top + 100)
+      ctx.strokeText(this.text + ' ', left + 175, top + 175)
       ctx.restore()
       this.visible = true
    }

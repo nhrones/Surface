@@ -89,13 +89,13 @@ function drawDieFace(ctx: CanvasRenderingContext2D) {
 }
 
 function drawGlare(ctx: CanvasRenderingContext2D,) {
-    let offset = 5
-    let bottomLeftX = offset
-    let bottomLeftY = size - offset
-    let bottomRightX = size - offset
-    let bottomRightY = size - offset
-    let quarter = size * 0.25
-    let threeQuarter = quarter * 3
+    const offset = 5
+    const bottomLeftX = offset
+    const bottomLeftY = size - offset
+    const bottomRightX = size - offset
+    const bottomRightY = size - offset
+    const quarter = size * 0.25
+    const threeQuarter = quarter * 3
     ctx.fillStyle = 'rgba(200, 200, 200, 0.4)'
     ctx.beginPath()
     ctx.moveTo(bottomLeftX, bottomLeftY)
@@ -107,15 +107,15 @@ function drawGlare(ctx: CanvasRenderingContext2D,) {
 }
 
 function drawDots(ctx: CanvasRenderingContext2D, dieValue: number) {
-    let quarter = size / 4
-    let center = quarter * 2
-    let middle = quarter * 2
-    let left = quarter
-    let top = quarter
-    let right = quarter * 3
-    let bottom = quarter * 3
-    let dotSize = size / 12
-    let doDot = drawDot
+   const quarter = size / 4
+   const center = quarter * 2
+   const middle = quarter * 2
+   const left = quarter
+   const top = quarter
+   const right = quarter * 3
+   const bottom = quarter * 3
+   const dotSize = size / 12
+   const doDot = drawDot
     if (dieValue === 1) {
         doDot(ctx, middle, center, dotSize)
     }
