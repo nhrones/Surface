@@ -40,12 +40,12 @@ export default class Button implements View {
       this.zOrder = 0
       this.tabOrder = el.tabOrder || 0
       this.location = el.location
-      //const { left, top } = el.location
+      //HACK const { left, top } = el.location
       this.boarderWidth = el.boarderWidth || 1
       this.size = el.size || { width: 50, height: 30 }
-      //const { width, height } = this.size
+      //HACK const { width, height } = this.size
       this.enabled = true
-      this.path = this.buildPath(el.radius || 0)
+      this.path = this.buildPath(el.radius || 10)
       this.textNode = new Text(
          {
             kind: 'Text',
@@ -53,8 +53,8 @@ export default class Button implements View {
             tabOrder: 0,
             id: this.name + 'Label',
             text: el.text || "",
-            location: this.location,
-            size: this.size,
+            location: {left: this.location.left +10, top: this.location.top + 10},
+            size: { width: this.size.width-20, height: this.size.height-20 }, //this.size,
             fontSize: el.fontSize || 18,
             bind: true
          }
@@ -96,7 +96,6 @@ export default class Button implements View {
     * fires an event on the eventBus to inform VMs 
     */
    touched() {
-      console.log("Button " + this.name + " touched!")
       if (this.enabled) {
          events.fire('ButtonTouched', this.name, null)
       }
@@ -124,7 +123,6 @@ export default class Button implements View {
       ctx.restore()
       this.textNode.fillColor = this.color
       this.textNode.fontColor = this.fontColor
-
       this.textNode.text = this.text
       this.textNode.update()
    }
