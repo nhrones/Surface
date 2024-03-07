@@ -2,14 +2,14 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 var __export = (target, all) => {
-  for (var name2 in all)
-    __defProp(target, name2, { get: all[name2], enumerable: true });
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
 
 // https://raw.githubusercontent.com/nhrones/Surface/main/Components/ViewModels/closeButton.ts
 var thisID;
-var initCloseButton = /* @__PURE__ */ __name((id3) => {
-  thisID = id3;
+var initCloseButton = /* @__PURE__ */ __name((id2) => {
+  thisID = id2;
   events.on("ButtonTouched", thisID, () => {
   });
 }, "initCloseButton");
@@ -862,20 +862,20 @@ var getFactories = /* @__PURE__ */ __name(() => {
     const url = new URL(self, baseUrl).href;
     const path = url.substring(baseUrl.length).substring("Views".length);
     const baseRoute = path.substring(1, path.length - 3);
-    const name2 = sanitizeName(baseRoute);
-    const id3 = name2.toLowerCase();
-    const newView = { id: id3, name: name2, url, component: module.default };
-    factories2.set(id3, newView);
+    const name = sanitizeName(baseRoute);
+    const id2 = name.toLowerCase();
+    const newView = { id: id2, name, url, component: module.default };
+    factories2.set(id2, newView);
   }
   if (appManifest.Views) {
     for (const [self, module] of Object.entries(appManifest.Views)) {
       const url = new URL(self, baseUrl).href;
       const path = url.substring(baseUrl.length).substring("Views".length);
       const baseRoute = path.substring(1, path.length - 3);
-      const name2 = sanitizeName(baseRoute);
-      const id3 = name2.toLowerCase();
-      const newView = { id: id3, name: name2, url, component: module.default };
-      factories2.set(id3, newView);
+      const name = sanitizeName(baseRoute);
+      const id2 = name.toLowerCase();
+      const newView = { id: id2, name, url, component: module.default };
+      factories2.set(id2, newView);
     }
   }
   return factories2;
@@ -908,8 +908,8 @@ function toPascalCase(text) {
   );
 }
 __name(toPascalCase, "toPascalCase");
-function sanitizeName(name2) {
-  const fileName = name2.replace("/", "");
+function sanitizeName(name) {
+  const fileName = name.replace("/", "");
   return toPascalCase(fileName);
 }
 __name(sanitizeName, "sanitizeName");
@@ -925,8 +925,8 @@ function buildEventBus() {
      * @param {string} id - id of a target element (may be an empty string)
      * @param {Handler} handler - event handler callback function
      */
-    on(eventName, id3, handler) {
-      const keyName = eventName + "-" + id3;
+    on(eventName, id2, handler) {
+      const keyName = eventName + "-" + id2;
       if (eventHandlers.has(keyName)) {
         const handlers = eventHandlers.get(keyName);
         handlers.push(handler);
@@ -940,8 +940,8 @@ function buildEventBus() {
      * @param {string} id - id of a target element (may be an empty string)
      * @param {TypedEvents[key]} data - data payload, typed for this category of event
      */
-    fire(eventName, id3, data) {
-      const keyName = eventName + "-" + id3;
+    fire(eventName, id2, data) {
+      const keyName = eventName + "-" + id2;
       const handlers = eventHandlers.get(keyName);
       if (handlers) {
         for (const handler of handlers) {
@@ -1480,31 +1480,31 @@ var House = 10;
 var FiveOfaKind = 11;
 var Chance = 12;
 var FiveOfaKindIndex = FiveOfaKind;
-var evaluate = /* @__PURE__ */ __name((id3) => {
-  return id3 < 6 ? evaluateNumbers(id3) : evaluateCommon(id3);
+var evaluate = /* @__PURE__ */ __name((id2) => {
+  return id2 < 6 ? evaluateNumbers(id2) : evaluateCommon(id2);
 }, "evaluate");
-var evaluateCommon = /* @__PURE__ */ __name((id3) => {
-  if (id3 === FiveOfaKind) {
+var evaluateCommon = /* @__PURE__ */ __name((id2) => {
+  if (id2 === FiveOfaKind) {
     return hasFiveOfaKind ? 50 : 0;
-  } else if (id3 === SmallStraight) {
+  } else if (id2 === SmallStraight) {
     return hasSmallStr ? 30 : 0;
-  } else if (id3 === LargeStraight) {
+  } else if (id2 === LargeStraight) {
     return hasLargeStr ? 40 : 0;
-  } else if (id3 === House) {
+  } else if (id2 === House) {
     return hasFullHouse ? 25 : 0;
-  } else if (id3 === FourOfaKind) {
+  } else if (id2 === FourOfaKind) {
     return hasQuads || hasFiveOfaKind ? sumOfAllDie : 0;
-  } else if (id3 === ThreeOfaKind) {
+  } else if (id2 === ThreeOfaKind) {
     return hasTrips || hasQuads || hasFiveOfaKind ? sumOfAllDie : 0;
-  } else if (id3 === Chance) {
+  } else if (id2 === Chance) {
     return sumOfAllDie;
   } else {
     return 0;
   }
 }, "evaluateCommon");
-var evaluateNumbers = /* @__PURE__ */ __name((id3) => {
+var evaluateNumbers = /* @__PURE__ */ __name((id2) => {
   let hits = 0;
-  const target = id3 + 1;
+  const target = id2 + 1;
   for (let i = 0; i < 5; i++) {
     const val = die[i].value;
     if (val === target) {
@@ -1532,14 +1532,14 @@ var ScoreElement = class {
    * @param index {number} index of this instance
    * @param name {string} the name of this instance
    */
-  constructor(index, name2) {
+  constructor(index, name) {
     this.owner = null;
     this.scoringDiesetSum = 0;
     this.hasFiveOfaKind = false;
     this.available = false;
     this.owned = false;
     this.index = index;
-    this.name = name2;
+    this.name = name;
     this.finalValue = 0;
     this.possibleValue = 0;
     this.scoringDieset = [0, 0, 0, 0, 0];
@@ -2081,9 +2081,9 @@ var cfg = {
       id: "rollbutton",
       idx: 0,
       tabOrder: 1,
-      location: { left: 120, top: 20 },
-      size: { width: 150, height: 50 },
-      boarderWidth: 5,
+      location: { left: 122, top: 20 },
+      size: { width: 46, height: 48 },
+      boarderWidth: 2,
       radius: 10,
       text: "Roll Dice"
     },
@@ -2875,32 +2875,27 @@ var manifest = {
 var view_manifest_default = manifest;
 
 // src/main.ts
-console.info("manifest", view_manifest_default);
 var eventBus = buildEventBus();
 initCloseButton("closebutton");
 var AudioContext = globalThis.AudioContext;
 var context2 = new AudioContext();
 init(context2);
-var can = document.getElementById("surface");
+var cannvy = document.getElementById("surface");
 containerInit(
-  can,
+  cannvy,
   cfg,
   view_manifest_default
 );
 App.init();
 hydrateUI();
 var thisPlayer = {
-  id: "0",
+  id: "1",
   idx: 0,
-  playerName: "Nick",
+  playerName: "Score:",
   color: "brown",
   score: 0,
   lastScore: ""
 };
-var id2 = "1";
-var name = "Score:";
-thisPlayer.id = id2;
-thisPlayer.playerName = name;
 appInstance.resetTurn();
 render();
 export {

@@ -1,6 +1,6 @@
 {
    "build": {
-      "Out": "./dist",
+      "Out": "./",
       "FileName": "bundle.js",
       "Entry": [
          "./src/main.ts"
