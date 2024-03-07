@@ -6,6 +6,18 @@ var __export = (target, all) => {
     __defProp(target, name2, { get: all[name2], enumerable: true });
 };
 
+// ../../Components/ViewModels/closeButton.ts
+var thisID;
+var initCloseButton = /* @__PURE__ */ __name((id3) => {
+  thisID = id3;
+  events.on("ButtonTouched", thisID, () => {
+  });
+}, "initCloseButton");
+
+// ../../Components/ViewModels/constants.ts
+var HAIRSPACE = "\u200A";
+var CARETBAR = "\u258F";
+
 // ../../Components/Views/Button.ts
 var Button_exports = {};
 __export(Button_exports, {
@@ -170,7 +182,7 @@ var Button = class {
     this.zOrder = 0;
     this.tabOrder = el.tabOrder || 0;
     this.location = el.location;
-    const { left: left5, top: top4 } = el.location;
+    const { left: left4, top: top3 } = el.location;
     this.boarderWidth = el.boarderWidth || 1;
     this.size = el.size || { width: 50, height: 30 };
     const { width, height } = this.size;
@@ -255,111 +267,6 @@ var Button = class {
 };
 __name(Button, "Button");
 
-// ../../Components/Views/CheckBox.ts
-var CheckBox_exports = {};
-__export(CheckBox_exports, {
-  default: () => CheckBox
-});
-var CheckBox = class {
-  /**
-   * instantiate a new vitual CheckBox-View
-   */
-  constructor(el) {
-    this.id = 0;
-    this.activeView = true;
-    this.index = -1;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.text = "";
-    this.checked = false;
-    this.name = el.id;
-    this.zOrder = 0;
-    this.tabOrder = el.tabOrder || 0;
-    this.location = el.location;
-    const { left: left5, top: top4 } = el.location;
-    this.boarderWidth = el.boarderWidth || 1;
-    this.size = el.size || { width: 50, height: 30 };
-    const { width, height } = this.size;
-    this.enabled = true;
-    this.path = this.buildPath(el.radius || 0);
-    this.color = el.color || "red";
-    this.fontColor = el.fontColor || "white";
-    this.text = el.text || "??";
-    this.fontSize = el.fontSize || 24;
-    this.render();
-    events.on(
-      "UpdateCheckBox",
-      this.name,
-      (data) => {
-        this.checked = data.checked;
-        this.color = data.color;
-        this.text = data.text;
-        this.update();
-      }
-    );
-  }
-  /** 
-   * build the Path2D 
-   */
-  buildPath(radius) {
-    const path = new Path2D();
-    path.roundRect(
-      this.location.left,
-      this.location.top,
-      this.size.width,
-      this.size.height,
-      radius
-    );
-    return path;
-  }
-  /** 
-   * called from core/systemEvents when this element is touched
-   * fires an event on the eventBus to inform VMs 
-   */
-  touched() {
-    if (this.enabled) {
-      events.fire("CheckBoxTouched", this.name, { checked: this.enabled });
-    }
-  }
-  /** 
-   * updates and renders this view 
-   * called from /core/systemEvents (hover test) 
-   */
-  update() {
-    this.render();
-  }
-  /** 
-   * render this Button view onto the canvas 
-   */
-  render() {
-    ctx.save();
-    ctx.lineWidth = 8;
-    ctx.strokeStyle = this.hovered ? "orange" : "black";
-    ctx.stroke(this.path);
-    ctx.fillStyle = this.color;
-    ctx.fill(this.path);
-    ctx.fillStyle = "white";
-    ctx.restore();
-    ctx.save();
-    ctx.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
-    ctx;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "limegreen";
-    ctx.fillRect(this.location.left, this.location.top, this.size.width, this.size.height);
-    ctx.fillStyle = this.fontColor;
-    const top4 = this.location.top + this.size.height * 0.5;
-    const left5 = this.location.left + this.size.width * 0.5;
-    ctx.fillText(this.text + " ", left5, top4);
-    ctx.restore();
-  }
-};
-__name(CheckBox, "CheckBox");
-
 // ../../Components/Views/Container.ts
 var Container_exports = {};
 __export(Container_exports, {
@@ -427,12 +334,12 @@ var Scrollbar = class {
    * called by the scroll event - container.ts - 63 
    */
   scroll(delta) {
-    const { height, lineHeight, rowCapacity, top: top4 } = this.container;
+    const { height, lineHeight, rowCapacity, top: top3 } = this.container;
     this.cursor.index -= delta;
     if (this.cursor.index < 0)
       this.cursor.index = 0;
     const newTop = this.cursor.index * lineHeight;
-    if (newTop + this.cursor.length >= height + top4) {
+    if (newTop + this.cursor.length >= height + top3) {
     } else {
       this.cursor.top = newTop;
     }
@@ -636,12 +543,6 @@ var TextArea_exports = {};
 __export(TextArea_exports, {
   default: () => TextArea
 });
-
-// ../../Components/ViewModels/constants.ts
-var HAIRSPACE = "\u200A";
-var CARETBAR = "\u258F";
-
-// ../../Components/Views/TextArea.ts
 var dev = false;
 var caretChar = HAIRSPACE;
 var placeholder = "text";
@@ -822,6 +723,111 @@ var TextArea = class extends Container {
 };
 __name(TextArea, "TextArea");
 
+// ../../Components/Views/CheckBox.ts
+var CheckBox_exports = {};
+__export(CheckBox_exports, {
+  default: () => CheckBox
+});
+var CheckBox = class {
+  /**
+   * instantiate a new vitual CheckBox-View
+   */
+  constructor(el) {
+    this.id = 0;
+    this.activeView = true;
+    this.index = -1;
+    this.zOrder = 0;
+    this.tabOrder = 0;
+    this.name = "";
+    this.enabled = true;
+    this.hovered = false;
+    this.focused = false;
+    this.text = "";
+    this.checked = false;
+    this.name = el.id;
+    this.zOrder = 0;
+    this.tabOrder = el.tabOrder || 0;
+    this.location = el.location;
+    const { left: left4, top: top3 } = el.location;
+    this.boarderWidth = el.boarderWidth || 1;
+    this.size = el.size || { width: 50, height: 30 };
+    const { width, height } = this.size;
+    this.enabled = true;
+    this.path = this.buildPath(el.radius || 0);
+    this.color = el.color || "red";
+    this.fontColor = el.fontColor || "white";
+    this.text = el.text || "??";
+    this.fontSize = el.fontSize || 24;
+    this.render();
+    events.on(
+      "UpdateCheckBox",
+      this.name,
+      (data) => {
+        this.checked = data.checked;
+        this.color = data.color;
+        this.text = data.text;
+        this.update();
+      }
+    );
+  }
+  /** 
+   * build the Path2D 
+   */
+  buildPath(radius) {
+    const path = new Path2D();
+    path.roundRect(
+      this.location.left,
+      this.location.top,
+      this.size.width,
+      this.size.height,
+      radius
+    );
+    return path;
+  }
+  /** 
+   * called from core/systemEvents when this element is touched
+   * fires an event on the eventBus to inform VMs 
+   */
+  touched() {
+    if (this.enabled) {
+      events.fire("CheckBoxTouched", this.name, { checked: this.enabled });
+    }
+  }
+  /** 
+   * updates and renders this view 
+   * called from /core/systemEvents (hover test) 
+   */
+  update() {
+    this.render();
+  }
+  /** 
+   * render this Button view onto the canvas 
+   */
+  render() {
+    ctx.save();
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = this.hovered ? "orange" : "black";
+    ctx.stroke(this.path);
+    ctx.fillStyle = this.color;
+    ctx.fill(this.path);
+    ctx.fillStyle = "white";
+    ctx.restore();
+    ctx.save();
+    ctx.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
+    ctx;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "limegreen";
+    ctx.fillRect(this.location.left, this.location.top, this.size.width, this.size.height);
+    ctx.fillStyle = this.fontColor;
+    const top3 = this.location.top + this.size.height * 0.5;
+    const left4 = this.location.left + this.size.width * 0.5;
+    ctx.fillText(this.text + " ", left4, top3);
+    ctx.restore();
+  }
+};
+__name(CheckBox, "CheckBox");
+
 // ../../Components/base_manifest.ts
 var baseManifest = {
   Views: {
@@ -884,8 +890,8 @@ var incrementTickCount = /* @__PURE__ */ __name(() => {
 }, "incrementTickCount");
 var canvas;
 var ctx;
-var setupRenderContext = /* @__PURE__ */ __name((canvas3) => {
-  ctx = canvas3.getContext("2d");
+var setupRenderContext = /* @__PURE__ */ __name((canvas2) => {
+  ctx = canvas2.getContext("2d");
   refreshCanvasContext();
 }, "setupRenderContext");
 var refreshCanvasContext = /* @__PURE__ */ __name(() => {
@@ -1132,9 +1138,9 @@ __name(focusNext, "focusNext");
 
 // ../../Framework/src/render/uiContainer.ts
 var factories;
-function containerInit(canvas3, cfg2, manifest2) {
-  initCFG(canvas3, cfg2, manifest2);
-  setupRenderContext(canvas3);
+function containerInit(canvas2, cfg2, manifest2) {
+  initCFG(canvas2, cfg2, manifest2);
+  setupRenderContext(canvas2);
   initHostEvents();
 }
 __name(containerInit, "containerInit");
@@ -1150,8 +1156,8 @@ var hydrateUI = /* @__PURE__ */ __name(() => {
 function addElement(el) {
   const thisKind = el.kind.toLowerCase();
   if (factories.has(thisKind)) {
-    const View13 = factories.get(thisKind).component;
-    addNode(new View13(el));
+    const View8 = factories.get(thisKind).component;
+    addNode(new View8(el));
   } else {
     const errMsg = `No view named ${el.kind} was found! 
 Make sure your view_manifest is up to date!`;
@@ -1160,892 +1166,6 @@ Make sure your view_manifest is up to date!`;
   }
 }
 __name(addElement, "addElement");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Button.ts
-var Button_exports2 = {};
-__export(Button_exports2, {
-  default: () => Button2
-});
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Text.ts
-var Text_exports2 = {};
-__export(Text_exports2, {
-  default: () => Text2
-});
-var Text2 = class {
-  /** ctor that instantiates a new virtual Text view */
-  constructor(el) {
-    this.id = 0;
-    // N/A
-    this.activeView = false;
-    this.enabled = false;
-    this.hovered = false;
-    this.focused = false;
-    this.path = new Path2D();
-    this.index = 0;
-    this.zOrder = 0;
-    // assigned by activeViews.add()
-    this.tabOrder = 0;
-    this.padding = 10;
-    this.strokeColor = "black";
-    this.hasBorder = false;
-    this.fill = true;
-    this.textBaseline = "middle";
-    this.TextLocation = "middle";
-    this.boundingBox = { left: 0, top: 0, width: 0, height: 0 };
-    this.name = el.id;
-    this.index = el.idx;
-    this.text = el.text ?? "";
-    this.lastText = "";
-    this.size = el.size ?? { width: 30, height: 30 };
-    this.textSize = { width: this.size.width, height: this.size.height };
-    this.location = el.location;
-    this.boundingBox = {
-      left: this.location.left,
-      top: this.location.top,
-      width: this.size.width,
-      height: this.size.height
-    };
-    this.fillColor = el.color ?? "transparent";
-    this.fontColor = el.fontColor || "black";
-    this.fontSize = el.fontSize || 18;
-    this.padding = el.padding || 10;
-    this.textAlign = el.textAlign || "center";
-    this.textBaseline = el.textBaseline ?? "middle";
-    this.TextLocation = el.TextLocation ?? "middle";
-    this.textLocation = { left: el.location.left, top: el.location.top };
-    this.fill = el.fill ?? true;
-    this.hasBorder = el.hasBoarder ?? false;
-    this.calculateMetrics();
-    if (el.bind) {
-      events2.on(
-        "UpdateText",
-        this.name,
-        (data) => {
-          this.calculateMetrics();
-          this.hasBorder = data.border;
-          this.fill = data.fill;
-          this.fillColor = data.fillColor;
-          this.fontColor = data.fontColor;
-          this.lastText = data.text;
-          this.text = data.text;
-          this.update();
-        }
-      );
-    }
-  }
-  /** 
-   * updates and renders this view 
-   * called from a host (Button host or main-VM) 
-   */
-  update() {
-    this.calculateMetrics();
-  }
-  /** 
-   * render this Text-View onto the canvas 
-   */
-  render() {
-    ctx2.save();
-    ctx2.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
-    ctx2.textAlign = this.textAlign;
-    ctx2.textBaseline = this.textBaseline;
-    if (this.fill === true) {
-      ctx2.fillStyle = this.fillColor;
-      ctx2.fillRect(
-        this.location.left,
-        this.location.top,
-        this.size.width,
-        this.size.height
-      );
-    }
-    const bb = this.boundingBox;
-    if (this.hasBorder === true) {
-      ctx2.lineWidth = 1;
-      ctx2.strokeStyle = "black";
-      ctx2.strokeRect(bb.left, bb.top, bb.width, bb.height);
-    }
-    ctx2.fillStyle = this.fontColor;
-    ctx2.fillText(this.text + " ", this.textLocation.left, this.textLocation.top);
-    ctx2.restore();
-  }
-  /** not implemented - Text are not activeElements */
-  touched() {
-  }
-  /** 
-   * calculate location based on font
-   */
-  calculateMetrics() {
-    switch (this.TextLocation) {
-      case "top":
-        this.textLocation.top = this.location.top + this.padding;
-        break;
-      case "middle":
-        this.textLocation.top = this.location.top + this.size.height * 0.5;
-        break;
-      default:
-        this.textLocation.top = this.location.top + this.padding;
-        break;
-    }
-    switch (this.textAlign) {
-      case "left":
-        this.textLocation.left = this.location.left + this.padding;
-        break;
-      case "center":
-        this.textLocation.left = this.location.left + this.size.width * 0.5;
-        break;
-      case "right":
-        this.textLocation.left = this.location.left + this.padding;
-        break;
-      default:
-        this.textLocation.left = this.location.left + this.padding;
-        break;
-    }
-    this.render();
-  }
-};
-__name(Text2, "Text");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Button.ts
-var Button2 = class {
-  /**
-   * instantiate a new vitual Button-View
-   */
-  constructor(el) {
-    this.id = 0;
-    this.activeView = true;
-    this.index = -1;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.text = "";
-    this.name = el.id;
-    this.zOrder = 0;
-    this.tabOrder = el.tabOrder || 0;
-    this.location = el.location;
-    const { left: left5, top: top4 } = el.location;
-    this.boarderWidth = el.boarderWidth || 1;
-    this.size = el.size || { width: 50, height: 30 };
-    const { width, height } = this.size;
-    this.enabled = true;
-    this.path = this.buildPath(el.radius || 0);
-    this.textNode = new Text2(
-      {
-        kind: "Text",
-        idx: -1,
-        tabOrder: 0,
-        id: this.name + "Label",
-        text: el.text || "",
-        location: this.location,
-        size: this.size,
-        fontSize: el.fontSize || 18,
-        bind: true
-      }
-    );
-    this.color = el.color || "red";
-    this.fontColor = el.fontColor || "white";
-    this.text = el.text || "??";
-    this.render();
-    events2.on(
-      "UpdateButton",
-      this.name,
-      (data) => {
-        this.enabled = data.enabled;
-        this.color = data.color;
-        this.text = data.text;
-        this.update();
-      }
-    );
-  }
-  /** 
-   * build the Path2D 
-   */
-  buildPath(radius) {
-    const path = new Path2D();
-    path.roundRect(
-      this.location.left,
-      this.location.top,
-      this.size.width,
-      this.size.height,
-      radius
-    );
-    return path;
-  }
-  /** 
-   * called from core/systemEvents when this element is touched
-   * fires an event on the eventBus to inform VMs 
-   */
-  touched() {
-    console.log("Button " + this.name + " touched!");
-    if (this.enabled) {
-      events2.fire("ButtonTouched", this.name, null);
-    }
-  }
-  /** 
-   * updates and renders this view 
-   * called from /core/systemEvents (hover test) 
-   */
-  update() {
-    this.render();
-  }
-  /** 
-   * render this Button view onto the canvas 
-   */
-  render() {
-    ctx2.save();
-    ctx2.lineWidth = this.boarderWidth;
-    ctx2.strokeStyle = this.hovered ? "orange" : "black";
-    ctx2.stroke(this.path);
-    ctx2.fillStyle = this.color;
-    ctx2.fill(this.path);
-    ctx2.fillStyle = "white";
-    ctx2.restore();
-    this.textNode.fillColor = this.color;
-    this.textNode.fontColor = this.fontColor;
-    this.textNode.text = this.text;
-    this.textNode.update();
-  }
-};
-__name(Button2, "Button");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/CheckBox.ts
-var CheckBox_exports2 = {};
-__export(CheckBox_exports2, {
-  default: () => CheckBox2
-});
-var CheckBox2 = class {
-  /**
-   * instantiate a new vitual CheckBox-View
-   */
-  constructor(el) {
-    this.id = 0;
-    this.activeView = true;
-    this.index = -1;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.text = "";
-    this.checked = false;
-    this.name = el.id;
-    this.zOrder = 0;
-    this.tabOrder = el.tabOrder || 0;
-    this.location = el.location;
-    const { left: left5, top: top4 } = el.location;
-    this.boarderWidth = el.boarderWidth || 1;
-    this.size = el.size || { width: 50, height: 30 };
-    const { width, height } = this.size;
-    this.enabled = true;
-    this.path = this.buildPath(el.radius || 0);
-    this.color = el.color || "red";
-    this.fontColor = el.fontColor || "white";
-    this.text = el.text || "??";
-    this.fontSize = el.fontSize || 24;
-    this.render();
-    events2.on(
-      "UpdateCheckBox",
-      this.name,
-      (data) => {
-        this.checked = data.checked;
-        this.color = data.color;
-        this.text = data.text;
-        this.update();
-      }
-    );
-  }
-  /** 
-   * build the Path2D 
-   */
-  buildPath(radius) {
-    const path = new Path2D();
-    path.roundRect(
-      this.location.left,
-      this.location.top,
-      this.size.width,
-      this.size.height,
-      radius
-    );
-    return path;
-  }
-  /** 
-   * called from core/systemEvents when this element is touched
-   * fires an event on the eventBus to inform VMs 
-   */
-  touched() {
-    if (this.enabled) {
-      events2.fire("CheckBoxTouched", this.name, { checked: this.enabled });
-    }
-  }
-  /** 
-   * updates and renders this view 
-   * called from /core/systemEvents (hover test) 
-   */
-  update() {
-    this.render();
-  }
-  /** 
-   * render this Button view onto the canvas 
-   */
-  render() {
-    ctx2.save();
-    ctx2.lineWidth = 8;
-    ctx2.strokeStyle = this.hovered ? "orange" : "black";
-    ctx2.stroke(this.path);
-    ctx2.fillStyle = this.color;
-    ctx2.fill(this.path);
-    ctx2.fillStyle = "white";
-    ctx2.restore();
-    ctx2.save();
-    ctx2.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
-    ctx2;
-    ctx2.textAlign = "center";
-    ctx2.textBaseline = "middle";
-    ctx2.fillStyle = "limegreen";
-    ctx2.fillRect(this.location.left, this.location.top, this.size.width, this.size.height);
-    ctx2.fillStyle = this.fontColor;
-    const top4 = this.location.top + this.size.height * 0.5;
-    const left5 = this.location.left + this.size.width * 0.5;
-    ctx2.fillText(this.text + " ", left5, top4);
-    ctx2.restore();
-  }
-};
-__name(CheckBox2, "CheckBox");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Container.ts
-var Container_exports2 = {};
-__export(Container_exports2, {
-  default: () => Container2
-});
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Scrollbar.ts
-var Scrollbar2 = class {
-  /**
-   *  Scrollbar ctor
-   */
-  constructor(host) {
-    this.mousePos = 0;
-    this.dragging = false;
-    this.hovered = false;
-    this.visible = true;
-    this.left = 0;
-    this.top = 0;
-    this.width = 0;
-    this.height = 0;
-    this.container = host;
-    this.left = host.left + host.width - host.scrollBarWidth, this.top = host.top;
-    this.height = host.height, this.width = host.scrollBarWidth;
-    this.fill = "#dedede";
-    this.cursor = {
-      index: 0,
-      top: 0,
-      bottom: host.height - host.scrollBarWidth,
-      left: this.left + this.width - host.scrollBarWidth,
-      width: host.scrollBarWidth,
-      length: host.scrollBarWidth,
-      fill: "#bababa"
-    };
-    this.path = new Path2D();
-    this.path.rect(
-      this.left,
-      this.top,
-      this.width - 2,
-      this.height
-    );
-    this.mousePos = 0;
-  }
-  /**
-   *  called from - container.ts - 97
-   */
-  render(ItemsLength, capacity) {
-    const ratio = capacity / ItemsLength;
-    this.cursor.length = 100;
-    ctx2.save();
-    ctx2.fillStyle = this.fill;
-    ctx2.fill(this.path);
-    ctx2.fillStyle = "red";
-    ctx2.fillRect(
-      this.cursor.left,
-      this.container.top + this.cursor.top,
-      this.cursor.width,
-      this.cursor.length
-    );
-    ctx2.lineWidth = 2;
-    ctx2.strokeStyle = this.hovered ? "orange" : "#bababa";
-    ctx2.stroke(this.path);
-    ctx2.restore();
-  }
-  /** 
-   * called by the scroll event - container.ts - 63 
-   */
-  scroll(delta) {
-    const { height, lineHeight, rowCapacity, top: top4 } = this.container;
-    this.cursor.index -= delta;
-    if (this.cursor.index < 0)
-      this.cursor.index = 0;
-    const newTop = this.cursor.index * lineHeight;
-    if (newTop + this.cursor.length >= height + top4) {
-    } else {
-      this.cursor.top = newTop;
-    }
-    if (this.cursor.top < 0)
-      this.cursor.top = 0;
-    this.container.render();
-  }
-};
-__name(Scrollbar2, "Scrollbar");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Container.ts
-var Container2 = class {
-  /** 
-   * Container ctor 
-   */
-  constructor(el) {
-    this.id = 0;
-    this.activeView = true;
-    this.index = 1;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.padding = 10;
-    this.left = 0;
-    this.top = 0;
-    this.lineHeight = 0;
-    this.showPlaceholder = true;
-    this.scrollBarWidth = 25;
-    /** the number of characters that will fit in this width */
-    this.textCapacity = 0;
-    /** number of rows that will fit container height */
-    this.rowCapacity = 0;
-    this.name = el.id;
-    this.tabOrder = el.tabOrder || 0;
-    this.left = el.location.left;
-    this.top = el.location.top;
-    this.width = el.size?.width ?? 100;
-    this.height = el.size?.height ?? 40;
-    this.color = el.color || "white";
-    this.path = new Path2D();
-    this.path.rect(
-      this.left,
-      this.top,
-      this.width,
-      this.height
-    );
-    this.scrollBar = new Scrollbar2(this);
-    events2.on("Scroll", "", (evt) => {
-      this.scrollBar.scroll(evt.deltaY);
-    });
-    events2.on("TextMetrics", this.name, (data) => {
-      this.textCapacity = data.capacity.columns - 1;
-      this.rowCapacity = data.capacity.rows;
-    });
-  }
-  touched() {
-  }
-  update() {
-    this.render();
-  }
-  render() {
-    ctx2.save();
-    ctx2.lineWidth = 2;
-    if (this.focused === false) {
-      ctx2.strokeStyle = this.hovered ? "orange" : "black";
-      ctx2.fillStyle = this.color;
-    } else {
-      ctx2.strokeStyle = "blue";
-      ctx2.fillStyle = "white";
-    }
-    ctx2.stroke(this.path);
-    ctx2.fill(this.path);
-    ctx2.restore();
-    if (this.focused === true) {
-      this.scrollBar.render(50, 27);
-    }
-  }
-};
-__name(Container2, "Container");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Popup.ts
-var Popup_exports2 = {};
-__export(Popup_exports2, {
-  default: () => Popup2
-});
-var left3 = 1;
-var top2 = 1;
-var Popup2 = class {
-  /** ctor that instantiates a new vitual Popup view */
-  constructor(el) {
-    this.id = 0;
-    // assigned by activeViews.add() 
-    this.index = -1;
-    this.activeView = true;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.color = "black";
-    this.text = "";
-    this.fontColor = "red";
-    this.fontSize = 28;
-    this.visible = true;
-    this.tabOrder = el.tabOrder || 0;
-    this.enabled = true;
-    this.color = "white";
-    this.location = el.location;
-    this.hiddenPath = new Path2D();
-    this.hiddenPath.rect(1, 1, 1, 1);
-    this.size = el.size || { width: 300, height: 300 };
-    this.shownPath = this.buildPath(el.radius || 30);
-    this.path = this.hiddenPath;
-    this.fontSize = el.fontSize || 24;
-    this.textNode = new Text2(
-      {
-        kind: "Text",
-        idx: -1,
-        tabOrder: 0,
-        id: this.name + "Label",
-        text: el.text || "",
-        location: this.location,
-        size: this.size,
-        bind: true
-      }
-    );
-    events2.on("ShowPopup", "", (data) => {
-      this.show(data.msg);
-    });
-    events2.on("HidePopup", "", () => this.hide());
-  }
-  /** build a Path2D */
-  buildPath(radius) {
-    const path = new Path2D();
-    path.roundRect(this.location.left, this.location.top, this.size.width, this.size.height, radius);
-    return path;
-  }
-  /** show the virtual Popup view */
-  show(msg) {
-    events2.fire("FocusPopup", " ", this);
-    this.text = msg;
-    left3 = this.location.left;
-    top2 = this.location.top;
-    this.path = this.shownPath;
-    this.visible = true;
-    setHasVisiblePopup2(true);
-    this.render();
-  }
-  /** hide the virtual Popup view */
-  hide() {
-    if (this.visible) {
-      left3 = 1;
-      top2 = 1;
-      this.path = this.hiddenPath;
-      this.visible = false;
-      setHasVisiblePopup2(false);
-    }
-  }
-  /** called from Surface/canvasEvents when this element has been touched */
-  touched() {
-    this.hide();
-    events2.fire("PopupReset", "", null);
-  }
-  /** update this virtual Popups view (render it) */
-  update() {
-    if (this.visible)
-      this.render();
-  }
-  /** render this virtual Popup view */
-  render() {
-    ctx2.save();
-    ctx2.shadowColor = "#404040";
-    ctx2.shadowBlur = 45;
-    ctx2.shadowOffsetX = 5;
-    ctx2.shadowOffsetY = 5;
-    ctx2.fillStyle = windowCFG2.containerColor;
-    ctx2.fill(this.path);
-    ctx2.shadowBlur = 0;
-    ctx2.shadowOffsetX = 0;
-    ctx2.shadowOffsetY = 0;
-    ctx2.lineWidth = 1;
-    ctx2.strokeStyle = windowCFG2.textColor;
-    ctx2.stroke(this.path);
-    this.textNode.fontSize = this.fontSize;
-    this.textNode.fillColor = this.color;
-    this.textNode.fontColor = this.fontColor;
-    this.textNode.text = this.text;
-    this.textNode.update();
-    ctx2.restore();
-    this.visible = true;
-  }
-};
-__name(Popup2, "Popup");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/TextArea.ts
-var TextArea_exports2 = {};
-__export(TextArea_exports2, {
-  default: () => TextArea2
-});
-var dev2 = false;
-var caretChar2 = HAIRSPACE2;
-var placeholder2 = "text";
-var TextArea2 = class extends Container2 {
-  constructor(el) {
-    super(el);
-    this.id = 0;
-    this.activeView = true;
-    this.index = 1;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.log = false;
-    this.padding = 10;
-    this.lineHeight = 0;
-    this.text = "";
-    this.lines = [];
-    this.trimmedLeft = "";
-    this.trimmedRight = "";
-    this.insertionColumn = 0;
-    this.insertionRow = 0;
-    this.selectStart = 0;
-    this.selectEnd = 0;
-    this.widthPerChar = 15;
-    /** 
-     * the number of characters that will fit in this width  
-     */
-    this.textCapacity = 0;
-    this.rowCapacity = 0;
-    this.showPlaceholder = true;
-    this.name = el.id;
-    this.tabOrder = el.tabOrder || 0;
-    this.location = el.location;
-    this.size = el.size || { width: 100, height: 40 };
-    this.color = el.color || "white";
-    this.fontColor = "black";
-    this.fontSize = el.fontSize || 28;
-    this.getMetrics();
-    this.path = new Path2D();
-    this.path.rect(
-      this.location.left,
-      this.location.top,
-      this.size.width,
-      this.size.height
-    );
-    events2.fire(
-      "TextMetrics",
-      this.name,
-      {
-        size: this.size,
-        capacity: { rows: this.rowCapacity, columns: this.textCapacity }
-      }
-    );
-    events2.on("UpdateTextArea", this.name, (data) => {
-      const {
-        _reason,
-        text,
-        lines,
-        focused,
-        insertionColumn,
-        insertionRow,
-        selectStart,
-        selectEnd
-      } = data;
-      this.insertionColumn = insertionColumn;
-      this.insertionRow = insertionRow;
-      this.selectStart = selectStart;
-      this.selectEnd = selectEnd;
-      this.focused = focused;
-      this.lines = lines;
-      this.text = text;
-      this.showPlaceholder = this.text.length === 0;
-      if (this.focused === true) {
-        caretChar2 = CARETBAR2;
-      }
-      let str = "";
-      for (const line of this.lines) {
-        str += `${JSON.stringify(line)}
-            `;
-      }
-      this.render();
-    });
-    this.render();
-  }
-  getMetrics() {
-    ctx2.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
-    const t = "This is a test! A very very long text!";
-    const m = ctx2.measureText(t);
-    this.lineHeight = m.fontBoundingBoxAscent + m.fontBoundingBoxDescent;
-    this.size.height = this.size.height;
-    this.widthPerChar = m.width / t.length;
-    this.textCapacity = this.size.width / this.widthPerChar;
-  }
-  getUnusedSpace() {
-    return this.size.width - ctx2.measureText(this.text).width;
-  }
-  touched() {
-    events2.fire("TextViewTouched", this.name, null);
-  }
-  update() {
-    this.render();
-  }
-  /** render the container and text */
-  render() {
-    super.render();
-    ctx2.textAlign = "left";
-    ctx2.textBaseline = "alphabetic";
-    ctx2.save();
-    if (this.focused === true) {
-      if (tickCount2 === 30)
-        caretChar2 = HAIRSPACE2;
-      if (tickCount2 === 0)
-        caretChar2 = CARETBAR2;
-    } else {
-      caretChar2 = "";
-    }
-    let lineNumber = 0;
-    for (const line of this.lines) {
-      if (line.length <= 0)
-        continue;
-      const textTop = this.location.top + this.lineHeight * (lineNumber + 1);
-      if (this.showPlaceholder && this.focused === false) {
-        ctx2.fillStyle = "Gray";
-        ctx2.fillText(
-          placeholder2,
-          this.location.left + this.padding,
-          textTop
-        );
-      } else {
-        let txt = "";
-        this.positionCaret(line.text);
-        if (line.hasSelection)
-          this.renderHighlight(line);
-        txt = this.insertionRow === lineNumber ? this.trimmedLeft + caretChar2 + this.trimmedRight : line.text;
-        ctx2.fillStyle = this.fontColor;
-        ctx2.fillText(
-          txt,
-          this.location.left + this.padding,
-          textTop
-        );
-      }
-      ctx2.restore();
-      lineNumber++;
-    }
-  }
-  /** locate Caret */
-  positionCaret(line) {
-    const col = this.insertionColumn;
-    this.trimmedLeft = line.substring(0, col);
-    this.trimmedRight = line.substring(col);
-  }
-  /** 
-   * Highlight selected text 
-   */
-  renderHighlight(line) {
-    const { lineHeight, padding, location, selectStart, selectEnd, text } = this;
-    const rectX = selectStart <= line.start ? 0 : ctx2.measureText(text.substring(line.start, selectStart)).width;
-    const endFrom = selectStart > line.start ? selectStart : line.start;
-    const endTo = selectEnd >= line.end ? line.end : selectEnd;
-    const rectWidth = ctx2.measureText(text.substring(endFrom, endTo)).width;
-    const rectY = location.top + lineHeight * line.index + padding;
-    if (dev2) {
-      console.log(`hiStart ${rectX}, hiEnd ${rectWidth}, hiTop ${rectY}`);
-      console.log(`selectStart ${selectStart}, selectEnd ${selectEnd}`);
-      console.log(`lineStart ${line.start}, lineEnd ${line.end}`);
-    }
-    ctx2.fillStyle = "lightblue";
-    ctx2.fillRect(
-      location.left + padding + rectX,
-      rectY,
-      rectWidth,
-      lineHeight
-    );
-  }
-};
-__name(TextArea2, "TextArea");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/base_manifest.ts
-var baseManifest2 = {
-  Views: {
-    "./Views/Button.ts": Button_exports2,
-    "./Views/CheckBox.ts": CheckBox_exports2,
-    "./Views/Container.ts": Container_exports2,
-    "./Views/Popup.ts": Popup_exports2,
-    "./Views/Text.ts": Text_exports2,
-    "./Views/TextArea.ts": TextArea_exports2
-  },
-  baseUrl: import.meta.url
-};
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/render/renderContext.ts
-var windowCFG2 = {
-  containerColor: "snow",
-  textColor: "black"
-};
-var hasVisiblePopup2 = false;
-var setHasVisiblePopup2 = /* @__PURE__ */ __name((val) => hasVisiblePopup2 = val, "setHasVisiblePopup");
-var tickCount2 = 0;
-var ctx2;
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/coms/eventBus.ts
-function buildEventBus2() {
-  const eventHandlers = /* @__PURE__ */ new Map();
-  const newEventBus = {
-    /** 
-     * on - registers a handler function to be executed when an event is sent
-     *  
-     * @param {T} eventName - event name (one of `TypedEvents` only)!
-     * @param {string} id - id of a target element (may be an empty string)
-     * @param {Handler} handler - event handler callback function
-     */
-    on(eventName, id3, handler) {
-      const keyName = eventName + "-" + id3;
-      if (eventHandlers.has(keyName)) {
-        const handlers = eventHandlers.get(keyName);
-        handlers.push(handler);
-      } else {
-        eventHandlers.set(keyName, [handler]);
-      }
-    },
-    /** 
-     * execute all registered handlers for a named event
-     * @param {key} eventName - event name - one of `TypedEvents` only!
-     * @param {string} id - id of a target element (may be an empty string)
-     * @param {TypedEvents[key]} data - data payload, typed for this category of event
-     */
-    fire(eventName, id3, data) {
-      const keyName = eventName + "-" + id3;
-      const handlers = eventHandlers.get(keyName);
-      if (handlers) {
-        for (const handler of handlers) {
-          handler(data);
-        }
-      }
-    }
-  };
-  return newEventBus;
-}
-__name(buildEventBus2, "buildEventBus");
-var events2 = buildEventBus2();
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/ViewModels/closeButton.ts
-var thisID;
-var initCloseButton2 = /* @__PURE__ */ __name((id3) => {
-  thisID = id3;
-  events2.on("ButtonTouched", thisID, () => {
-  });
-}, "initCloseButton");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/ViewModels/constants.ts
-var HAIRSPACE2 = "\u200A";
-var CARETBAR2 = "\u258F";
 
 // src/ViewModels/sounds.ts
 var context;
@@ -3181,10 +2301,10 @@ function buildDieFaces() {
   const { size: dieSize, radius, color } = DIE_CFG;
   r = radius;
   const start = performance.now();
-  const canvas3 = document.createElement("canvas");
-  const ctx3 = canvas3.getContext("2d");
-  canvas3.width = dieSize.width;
-  canvas3.height = dieSize.height;
+  const canvas2 = document.createElement("canvas");
+  const ctx2 = canvas2.getContext("2d");
+  canvas2.width = dieSize.width;
+  canvas2.height = dieSize.height;
   const faces = [
     new ImageData(1, 1),
     new ImageData(1, 1),
@@ -3200,45 +2320,45 @@ function buildDieFaces() {
     new ImageData(1, 1)
   ];
   size = dieSize.width;
-  ctx3.fillStyle = color;
-  ctx3.fillRect(0, 0, size, size);
+  ctx2.fillStyle = color;
+  ctx2.fillRect(0, 0, size, size);
   for (let i = 0; i < 7; i++) {
-    faces[i] = drawDie(ctx3, false, i);
-    frozenFaces[i] = drawDie(ctx3, true, i);
+    faces[i] = drawDie(ctx2, false, i);
+    frozenFaces[i] = drawDie(ctx2, true, i);
   }
   console.log(`Building 12 die face images took ${(performance.now() - start).toFixed()}ms!`);
   return { faces, frozenFaces };
 }
 __name(buildDieFaces, "buildDieFaces");
-function drawDie(ctx3, frozen, value) {
-  ctx3.save();
+function drawDie(ctx2, frozen, value) {
+  ctx2.save();
   if (frozen) {
-    ctx3.strokeStyle = "silver";
-    ctx3.fillStyle = "WhiteSmoke";
+    ctx2.strokeStyle = "silver";
+    ctx2.fillStyle = "WhiteSmoke";
   } else {
-    ctx3.strokeStyle = "black";
-    ctx3.fillStyle = "white";
+    ctx2.strokeStyle = "black";
+    ctx2.fillStyle = "white";
   }
-  drawDieFace(ctx3);
-  drawGlare(ctx3);
-  ctx3.fillStyle = frozen ? "silver" : "black";
-  drawDots(ctx3, value);
-  ctx3.restore();
-  return ctx3.getImageData(0, 0, size, size);
+  drawDieFace(ctx2);
+  drawGlare(ctx2);
+  ctx2.fillStyle = frozen ? "silver" : "black";
+  drawDots(ctx2, value);
+  ctx2.restore();
+  return ctx2.getImageData(0, 0, size, size);
 }
 __name(drawDie, "drawDie");
-function drawDieFace(ctx3) {
-  ctx3.beginPath();
-  ctx3.roundRect(0, 0, size, size, r);
-  ctx3.closePath();
-  ctx3.fill();
-  ctx3.lineWidth = 2;
-  ctx3.strokeStyle = "black";
-  ctx3.stroke();
-  ctx3.lineWidth = 1;
+function drawDieFace(ctx2) {
+  ctx2.beginPath();
+  ctx2.roundRect(0, 0, size, size, r);
+  ctx2.closePath();
+  ctx2.fill();
+  ctx2.lineWidth = 2;
+  ctx2.strokeStyle = "black";
+  ctx2.stroke();
+  ctx2.lineWidth = 1;
 }
 __name(drawDieFace, "drawDieFace");
-function drawGlare(ctx3) {
+function drawGlare(ctx2) {
   const offset = 5;
   const bottomLeftX = offset;
   const bottomLeftY = size - offset;
@@ -3246,61 +2366,61 @@ function drawGlare(ctx3) {
   const bottomRightY = size - offset;
   const quarter = size * 0.25;
   const threeQuarter = quarter * 3;
-  ctx3.fillStyle = "rgba(200, 200, 200, 0.4)";
-  ctx3.beginPath();
-  ctx3.moveTo(bottomLeftX, bottomLeftY);
-  ctx3.lineTo(bottomRightX, bottomRightY);
-  ctx3.bezierCurveTo(quarter, threeQuarter, quarter, threeQuarter, offset, offset);
-  ctx3.closePath();
-  ctx3.fill();
-  ctx3.save();
+  ctx2.fillStyle = "rgba(200, 200, 200, 0.4)";
+  ctx2.beginPath();
+  ctx2.moveTo(bottomLeftX, bottomLeftY);
+  ctx2.lineTo(bottomRightX, bottomRightY);
+  ctx2.bezierCurveTo(quarter, threeQuarter, quarter, threeQuarter, offset, offset);
+  ctx2.closePath();
+  ctx2.fill();
+  ctx2.save();
 }
 __name(drawGlare, "drawGlare");
-function drawDots(ctx3, dieValue) {
+function drawDots(ctx2, dieValue) {
   const quarter = size / 4;
   const center = quarter * 2;
   const middle = quarter * 2;
-  const left5 = quarter;
-  const top4 = quarter;
+  const left4 = quarter;
+  const top3 = quarter;
   const right = quarter * 3;
   const bottom = quarter * 3;
   const dotSize = size / 12;
   const doDot = drawDot;
   if (dieValue === 1) {
-    doDot(ctx3, middle, center, dotSize);
+    doDot(ctx2, middle, center, dotSize);
   } else if (dieValue === 2) {
-    doDot(ctx3, top4, left5, dotSize);
-    doDot(ctx3, bottom, right, dotSize);
+    doDot(ctx2, top3, left4, dotSize);
+    doDot(ctx2, bottom, right, dotSize);
   } else if (dieValue === 3) {
-    drawDot(ctx3, top4, left5, dotSize);
-    drawDot(ctx3, middle, center, dotSize);
-    drawDot(ctx3, bottom, right, dotSize);
+    drawDot(ctx2, top3, left4, dotSize);
+    drawDot(ctx2, middle, center, dotSize);
+    drawDot(ctx2, bottom, right, dotSize);
   } else if (dieValue === 4) {
-    drawDot(ctx3, top4, left5, dotSize);
-    drawDot(ctx3, top4, right, dotSize);
-    drawDot(ctx3, bottom, left5, dotSize);
-    drawDot(ctx3, bottom, right, dotSize);
+    drawDot(ctx2, top3, left4, dotSize);
+    drawDot(ctx2, top3, right, dotSize);
+    drawDot(ctx2, bottom, left4, dotSize);
+    drawDot(ctx2, bottom, right, dotSize);
   } else if (dieValue === 5) {
-    drawDot(ctx3, top4, left5, dotSize);
-    drawDot(ctx3, top4, right, dotSize);
-    drawDot(ctx3, middle, center, dotSize);
-    drawDot(ctx3, bottom, left5, dotSize);
-    drawDot(ctx3, bottom, right, dotSize);
+    drawDot(ctx2, top3, left4, dotSize);
+    drawDot(ctx2, top3, right, dotSize);
+    drawDot(ctx2, middle, center, dotSize);
+    drawDot(ctx2, bottom, left4, dotSize);
+    drawDot(ctx2, bottom, right, dotSize);
   } else if (dieValue === 6) {
-    drawDot(ctx3, top4, left5, dotSize);
-    drawDot(ctx3, top4, right, dotSize);
-    drawDot(ctx3, middle, left5, dotSize);
-    drawDot(ctx3, middle, right, dotSize);
-    drawDot(ctx3, bottom, left5, dotSize);
-    drawDot(ctx3, bottom, right, dotSize);
+    drawDot(ctx2, top3, left4, dotSize);
+    drawDot(ctx2, top3, right, dotSize);
+    drawDot(ctx2, middle, left4, dotSize);
+    drawDot(ctx2, middle, right, dotSize);
+    drawDot(ctx2, bottom, left4, dotSize);
+    drawDot(ctx2, bottom, right, dotSize);
   }
 }
 __name(drawDots, "drawDots");
-function drawDot(ctx3, y2, x2, dotSize) {
-  ctx3.beginPath();
-  ctx3.arc(x2, y2, dotSize, 0, Math.PI * 2, true);
-  ctx3.closePath();
-  ctx3.fill();
+function drawDot(ctx2, y2, x2, dotSize) {
+  ctx2.beginPath();
+  ctx2.arc(x2, y2, dotSize, 0, Math.PI * 2, true);
+  ctx2.closePath();
+  ctx2.fill();
 }
 __name(drawDot, "drawDot");
 
@@ -3392,13 +2512,13 @@ Die.frozenFaces = [
 ];
 
 // src/Views/Popup.ts
-var Popup_exports3 = {};
-__export(Popup_exports3, {
-  default: () => Popup3
+var Popup_exports2 = {};
+__export(Popup_exports2, {
+  default: () => Popup2
 });
-var left4 = 1;
-var top3 = 1;
-var Popup3 = class {
+var left3 = 1;
+var top2 = 1;
+var Popup2 = class {
   /** ctor that instantiates a new vitual Popup view */
   constructor(el) {
     this.id = 0;
@@ -3444,8 +2564,8 @@ var Popup3 = class {
     events.fire("FocusPopup", " ", this);
     this.title = data.title;
     this.text = data.msg;
-    left4 = this.location.left;
-    top3 = this.location.top;
+    left3 = this.location.left;
+    top2 = this.location.top;
     this.path = this.shownPath;
     this.visible = true;
     this.saveScreenToBuffer();
@@ -3455,8 +2575,8 @@ var Popup3 = class {
   /** hide the virtual Popup view */
   hide() {
     if (this.visible) {
-      left4 = 1;
-      top3 = 1;
+      left3 = 1;
+      top2 = 1;
       this.path = this.hiddenPath;
       this.restoreScreenFromBuffer();
       this.visible = false;
@@ -3465,9 +2585,9 @@ var Popup3 = class {
   }
   /** takes a snapshot of our current canvas bitmap */
   saveScreenToBuffer() {
-    const { left: left5, top: top4 } = this.location;
+    const { left: left4, top: top3 } = this.location;
     const { width, height } = this.size;
-    console.log(`Buffer = left:${left5}, top:${top4}, width:${width}, height:${height}`);
+    console.log(`Buffer = left:${left4}, top:${top3}, width:${width}, height:${height}`);
     this.buffer = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
   /** paint the canvas with our current snapshot */
@@ -3503,16 +2623,16 @@ var Popup3 = class {
     ctx.stroke(this.path);
     ctx.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
     ctx.textAlign = this.textAlign;
-    ctx.strokeText(this.title + " ", left4 + 175, top3 + 100);
-    let txtTop = top3 + 100;
+    ctx.strokeText(this.title + " ", left3 + 175, top2 + 100);
+    let txtTop = top2 + 100;
     this.text.forEach((str) => {
-      ctx.strokeText(str + " ", left4 + 175, txtTop += 50);
+      ctx.strokeText(str + " ", left3 + 175, txtTop += 50);
     });
     ctx.restore();
     this.visible = true;
   }
 };
-__name(Popup3, "Popup");
+__name(Popup2, "Popup");
 
 // src/Views/ScoreButton.ts
 var ScoreButton_exports = {};
@@ -3522,43 +2642,43 @@ __export(ScoreButton_exports, {
 
 // src/ViewModels/pathFactory.ts
 function buildRightScore(location, size2) {
-  const { left: left5, right, top: top4, bottom, width, height, radius } = getPathGeometry(location, size2);
-  const halfWidth = left5 + width * 0.3;
-  const halfHeight = top4 + height * 0.5 + 5;
+  const { left: left4, right, top: top3, bottom, width, height, radius } = getPathGeometry(location, size2);
+  const halfWidth = left4 + width * 0.3;
+  const halfHeight = top3 + height * 0.5 + 5;
   const p = new Path2D();
-  p.moveTo(halfWidth + radius, top4);
-  p.arcTo(right, top4, right, top4 + radius, radius);
+  p.moveTo(halfWidth + radius, top3);
+  p.arcTo(right, top3, right, top3 + radius, radius);
   p.arcTo(right, bottom, right - radius, bottom, radius);
-  p.arcTo(left5, bottom, left5, bottom - radius, radius);
-  p.arcTo(left5, halfHeight, left5 + radius, halfHeight, radius);
+  p.arcTo(left4, bottom, left4, bottom - radius, radius);
+  p.arcTo(left4, halfHeight, left4 + radius, halfHeight, radius);
   p.arcTo(halfWidth, halfHeight, halfWidth, halfHeight - radius, radius);
-  p.arcTo(halfWidth, top4, halfWidth + radius, top4, radius);
+  p.arcTo(halfWidth, top3, halfWidth + radius, top3, radius);
   return p;
 }
 __name(buildRightScore, "buildRightScore");
 function buildLeftScore(location, size2) {
-  const { left: left5, right, top: top4, bottom, width, height, radius } = getPathGeometry(location, size2);
-  const halfWidth = left5 + width * 0.7;
-  const halfHeight = top4 + height * 0.5 - 5;
+  const { left: left4, right, top: top3, bottom, width, height, radius } = getPathGeometry(location, size2);
+  const halfWidth = left4 + width * 0.7;
+  const halfHeight = top3 + height * 0.5 - 5;
   const p = new Path2D();
-  p.moveTo(left5 + radius, top4);
-  p.arcTo(right, top4, right, top4 + radius, radius);
+  p.moveTo(left4 + radius, top3);
+  p.arcTo(right, top3, right, top3 + radius, radius);
   p.arcTo(right, halfHeight, right - radius, halfHeight, radius);
   p.arcTo(halfWidth, halfHeight, halfWidth, halfHeight + radius, radius);
   p.arcTo(halfWidth, bottom, halfWidth - radius, bottom, radius);
-  p.arcTo(left5, bottom, left5, bottom - radius, radius);
-  p.arcTo(left5, top4, left5 + radius, top4, radius);
+  p.arcTo(left4, bottom, left4, bottom - radius, radius);
+  p.arcTo(left4, top3, left4 + radius, top3, radius);
   return p;
 }
 __name(buildLeftScore, "buildLeftScore");
 var getPathGeometry = /* @__PURE__ */ __name((location, size2, radius = 10) => {
-  const { left: left5, top: top4 } = location;
+  const { left: left4, top: top3 } = location;
   const { width, height } = size2;
   return {
-    left: left5,
-    right: left5 + width,
-    top: top4,
-    bottom: top4 + height,
+    left: left4,
+    right: left4 + width,
+    top: top3,
+    bottom: top3 + height,
     width,
     height,
     radius
@@ -3618,38 +2738,38 @@ var ScoreButton = class {
   /** build the correct (left/right) path and Txt locations */
   buildPath() {
     const s = this;
-    const { left: left5, top: top4 } = s.location;
+    const { left: left4, top: top3 } = s.location;
     if (this.isLeftHanded) {
       s.path = buildRightScore(s.location, s.size);
-      s.upperName = new Text_exports2.default({
+      s.upperName = new Text_exports.default({
         kind: "text",
         idx: -1,
         tabOrder: 0,
         id: s.name + "-upperText",
         text: s.upperText,
-        location: { left: left5 + 40, top: top4 + 10 },
+        location: { left: left4 + 40, top: top3 + 10 },
         size: { width: 55, height: 30 },
         color: s.color,
         bind: false
       });
-      s.lowerName = new Text_exports2.default({
+      s.lowerName = new Text_exports.default({
         kind: "text",
         idx: -1,
         tabOrder: 0,
         id: s.name + "-lowerText",
         text: s.lowerText,
-        location: { left: left5 + 40, top: top4 + 40 },
+        location: { left: left4 + 40, top: top3 + 40 },
         size: { width: 55, height: 30 },
         color: s.color,
         bind: false
       });
-      s.scoreBox = new Text_exports2.default({
+      s.scoreBox = new Text_exports.default({
         kind: "text",
         idx: -1,
         tabOrder: 0,
         id: s.name + "-score",
         text: "",
-        location: { left: left5 + 5, top: top4 + 50 },
+        location: { left: left4 + 5, top: top3 + 50 },
         size: { width: 24, height: 24 },
         color: s.color,
         padding: 10,
@@ -3657,35 +2777,35 @@ var ScoreButton = class {
       });
     } else {
       s.path = buildLeftScore(s.location, s.size);
-      s.upperName = new Text_exports2.default({
+      s.upperName = new Text_exports.default({
         kind: "text",
         idx: -1,
         tabOrder: 0,
         id: s.name + "-upperText",
         text: s.upperText,
-        location: { left: left5 + 10, top: top4 + 10 },
+        location: { left: left4 + 10, top: top3 + 10 },
         size: { width: 55, height: 30 },
         color: s.color,
         bind: false
       });
-      s.lowerName = new Text_exports2.default({
+      s.lowerName = new Text_exports.default({
         kind: "text",
         idx: -1,
         tabOrder: 0,
         id: s.name + "-lowerText",
         text: s.lowerText,
-        location: { left: left5 + 10, top: top4 + 40 },
+        location: { left: left4 + 10, top: top3 + 40 },
         size: { width: 55, height: 30 },
         color: s.color,
         bind: false
       });
-      s.scoreBox = new Text_exports2.default({
+      s.scoreBox = new Text_exports.default({
         kind: "text",
         idx: -1,
         tabOrder: 0,
         id: s.name + "-score",
         text: "",
-        location: { left: left5 + 70, top: top4 + 3 },
+        location: { left: left4 + 70, top: top3 + 3 },
         size: { width: 24, height: 24 },
         color: s.color,
         padding: 10,
@@ -3747,7 +2867,7 @@ __name(ScoreButton, "ScoreButton");
 var manifest = {
   Views: {
     "./Views/Die.ts": Die_exports,
-    "./Views/Popup.ts": Popup_exports3,
+    "./Views/Popup.ts": Popup_exports2,
     "./Views/ScoreButton.ts": ScoreButton_exports
   },
   baseUrl: import.meta.url
@@ -3757,7 +2877,7 @@ var view_manifest_default = manifest;
 // src/main.ts
 console.info("manifest", view_manifest_default);
 var eventBus = buildEventBus();
-initCloseButton2("closebutton");
+initCloseButton("closebutton");
 var AudioContext = globalThis.AudioContext;
 var context2 = new AudioContext();
 init(context2);
