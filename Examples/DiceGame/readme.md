@@ -1,4 +1,4 @@
-# DWM_GUI Dice Game
+# Surface Framework Dice Game Example
 Version v0.0.1-beta-2    
 
 Yes it's my same old poker-dice game you've all seen on many platforms.    
