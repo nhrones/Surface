@@ -2081,9 +2081,9 @@ var cfg = {
       id: "rollbutton",
       idx: 0,
       tabOrder: 1,
-      location: { left: 122, top: 20 },
-      size: { width: 46, height: 48 },
-      boarderWidth: 2,
+      location: { left: 120, top: 20 },
+      size: { width: 150, height: 50 },
+      boarderWidth: 5,
       radius: 10,
       text: "Roll Dice"
     },

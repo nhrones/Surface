@@ -3,7 +3,6 @@ import {
    ElementDescriptor,
    Location,
    View,
-   Host,
    ctx,
    events
 } from '../deps.ts'
@@ -41,10 +40,10 @@ export default class Button implements View {
       this.zOrder = 0
       this.tabOrder = el.tabOrder || 0
       this.location = el.location
-      const { left, top } = el.location
+      //const { left, top } = el.location
       this.boarderWidth = el.boarderWidth || 1
       this.size = el.size || { width: 50, height: 30 }
-      const { width, height } = this.size
+      //const { width, height } = this.size
       this.enabled = true
       this.path = this.buildPath(el.radius || 0)
       this.textNode = new Text(
