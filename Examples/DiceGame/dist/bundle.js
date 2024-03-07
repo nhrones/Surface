@@ -6,27 +6,25 @@ var __export = (target, all) => {
     __defProp(target, name2, { get: all[name2], enumerable: true });
 };
 
-// ../../Components/ViewModels/closeButton.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Components/ViewModels/closeButton.ts
 var thisID;
 var initCloseButton = /* @__PURE__ */ __name((id3) => {
   thisID = id3;
   events.on("ButtonTouched", thisID, () => {
-    console.log("window.close");
-    self.close();
   });
 }, "initCloseButton");
 
-// ../../Components/ViewModels/constants.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Components/ViewModels/constants.ts
 var HAIRSPACE = "\u200A";
 var CARETBAR = "\u258F";
 
-// ../../Components/Views/Button.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Button.ts
 var Button_exports = {};
 __export(Button_exports, {
   default: () => Button
 });
 
-// ../../Components/Views/Text.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Text.ts
 var Text_exports = {};
 __export(Text_exports, {
   default: () => Text
@@ -164,7 +162,7 @@ var Text = class {
 };
 __name(Text, "Text");
 
-// ../../Components/Views/Button.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Button.ts
 var Button = class {
   /**
    * instantiate a new vitual Button-View
@@ -269,13 +267,13 @@ var Button = class {
 };
 __name(Button, "Button");
 
-// ../../Components/Views/Container.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Container.ts
 var Container_exports = {};
 __export(Container_exports, {
   default: () => Container
 });
 
-// ../../Components/Views/Scrollbar.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Scrollbar.ts
 var Scrollbar = class {
   /**
    *  Scrollbar ctor
@@ -352,7 +350,7 @@ var Scrollbar = class {
 };
 __name(Scrollbar, "Scrollbar");
 
-// ../../Components/Views/Container.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Container.ts
 var Container = class {
   /** 
    * Container ctor 
@@ -425,7 +423,7 @@ var Container = class {
 };
 __name(Container, "Container");
 
-// ../../Components/Views/Popup.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Popup.ts
 var Popup_exports = {};
 __export(Popup_exports, {
   default: () => Popup
@@ -540,7 +538,7 @@ var Popup = class {
 };
 __name(Popup, "Popup");
 
-// ../../Components/Views/TextArea.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/TextArea.ts
 var TextArea_exports = {};
 __export(TextArea_exports, {
   default: () => TextArea
@@ -725,7 +723,7 @@ var TextArea = class extends Container {
 };
 __name(TextArea, "TextArea");
 
-// ../../Components/Views/CheckBox.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/CheckBox.ts
 var CheckBox_exports = {};
 __export(CheckBox_exports, {
   default: () => CheckBox
@@ -830,7 +828,7 @@ var CheckBox = class {
 };
 __name(CheckBox, "CheckBox");
 
-// ../../Components/base_manifest.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Components/base_manifest.ts
 var baseManifest = {
   Views: {
     "./Views/Button.ts": Button_exports,
@@ -844,7 +842,7 @@ var baseManifest = {
 };
 var base_manifest_default = baseManifest;
 
-// ../../Framework/src/render/renderContext.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/render/renderContext.ts
 var windowCFG = {
   containerColor: "snow",
   textColor: "black"
@@ -860,8 +858,8 @@ var initCFG = /* @__PURE__ */ __name((theCanvas, cfg2, applicationManifest) => {
 var getFactories = /* @__PURE__ */ __name(() => {
   const baseUrl = new URL("./", appManifest.baseUrl).href;
   const factories2 = /* @__PURE__ */ new Map();
-  for (const [self2, module] of Object.entries(base_manifest_default.Views)) {
-    const url = new URL(self2, baseUrl).href;
+  for (const [self, module] of Object.entries(base_manifest_default.Views)) {
+    const url = new URL(self, baseUrl).href;
     const path = url.substring(baseUrl.length).substring("Views".length);
     const baseRoute = path.substring(1, path.length - 3);
     const name2 = sanitizeName(baseRoute);
@@ -870,8 +868,8 @@ var getFactories = /* @__PURE__ */ __name(() => {
     factories2.set(id3, newView);
   }
   if (appManifest.Views) {
-    for (const [self2, module] of Object.entries(appManifest.Views)) {
-      const url = new URL(self2, baseUrl).href;
+    for (const [self, module] of Object.entries(appManifest.Views)) {
+      const url = new URL(self, baseUrl).href;
       const path = url.substring(baseUrl.length).substring("Views".length);
       const baseRoute = path.substring(1, path.length - 3);
       const name2 = sanitizeName(baseRoute);
@@ -916,7 +914,7 @@ function sanitizeName(name2) {
 }
 __name(sanitizeName, "sanitizeName");
 
-// ../../Framework/src/events/eventBus.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/coms/eventBus.ts
 function buildEventBus() {
   const eventHandlers = /* @__PURE__ */ new Map();
   const newEventBus = {
@@ -957,7 +955,7 @@ function buildEventBus() {
 __name(buildEventBus, "buildEventBus");
 var events = buildEventBus();
 
-// ../../Framework/src/render/activeNodes.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/render/activeNodes.ts
 var activeNodes = /* @__PURE__ */ new Set();
 var addNode = /* @__PURE__ */ __name((view) => {
   activeNodes.add(view);
@@ -989,7 +987,7 @@ var renderNodes = /* @__PURE__ */ __name(() => {
   }
 }, "renderNodes");
 
-// ../../Framework/src/events/systemEvents.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/coms/systemEvents.ts
 var left2 = 0;
 var x = 0;
 var y = 0;
@@ -1138,7 +1136,7 @@ function focusNext(target, _shift) {
 }
 __name(focusNext, "focusNext");
 
-// ../../Framework/src/render/uiContainer.ts
+// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/render/uiContainer.ts
 var factories;
 function containerInit(canvas2, cfg2, manifest2) {
   initCFG(canvas2, cfg2, manifest2);
