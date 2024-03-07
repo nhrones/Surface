@@ -1,4 +1,4 @@
-import type {ElementDescriptor} from '../../Framework/types.ts'
+import type {ElementDescriptor} from './deps.ts'
 
 /** This is the configuration object  */
 export const cfg = {
@@ -19,8 +19,8 @@ export const cfg = {
          id: "TextArea1",
          idx: 0,
          tabOrder: 1,
-         location: { left: 300, top: 20 },
-         size: { width: 400, height: 350 },
+         location: { left: 10, top: 20 },
+         size: { width: 390, height: 350 },
          text: "testing123",
          color: "snow",
          
@@ -31,8 +31,9 @@ export const cfg = {
          id: "closebutton",
          idx: 0,
          tabOrder: 2,
-         location: { left: 400, top: 400 },
+         location: { left: 100, top: 400 },
          size: { width: 200, height: 50 },
+         enabled: true,
          text: "Close",
          color: "brown"
       }

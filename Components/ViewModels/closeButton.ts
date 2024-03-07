@@ -1,4 +1,4 @@
-import { Host, events } from '../deps.ts'
+import { events } from '../deps.ts'
 
 // used to recognize events from a (decoupled) view
 let thisID: string;
@@ -11,6 +11,7 @@ export const initCloseButton = (id: string) => {
     thisID = id   
     // listens for a touch event from this buttom 
     events.on('ButtonTouched', thisID, () => {
-        //TODO Host.window.close()
+        console.log("window.close");
+        self.close()
     })
 }

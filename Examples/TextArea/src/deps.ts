@@ -1,8 +1,8 @@
 //=================================================
 //    Framework Deps
 //=================================================
-export * from '../../Framework/mod.ts';
+export * from '../../../Framework/mod.ts';
 //=================================================
 //    Component Deps
 //=================================================
-export * from '../../Components/mod.ts'
+//export * from '../../Components/mod.ts'
