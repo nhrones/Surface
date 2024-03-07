@@ -18,7 +18,7 @@ export {
    containerInit, 
    hydrateUI, 
    render
-} from './host/uiContainer.ts'
+} from './src/render/uiContainer.ts'
 
 //======================================
 //      render 
@@ -29,7 +29,7 @@ export {
    activeNodes, 
    addNode, 
    renderNodes 
-} from './render/activeNodes.ts'
+} from './src/render/activeNodes.ts'
 
 /* renderContext.ts */
 export { 
@@ -46,13 +46,13 @@ export {
    setupRenderContext,
    tickCount,
    windowCFG 
-} from './render/renderContext.ts'
+} from './src/render/renderContext.ts'
 
 //======================================
 //      coms 
 //======================================
 
-export { events, buildEventBus } from './coms/eventBus.ts'
-export { initHostEvents } from './coms/systemEvents.ts'
-export type { CoreEvents } from './coms/coreEventTypes.ts'
-export * from './types.ts'
+export { events, buildEventBus } from './src/coms/eventBus.ts'
+export { initHostEvents } from './src/coms/systemEvents.ts'
+export type { CoreEvents } from './src/coms/coreEventTypes.ts'
+export * from './src/types.ts'

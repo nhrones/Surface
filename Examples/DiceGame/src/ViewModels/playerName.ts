@@ -15,9 +15,7 @@ export const state = {
 /** PlayerName ViewModel initialization
  *  Called from DiceGame Controller ctor */
 export const init = () => {
-   //hack: 
    eventBus.on("UpdatePlayer", "0", (data: { index: number, color: string, text: string }) => {
-      //state.color = data.color
       state.text = data.text
       update()
    })

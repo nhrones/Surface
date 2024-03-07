@@ -4,7 +4,7 @@
 import { activeNodes } from '../render/activeNodes.ts'
 import { canvas, ctx, hasVisiblePopup } from '../render/renderContext.ts'
 
-import type { View } from '../types.ts';
+import type { View } from '../../src/types.ts';
 import { events } from './eventBus.ts'
 
 //====================================================
@@ -150,8 +150,8 @@ function handleMouseMove(evt: MouseEvent,) {
          node.hovered = true           // set this nodes `hovered` flag
          node.update()                 // command to update the hovered node
          hoveredNode = node            // register this node as currently hovered
-         //HACK setCursor("hand")      // change the cursor
-
+         //setCursor("hand")      // change the cursor
+         document.documentElement.style.cursor = 'hand';
       }
    } else {                            // no node was hit
       if (hoveredNode !== null) {      // is there a hovered node?
@@ -209,7 +209,7 @@ function clearFocused() {
 
 /** clear last hovered object */
 function clearHovered() {
-   //HACK setCursor("arrow")
+   document.documentElement.style.cursor = "arrow"
    if (hoveredNode !== null) {
       hoveredNode.hovered = false
       hoveredNode.update()       // re-render the node

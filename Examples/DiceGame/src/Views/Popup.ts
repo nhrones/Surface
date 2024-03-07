@@ -28,10 +28,10 @@ export default class Popup implements View {
    shownPath: Path2D
    hiddenPath: Path2D
    location: Location
-   size: { height:number, width: number }
+   size: { height: number, width: number }
    color = "black"
-   text = ""
-   title = ''
+   text: string[] = [""]
+   title = ""
    textAlign = "center"
    visible = true
    buffer: ImageData | null = null
@@ -39,7 +39,7 @@ export default class Popup implements View {
 
    /** ctor that instantiates a new vitual Popup view */
    constructor(el: ElementDescriptor) {
-      this.tabOrder = el.tabOrder  || 0
+      this.tabOrder = el.tabOrder || 0
       this.enabled = true
       this.color = 'white'
       this.location = el.location
@@ -54,7 +54,7 @@ export default class Popup implements View {
       //================================================
 
       // Our game controller broadcasts this ShowPopup event at the end of a game
-      events.on('ShowPopup',"", (data: { title: string, msg: string }) => {
+      events.on('ShowPopup', "", (data: { title: string, msg: string[] }) => {
          this.show(data)
       })
 
@@ -67,10 +67,10 @@ export default class Popup implements View {
       return path
    }
    /** show the virtual Popup view */
-   show(data:{ title: string, msg: string }) {
-      events.fire('FocusPopup'," ", this)
-      this.text = data.msg
+   show(data: { title: string, msg: string[] }) {
+      events.fire('FocusPopup', " ", this)
       this.title = data.title
+      this.text = data.msg
       left = this.location.left
       top = this.location.top
       this.path = this.shownPath
@@ -110,7 +110,7 @@ export default class Popup implements View {
    /** called from Surface/canvasEvents when this element has been touched */
    touched() {
       this.hide()
-      events.fire('PopupReset','', null)
+      events.fire('PopupReset', '', null)
    }
 
    /** update this virtual Popups view (render it) */
@@ -136,7 +136,11 @@ export default class Popup implements View {
       ctx.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
       ctx.textAlign = this.textAlign as "center" | "left" | "right" | "start" | "end"
       ctx.strokeText(this.title + ' ', left + 175, top + 100)
-      ctx.strokeText(this.text + ' ', left + 175, top + 175)
+      let txtTop = top + 100
+      // stroke each string in the array
+      this.text.forEach(str => {
+         ctx.strokeText(str + ' ', left + 175, txtTop+=50)
+      });
       ctx.restore()
       this.visible = true
    }

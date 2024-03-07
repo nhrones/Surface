@@ -1,20 +1,17 @@
 // deno-lint-ignore-file no-explicit-any
-
 import type { Configuration, ElementDescriptor } from '../types.ts'
-//HACK import { renderNodes, addNode } from '../render/activeNodes.ts'
-import { addNode, renderNodes, } from '../render/activeNodes.ts' // NEW
+import { addNode, renderNodes, } from './activeNodes.ts'
 import {
    elementDescriptors,
    getFactories,
    initCFG,
-   setupRenderContext,
-   //windowCFG
-} from '../render/renderContext.ts'
-//HACK import { Host } from '../render/renderContext.ts'
-//HACK import { HostWindow, } from "./hostWindow.ts";
+   setupRenderContext
+} from './renderContext.ts'
 import { initHostEvents } from '../coms/systemEvents.ts'
 
-// our view factories
+/** 
+ * our view factories 
+ */
 let factories: Map<string, any>
 
 /**  
@@ -26,7 +23,6 @@ export function containerInit(
    manifest: any
 ) {
    // initialize our execution context  
-   //HACK initCFG(cfg, manifest)
    initCFG(canvas, cfg, manifest)
 
    // sets shared host member references 

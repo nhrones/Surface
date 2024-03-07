@@ -1,7 +1,6 @@
 
-//HACK import { windowCFG, Host, ctx, incrementTickCount } from './renderContext.ts'
-import { windowCFG, ctx, incrementTickCount } from './renderContext.ts'
-import type { View } from '../types.ts'
+import { ctx, incrementTickCount } from './renderContext.ts'
+import type { View } from '../src/types.ts'
 import { events } from '../coms/eventBus.ts'
 
 //===============================  activeNodes  ======================================

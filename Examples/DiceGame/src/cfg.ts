@@ -35,15 +35,26 @@ export const cfg = {
       textColor: "black"
   },
    nodes: [
-
+      {
+         kind: "Text",
+         id: "ScoreLabel",
+         idx: 1,
+         tabOrder: 0,
+         location: { left: 5, top: 20 },
+         size:  { width: 100, height: 25 },
+         text: "This Score",
+         fontColor: "brown",
+         hasBoarder: false,
+         bind: true
+      },
       {
          kind: "Text",
          id: "player1",
          idx: 1,
          tabOrder: 0,
-         location: { left: 5, top: 20 },
+         location: { left: 10, top: 40 },
          size:  { width: 100, height: 25 },
-         text: "Score:",
+         text: "0",
          fontColor: "brown",
          hasBoarder: false,
          bind: true
@@ -53,11 +64,32 @@ export const cfg = {
          id: "rollbutton",
          idx: 0,
          tabOrder: 1,
-         location: { left: 120, top: 20 },//left 145
+         location: { left: 120, top: 20 },
          size: { width: 150, height: 50 },
          boarderWidth: 5,
          radius: 10,
          text: "Roll Dice"
+      },
+      {
+         kind: "Text",
+         id: "highScore",
+         idx: -1,
+         tabOrder: 0,
+         location: { left: 280, top: 20 }, 
+         size: { width: 100, height: 25 },
+         text: "High Score",
+         bind: true
+      },
+      {
+         kind: "Text",
+         id: "highScoreValue",
+         idx: -1,
+         tabOrder: 0,
+         location: { left: 280, top: 40 }, 
+         size: { width: 80, height: 25 },
+         text: "250",
+         hasBoarder: false,
+         bind: true
       },
       {
          kind: "Die",

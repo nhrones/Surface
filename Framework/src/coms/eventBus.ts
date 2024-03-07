@@ -5,7 +5,7 @@ import type {
    EventBus, 
    EventContract, 
    EventHandler 
-} from '../types.ts'
+} from '../../src/types.ts'
 
 /** 
  * A factory function that returns a generic strongly-typed EventBus instance 

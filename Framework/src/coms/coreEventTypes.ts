@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 
-import { TextLine } from "../types.ts";
+import { TextLine } from "../../src/types.ts";
 
 /** 
  * Named Event types    
@@ -37,14 +37,14 @@ export type CoreEvents = {
    /** Show \<Popup\> view event */
    ShowPopup: {
       title: string,
-      msg: string
+      msg: string[]
    },
    
    /** Window Input event */
-   WindowInput: any //HACK WindowInputEvent,
+   WindowInput: InputEvent,
 
    /** Window KeyDown event */
-   WindowKeyDown: any //HACK WindowKeyboardEvent,
+   WindowKeyDown: KeyboardEvent,
      
    /*======= Base Events =======*/
    
@@ -52,11 +52,11 @@ export type CoreEvents = {
    ButtonTouched: null,
    
    /** CheckBox Touched */
-   CheckBoxTouched:  {checked: boolean},
+   CheckBoxTouched: { checked: boolean },
 
    /** Text Metrics update event */
    TextMetrics: {
-      size: any, //HACK Size,
+      size: {width: number, height: number},
       capacity: {
          rows: number,
          columns: number

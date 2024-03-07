@@ -1,6 +1,8 @@
 import { events } from '../deps.ts'
 import * as PlaySound from './sounds.ts'
 
+import {HighScore, setupHighScore} from './highScore.ts'
+
 import { eventBus } from '../main.ts'
 
 import * as playerOne from './playerName.ts'
@@ -83,11 +85,6 @@ export class App {
       })
    }
 
-   /** check score total and determin the winner of this game */
-   getWinner() {
-      return thisPlayer //thisWinner
-   }
-
    /** clear all scoreElements possible score value */
    clearPossibleScores() {
       for (const scoreItem of this.scoreItems) {
@@ -105,7 +102,7 @@ export class App {
    /** resets the turn by resetting values and state */
    resetTurn() {
       PlaySound.enabled(true)
-      rollButton.state.color = thisPlayer.color 
+      rollButton.state.color = thisPlayer.color
       rollButton.state.enabled = true
       rollButton.state.text = 'Roll Dice'
       rollButton.update()
@@ -113,6 +110,7 @@ export class App {
       this.clearPossibleScores()
       this.setLeftScores()
       this.setRightScores()
+      setupHighScore()
    }
 
    /** resets game state to start a new game */
@@ -127,8 +125,7 @@ export class App {
          index: 0,
          color: "brown",
          text: ""
-      }
-      )
+      })
 
       this.leftBonus = 0
       this.fiveOkindBonus = 0
@@ -144,7 +141,7 @@ export class App {
             text: '^ total = 0'
          }
       )
-
+      setupHighScore()
       rollButton.state.color = 'brown'
       rollButton.state.text = 'Roll Dice'
       rollButton.state.enabled = true
@@ -153,24 +150,28 @@ export class App {
 
    /** show a popup with final score */
    showFinalScore() {
-      let winMsg
-      winMsg = thisPlayer.playerName + ' wins!'
+      const winMsg =[]
       PlaySound.Woohoo()
-      winMsg = 'You won!'
+      winMsg.push('You won!')
       rollButton.state.color = 'black'
-      rollButton.state.text = winMsg
+      rollButton.state.text = winMsg[0]
       rollButton.update()
-      this.updatePlayer(0,'snow',"")
-      events.fire(`UpdateText`, 'infolabel',
-         {
-            border: false,
-            fill: true,
-            fillColor: "snow",
-            fontColor: 'black',
-            text: winMsg + ' ' + thisPlayer.score
-         }
-      )
-      events.fire('ShowPopup', "", { title: 'Game Over!', msg: 'You Won!' })
+      this.updatePlayer(0, 'snow', "")
+      events.fire(`UpdateText`, 'infolabel', {
+         border: false,
+         fill: true,
+         fillColor: "snow",
+         fontColor: 'black',
+         text: winMsg[0] + ' ' + thisPlayer.score
+      })
+
+      // check and set high score
+      if (thisPlayer.score > HighScore) {
+         console.log("setting high score to ", thisPlayer.score)
+         localStorage.setItem("highScore", JSON.stringify(thisPlayer.score));
+         winMsg.push("You set a new high score!")
+      }
+      events.fire('ShowPopup', "", { title: 'Game Over!', msg: winMsg })
    }
 
    /** check all scoreElements to see if game is complete */
@@ -198,7 +199,7 @@ export class App {
          if (val > 0) {
             this.leftTotal += val
             thisPlayer.score += val
-            const text = (thisPlayer.score === 0) ? thisPlayer.playerName : `${thisPlayer.playerName} = ${thisPlayer.score}`
+            const text = thisPlayer.score + "" 
             this.updatePlayer(thisPlayer.idx, thisPlayer.color, text)
             if (this.scoreItems[i].hasFiveOfaKind && (dice.fiveOfaKindCount > 1)) {
                this.addScore(100)
@@ -265,7 +266,7 @@ export class App {
    /** add a score value for this player */
    addScore = (value: number) => {
       thisPlayer.score += value
-      const text = (thisPlayer.score === 0) ? thisPlayer.playerName : `${thisPlayer.playerName} = ${thisPlayer.score}`
+      const text = thisPlayer.score + "" //HACK (thisPlayer.score === 0) ? thisPlayer.playerName : `${thisPlayer.playerName} = ${thisPlayer.score}`
       this.updatePlayer(thisPlayer.idx, thisPlayer.color, text)
    }
 
@@ -275,7 +276,6 @@ export class App {
          index: index,
          color: color,
          text: text
-      }
-      )
+      })
    }
 }

@@ -1,12 +1,8 @@
-/**
- *  A flag to indicate if remote logger should be used
- */
-export const USE_LOGGER = true
 
 /**
  *  A flag that indicates if console.log should be used
  */
-export const DEBUG = true
+export const DEV = true
 
 
 /** 

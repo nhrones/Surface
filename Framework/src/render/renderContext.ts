@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import baseManifest from '../../Components/base_manifest.ts'
+import baseManifest from '../../../Components/base_manifest.ts'
 
 import type {
    Configuration,
@@ -24,11 +24,10 @@ export let elementDescriptors: ElementDescriptor[];
  * To hold our application View-Manifest 
  */
 let appManifest: Manifest
-//let canvas: HTMLCanvasElement
+
 /** 
  * Initialize our configuration 
  */
-//HACK export const initCFG = (cfg: Configuration, applicationManifest: Manifest) => {
 export const initCFG = (
    theCanvas: HTMLCanvasElement,
    cfg: Configuration, 
@@ -106,7 +105,7 @@ export const incrementTickCount = () => {
 /** 
  *  Expose our canvas
  */
-export let canvas: HTMLCanvasElement//HACK Canvas
+export let canvas: HTMLCanvasElement
 
 /** 
  *  Expose our context2D from canvas

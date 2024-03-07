@@ -1,10 +1,10 @@
 // deno-lint-ignore-file no-explicit-any
 /// <reference lib="dom" />
 
-import type { Editor, TextLine } from '../../Framework/types.ts'
+import type { Editor, TextLine } from '../../Framework/src/types.ts'
 
 import { events } from '../../Framework/mod.ts'
-import { InsertAt } from '../../Framework/constants.ts'
+import { InsertAt } from '../../Framework/src/constants.ts'
 
 import {
    Backspace,
