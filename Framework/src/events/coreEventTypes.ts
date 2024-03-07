@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 
-import { TextLine } from "../../src/types.ts";
+import { TextLine } from "../types.ts";
 
 /** 
  * Named Event types    

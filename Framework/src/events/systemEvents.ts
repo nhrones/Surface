@@ -4,7 +4,7 @@
 import { activeNodes } from '../render/activeNodes.ts'
 import { canvas, ctx, hasVisiblePopup } from '../render/renderContext.ts'
 
-import type { View } from '../../src/types.ts';
+import type { View } from '../types.ts';
 import { events } from './eventBus.ts'
 
 //====================================================

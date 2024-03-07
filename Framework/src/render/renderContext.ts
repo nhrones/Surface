@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import baseManifest from '../../../Components/base_manifest.ts'
+import baseManifest from '../../../Components/base_manifest.ts'//TODO FIX
 
 import type {
    Configuration,

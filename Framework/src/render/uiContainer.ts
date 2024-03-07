@@ -7,7 +7,7 @@ import {
    initCFG,
    setupRenderContext
 } from './renderContext.ts'
-import { initHostEvents } from '../coms/systemEvents.ts'
+import { initHostEvents } from '../events/systemEvents.ts'
 
 /** 
  * our view factories 
