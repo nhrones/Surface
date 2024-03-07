@@ -1,16 +1,13 @@
+
 //=================================================
 //    Component Deps
 //=================================================
-export * from '../Components/mod.ts'
-
+//export * from '../Components/mod.ts'
 
 
 //======================================
-//      host 
+//      render 
 //======================================
-
-/* hostWindow.ts */
-//HACK export { HostWindow } from './host/hostWindow.ts'
 
 /* uiContainer.ts */
 export { 
@@ -19,10 +16,6 @@ export {
    hydrateUI, 
    render
 } from './src/render/uiContainer.ts'
-
-//======================================
-//      render 
-//======================================
 
 /* activeNodes.ts */
 export { 

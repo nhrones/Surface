@@ -6,25 +6,13 @@ var __export = (target, all) => {
     __defProp(target, name2, { get: all[name2], enumerable: true });
 };
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/ViewModels/closeButton.ts
-var thisID;
-var initCloseButton = /* @__PURE__ */ __name((id3) => {
-  thisID = id3;
-  events.on("ButtonTouched", thisID, () => {
-  });
-}, "initCloseButton");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/ViewModels/constants.ts
-var HAIRSPACE = "\u200A";
-var CARETBAR = "\u258F";
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Button.ts
+// ../../Components/Views/Button.ts
 var Button_exports = {};
 __export(Button_exports, {
   default: () => Button
 });
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Text.ts
+// ../../Components/Views/Text.ts
 var Text_exports = {};
 __export(Text_exports, {
   default: () => Text
@@ -162,7 +150,7 @@ var Text = class {
 };
 __name(Text, "Text");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Button.ts
+// ../../Components/Views/Button.ts
 var Button = class {
   /**
    * instantiate a new vitual Button-View
@@ -267,13 +255,118 @@ var Button = class {
 };
 __name(Button, "Button");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Container.ts
+// ../../Components/Views/CheckBox.ts
+var CheckBox_exports = {};
+__export(CheckBox_exports, {
+  default: () => CheckBox
+});
+var CheckBox = class {
+  /**
+   * instantiate a new vitual CheckBox-View
+   */
+  constructor(el) {
+    this.id = 0;
+    this.activeView = true;
+    this.index = -1;
+    this.zOrder = 0;
+    this.tabOrder = 0;
+    this.name = "";
+    this.enabled = true;
+    this.hovered = false;
+    this.focused = false;
+    this.text = "";
+    this.checked = false;
+    this.name = el.id;
+    this.zOrder = 0;
+    this.tabOrder = el.tabOrder || 0;
+    this.location = el.location;
+    const { left: left4, top: top3 } = el.location;
+    this.boarderWidth = el.boarderWidth || 1;
+    this.size = el.size || { width: 50, height: 30 };
+    const { width, height } = this.size;
+    this.enabled = true;
+    this.path = this.buildPath(el.radius || 0);
+    this.color = el.color || "red";
+    this.fontColor = el.fontColor || "white";
+    this.text = el.text || "??";
+    this.fontSize = el.fontSize || 24;
+    this.render();
+    events.on(
+      "UpdateCheckBox",
+      this.name,
+      (data) => {
+        this.checked = data.checked;
+        this.color = data.color;
+        this.text = data.text;
+        this.update();
+      }
+    );
+  }
+  /** 
+   * build the Path2D 
+   */
+  buildPath(radius) {
+    const path = new Path2D();
+    path.roundRect(
+      this.location.left,
+      this.location.top,
+      this.size.width,
+      this.size.height,
+      radius
+    );
+    return path;
+  }
+  /** 
+   * called from core/systemEvents when this element is touched
+   * fires an event on the eventBus to inform VMs 
+   */
+  touched() {
+    if (this.enabled) {
+      events.fire("CheckBoxTouched", this.name, { checked: this.enabled });
+    }
+  }
+  /** 
+   * updates and renders this view 
+   * called from /core/systemEvents (hover test) 
+   */
+  update() {
+    this.render();
+  }
+  /** 
+   * render this Button view onto the canvas 
+   */
+  render() {
+    ctx.save();
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = this.hovered ? "orange" : "black";
+    ctx.stroke(this.path);
+    ctx.fillStyle = this.color;
+    ctx.fill(this.path);
+    ctx.fillStyle = "white";
+    ctx.restore();
+    ctx.save();
+    ctx.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
+    ctx;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "limegreen";
+    ctx.fillRect(this.location.left, this.location.top, this.size.width, this.size.height);
+    ctx.fillStyle = this.fontColor;
+    const top3 = this.location.top + this.size.height * 0.5;
+    const left4 = this.location.left + this.size.width * 0.5;
+    ctx.fillText(this.text + " ", left4, top3);
+    ctx.restore();
+  }
+};
+__name(CheckBox, "CheckBox");
+
+// ../../Components/Views/Container.ts
 var Container_exports = {};
 __export(Container_exports, {
   default: () => Container
 });
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Scrollbar.ts
+// ../../Components/Views/Scrollbar.ts
 var Scrollbar = class {
   /**
    *  Scrollbar ctor
@@ -350,7 +443,7 @@ var Scrollbar = class {
 };
 __name(Scrollbar, "Scrollbar");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Container.ts
+// ../../Components/Views/Container.ts
 var Container = class {
   /** 
    * Container ctor 
@@ -423,7 +516,7 @@ var Container = class {
 };
 __name(Container, "Container");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Popup.ts
+// ../../Components/Views/Popup.ts
 var Popup_exports = {};
 __export(Popup_exports, {
   default: () => Popup
@@ -538,11 +631,25 @@ var Popup = class {
 };
 __name(Popup, "Popup");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/TextArea.ts
+// ../../Components/Views/TextArea.ts
 var TextArea_exports = {};
 __export(TextArea_exports, {
   default: () => TextArea
 });
+
+// ../../Components/ViewModels/closeButton.ts
+var thisID;
+var initCloseButton = /* @__PURE__ */ __name((id3) => {
+  thisID = id3;
+  events.on("ButtonTouched", thisID, () => {
+  });
+}, "initCloseButton");
+
+// ../../Components/ViewModels/constants.ts
+var HAIRSPACE = "\u200A";
+var CARETBAR = "\u258F";
+
+// ../../Components/Views/TextArea.ts
 var dev = false;
 var caretChar = HAIRSPACE;
 var placeholder = "text";
@@ -723,112 +830,7 @@ var TextArea = class extends Container {
 };
 __name(TextArea, "TextArea");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/CheckBox.ts
-var CheckBox_exports = {};
-__export(CheckBox_exports, {
-  default: () => CheckBox
-});
-var CheckBox = class {
-  /**
-   * instantiate a new vitual CheckBox-View
-   */
-  constructor(el) {
-    this.id = 0;
-    this.activeView = true;
-    this.index = -1;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.text = "";
-    this.checked = false;
-    this.name = el.id;
-    this.zOrder = 0;
-    this.tabOrder = el.tabOrder || 0;
-    this.location = el.location;
-    const { left: left4, top: top3 } = el.location;
-    this.boarderWidth = el.boarderWidth || 1;
-    this.size = el.size || { width: 50, height: 30 };
-    const { width, height } = this.size;
-    this.enabled = true;
-    this.path = this.buildPath(el.radius || 0);
-    this.color = el.color || "red";
-    this.fontColor = el.fontColor || "white";
-    this.text = el.text || "??";
-    this.fontSize = el.fontSize || 24;
-    this.render();
-    events.on(
-      "UpdateCheckBox",
-      this.name,
-      (data) => {
-        this.checked = data.checked;
-        this.color = data.color;
-        this.text = data.text;
-        this.update();
-      }
-    );
-  }
-  /** 
-   * build the Path2D 
-   */
-  buildPath(radius) {
-    const path = new Path2D();
-    path.roundRect(
-      this.location.left,
-      this.location.top,
-      this.size.width,
-      this.size.height,
-      radius
-    );
-    return path;
-  }
-  /** 
-   * called from core/systemEvents when this element is touched
-   * fires an event on the eventBus to inform VMs 
-   */
-  touched() {
-    if (this.enabled) {
-      events.fire("CheckBoxTouched", this.name, { checked: this.enabled });
-    }
-  }
-  /** 
-   * updates and renders this view 
-   * called from /core/systemEvents (hover test) 
-   */
-  update() {
-    this.render();
-  }
-  /** 
-   * render this Button view onto the canvas 
-   */
-  render() {
-    ctx.save();
-    ctx.lineWidth = 8;
-    ctx.strokeStyle = this.hovered ? "orange" : "black";
-    ctx.stroke(this.path);
-    ctx.fillStyle = this.color;
-    ctx.fill(this.path);
-    ctx.fillStyle = "white";
-    ctx.restore();
-    ctx.save();
-    ctx.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
-    ctx;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "limegreen";
-    ctx.fillRect(this.location.left, this.location.top, this.size.width, this.size.height);
-    ctx.fillStyle = this.fontColor;
-    const top3 = this.location.top + this.size.height * 0.5;
-    const left4 = this.location.left + this.size.width * 0.5;
-    ctx.fillText(this.text + " ", left4, top3);
-    ctx.restore();
-  }
-};
-__name(CheckBox, "CheckBox");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/base_manifest.ts
+// ../../Components/base_manifest.ts
 var baseManifest = {
   Views: {
     "./Views/Button.ts": Button_exports,
@@ -842,7 +844,7 @@ var baseManifest = {
 };
 var base_manifest_default = baseManifest;
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/render/renderContext.ts
+// ../../Framework/src/render/renderContext.ts
 var windowCFG = {
   containerColor: "snow",
   textColor: "black"
@@ -914,7 +916,7 @@ function sanitizeName(name2) {
 }
 __name(sanitizeName, "sanitizeName");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/coms/eventBus.ts
+// ../../Framework/src/coms/eventBus.ts
 function buildEventBus() {
   const eventHandlers = /* @__PURE__ */ new Map();
   const newEventBus = {
@@ -955,7 +957,7 @@ function buildEventBus() {
 __name(buildEventBus, "buildEventBus");
 var events = buildEventBus();
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/render/activeNodes.ts
+// ../../Framework/src/render/activeNodes.ts
 var activeNodes = /* @__PURE__ */ new Set();
 var addNode = /* @__PURE__ */ __name((view) => {
   activeNodes.add(view);
@@ -987,7 +989,7 @@ var renderNodes = /* @__PURE__ */ __name(() => {
   }
 }, "renderNodes");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/coms/systemEvents.ts
+// ../../Framework/src/coms/systemEvents.ts
 var left2 = 0;
 var x = 0;
 var y = 0;
@@ -1136,7 +1138,7 @@ function focusNext(target, _shift) {
 }
 __name(focusNext, "focusNext");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/render/uiContainer.ts
+// ../../Framework/src/render/uiContainer.ts
 var factories;
 function containerInit(canvas2, cfg2, manifest2) {
   initCFG(canvas2, cfg2, manifest2);
