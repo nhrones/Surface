@@ -1,4 +1,5 @@
 # Surface Framework TextArea Example 
+Version v0.0.1-beta-2
 
 An editable multi-line text area component
 
