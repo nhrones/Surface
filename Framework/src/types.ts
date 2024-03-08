@@ -42,13 +42,13 @@ export type EventContract<T> = { [K in keyof T]: T[K] }
  */
 export interface SignalBroker<T extends EventContract<T>> {
    /** 
-    * registers a handler function to be executed when a signal is sent
+    * Registers a handler function to be executed when a signal is fired
     */
    on<K extends keyof T>(signal: K, id: string, handler: EventHandler<T[K]>): void,
 
    /** 
-    * fire a specific named signal with an appropriate payload 
-    * and execute all registered handlers for a named signal
+    * Fire a specific named signal with an appropriate payload 
+    * and execute all registered handlers for a named signal.
     */
    fire<K extends keyof T>(signal: K, id: string, args: T[K]): void
 }

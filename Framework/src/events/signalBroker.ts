@@ -4,8 +4,9 @@ import type { SignalBroker, EventContract, EventHandler } from '../types.ts'
 
 
 /** 
- * We use this factory function to create a new SignalBroker service. 
- * We could use an intersection type from `CoreEvents` and `LocalEvents` types. 
+ * We use this factory function to create a new SignalBroker service.      
+ * You can use intersection types for the generic type:     
+ * @example buildSignalBroker<CoreEvents & LocalEvents>()
  */
 export const signals = buildSignalBroker<CoreEvents>()
 
@@ -45,9 +46,7 @@ export function buildSignalBroker<T extends EventContract<T>>(): SignalBroker<T>
             const handlers = eventHandlers.get(keyName)!
             // push this new handler to it. 
             handlers.push(handler)
-         }
-         // keyName needs to be registered
-         else {
+         } else {  // keyName has yet to be registered
             // when first seen - create it with this handler
             eventHandlers.set(keyName, [handler])
          }
@@ -55,7 +54,7 @@ export function buildSignalBroker<T extends EventContract<T>>(): SignalBroker<T>
       },
 
       /** 
-       * execute all registered handlers for a named signal
+       * Execute all registered handlers for a typed signal (signalName)
        * @param {key} signalName - signal name - one of `TypedEvents` only!
        * @param {string} id - id of a target element (may be an empty string)
        * @param {TypedEvents[key]} data - data payload, typed for this category of signal
