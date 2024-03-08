@@ -23,7 +23,7 @@ export const cfg = {
          size: { width: 360, height: 350 },
          text: "testing123",
          color: "snow",
-         
+         bind: true,
          multiLine: true
       },      
       {

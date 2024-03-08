@@ -7,21 +7,6 @@ import { signals } from '../../Framework/mod.ts'
 import { InsertAt } from '../../Framework/src/constants.ts'
 
 import {
-   Backspace,
-   End,
-   Home,
-   Enter,
-   Delete,
-   UpArrow,
-   DwnArrow,
-   LeftArrow,
-   RightArrow,
-   Tab,
-   PLACEHOLDER,
-   Insert
-} from './constants.ts'
-
-import {
    handleEditEvents,
    removeSelection,
    isBetween,
@@ -139,12 +124,11 @@ export class TextEditor implements Editor {
          // even though the framework discriminates who 
          // has focus, we'll assert it on keyboard signals  
          this.focused = true
-
          // which key was pressed 152 - 350
          switch (evt.code) {
-
+            
             // remove a character left
-            case Backspace: // OK
+            case "Backspace": // OK
             
                //ndh why both???
                if (this.insertionColumn > 0 && this.insertionIndex > 0) {
@@ -170,7 +154,7 @@ export class TextEditor implements Editor {
 
             // if we have a selection delete it
             // else, delete one character to the right of the insertionColumn    
-            case Delete: { // OK
+            case "Delete": { // OK
                // if -> selection delete it and adjust insertion point
                if (this.hasSelection() && shiftKey) {
                   removeSelection(this) //mutation
@@ -190,7 +174,7 @@ export class TextEditor implements Editor {
             }
 
             // move down in view or select up
-            case DwnArrow: // OK
+            case "ArrowDown": // OK
                if (this.hasText() === true) {
                   if (this.insertionRow < this.lines.length - 1) {
                      this.insertionRow += 1
@@ -211,7 +195,7 @@ export class TextEditor implements Editor {
                this.updateInsertionPoint("DwnArrow")
                break;
 
-            case End:  // OK
+            case "End":  // OK
                if (shiftKey) {
                   if (!this.selecting) {
                      this.selectStart = this.insertionIndex;
@@ -227,11 +211,11 @@ export class TextEditor implements Editor {
                break;
 
             // the enter key will create -> move to a new line 
-            case Enter: // OK
+            case "Enter": // OK
                insertChars(this, '\n')
                break;
 
-            case Home: // OK
+            case "Home": // OK
                if (shiftKey) {
                   if (!this.selecting) {
                      this.selectEnd = this.insertionIndex;
@@ -247,7 +231,7 @@ export class TextEditor implements Editor {
                break;
 
             // paste from clipboard
-            case Insert:
+            case "Insert":
                // paste from clipboard at insertion point
                if (shiftKey) {
                   insertChars(this)
@@ -256,7 +240,7 @@ export class TextEditor implements Editor {
                break;
 
             // move left in viewport or select left
-            case LeftArrow: // OK
+            case "ArrowLeft": // OK
                if (this.insertionIndex > 0) {
                   this.insertionColumn -= 1
                   if (this.insertionColumn < 0) {
@@ -281,7 +265,7 @@ export class TextEditor implements Editor {
                break;
 
             // move right or select right   
-            case RightArrow: { // OK
+            case "ArrowRight": { // OK
                // At the end of fullText?
                if (this.insertionIndex < this.fullText.length) {
                   this.insertionColumn += 1
@@ -313,7 +297,7 @@ export class TextEditor implements Editor {
             }
 
             // move up a row or select up
-            case UpArrow: // OK
+            case "ArrowUp": // OK
                if (this.hasText() === true) {
                   // not at the top row
                   if (this.insertionRow > 0) {
@@ -379,7 +363,6 @@ export class TextEditor implements Editor {
 
    /** update the insertion column and row from insertion index */
    updateInsertionPoint(from: string, insertAt = InsertAt.Calc) { // OK
-
       switch (insertAt) {
 
          // calculate and set index from row and column 

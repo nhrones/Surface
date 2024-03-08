@@ -54,7 +54,6 @@ export function initHostEvents(): void {
    // handler for `keydown` -- enter backspace, delete, etc. 
    addEventListener('keydown', (evt: any) => {
       let focusNum = 0
-
       // handle Tab key
       if (evt.code === 'Tab') {
          if (focusedNode !== null) {

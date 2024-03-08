@@ -59,7 +59,7 @@ export interface SignalAggregator<T extends EventContract<T>> {
  * manifest interface 
  */
 export interface Manifest {
-   Views: Record<string, any>[];
+   Views: Record<string, any>;
    baseUrl: string;
 }
 

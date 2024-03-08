@@ -251,11 +251,11 @@ export default class TextArea extends Container implements View {
       // Finally, get the measurement for the top of the highlight rectangle
       const rectY = location.top + (lineHeight * (line.index)) + padding
 
-      if (dev) {
-         console.log(`hiStart ${rectX}, hiEnd ${rectWidth}, hiTop ${rectY}`)
-         console.log(`selectStart ${selectStart}, selectEnd ${selectEnd}`)
-         console.log(`lineStart ${line.start}, lineEnd ${line.end}`)
-      }
+      // if (dev) {
+      //    console.log(`hiStart ${rectX}, hiEnd ${rectWidth}, hiTop ${rectY}`)
+      //    console.log(`selectStart ${selectStart}, selectEnd ${selectEnd}`)
+      //    console.log(`lineStart ${line.start}, lineEnd ${line.end}`)
+      // }
 
       ctx.fillStyle = 'lightblue'
       ctx.fillRect(

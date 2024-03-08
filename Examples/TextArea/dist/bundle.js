@@ -20,16 +20,6 @@ var initCloseButton = /* @__PURE__ */ __name((id) => {
 var HAIRSPACE = "\u200A";
 var CARETBAR = "\u258F";
 var PLACEHOLDER = "\u200B";
-var RightArrow = "Unknown(333)";
-var Insert = "Unknown(338)";
-var Delete = "Unknown(339)";
-var UpArrow = "Unknown(328)";
-var DwnArrow = "Unknown(336)";
-var LeftArrow = "Unknown(331)";
-var Backspace = "Backspace";
-var Enter = "Enter";
-var End = "Unknown(335)";
-var Home = "Unknown(327)";
 
 // ../../Framework/src/constants.ts
 var InsertAt = {
@@ -267,7 +257,7 @@ var TextEditor = class {
       }
       this.focused = true;
       switch (evt.code) {
-        case Backspace:
+        case "Backspace":
           if (this.insertionColumn > 0 && this.insertionIndex > 0) {
             this.selectStart = this.insertionIndex - 1;
             this.selectEnd = this.insertionIndex;
@@ -285,7 +275,7 @@ var TextEditor = class {
             this.resetSelectionState();
           }
           break;
-        case Delete: {
+        case "Delete": {
           if (this.hasSelection() && shiftKey) {
             removeSelection(this);
             this.resetSelectionState();
@@ -299,7 +289,7 @@ var TextEditor = class {
           }
           break;
         }
-        case DwnArrow:
+        case "ArrowDown":
           if (this.hasText() === true) {
             if (this.insertionRow < this.lines.length - 1) {
               this.insertionRow += 1;
@@ -317,7 +307,7 @@ var TextEditor = class {
           }
           this.updateInsertionPoint("DwnArrow");
           break;
-        case End:
+        case "End":
           if (shiftKey) {
             if (!this.selecting) {
               this.selectStart = this.insertionIndex;
@@ -330,10 +320,10 @@ var TextEditor = class {
           }
           this.updateInsertionPoint(`Home Shift = ${shiftKey}`);
           break;
-        case Enter:
+        case "Enter":
           insertChars(this, "\n");
           break;
-        case Home:
+        case "Home":
           if (shiftKey) {
             if (!this.selecting) {
               this.selectEnd = this.insertionIndex;
@@ -346,13 +336,13 @@ var TextEditor = class {
           }
           this.updateInsertionPoint(`Home Shift = ${shiftKey}`);
           break;
-        case Insert:
+        case "Insert":
           if (shiftKey) {
             insertChars(this);
             this.refreshLines();
           }
           break;
-        case LeftArrow:
+        case "ArrowLeft":
           if (this.insertionIndex > 0) {
             this.insertionColumn -= 1;
             if (this.insertionColumn < 0) {
@@ -373,7 +363,7 @@ var TextEditor = class {
             this.updateInsertionPoint(`LeftArrow Shift = ${shiftKey}`);
           }
           break;
-        case RightArrow: {
+        case "ArrowRight": {
           if (this.insertionIndex < this.fullText.length) {
             this.insertionColumn += 1;
             if (this.insertionColumn > this.lines[this.insertionRow].length) {
@@ -399,7 +389,7 @@ var TextEditor = class {
           this.updateInsertionPoint(`RightArrow Shift = ${shiftKey}`);
           break;
         }
-        case UpArrow:
+        case "ArrowUp":
           if (this.hasText() === true) {
             if (this.insertionRow > 0) {
               this.insertionRow -= 1;
@@ -1051,7 +1041,6 @@ var TextArea_exports = {};
 __export(TextArea_exports, {
   default: () => TextArea
 });
-var dev = false;
 var caretChar = HAIRSPACE;
 var placeholder = "text";
 var TextArea = class extends Container {
@@ -1215,11 +1204,6 @@ var TextArea = class extends Container {
     const endTo = selectEnd >= line.end ? line.end : selectEnd;
     const rectWidth = ctx.measureText(text.substring(endFrom, endTo)).width;
     const rectY = location.top + lineHeight * line.index + padding;
-    if (dev) {
-      console.log(`hiStart ${rectX}, hiEnd ${rectWidth}, hiTop ${rectY}`);
-      console.log(`selectStart ${selectStart}, selectEnd ${selectEnd}`);
-      console.log(`lineStart ${line.start}, lineEnd ${line.end}`);
-    }
     ctx.fillStyle = "lightblue";
     ctx.fillRect(
       location.left + padding + rectX,
@@ -1418,6 +1402,7 @@ function sanitizeName(name) {
 __name(sanitizeName, "sanitizeName");
 
 // ../../Framework/src/events/signalBroker.ts
+var signals = buildSignalAggregator();
 function buildSignalAggregator() {
   const eventHandlers = /* @__PURE__ */ new Map();
   const newSignalBroker = {
@@ -1438,10 +1423,10 @@ function buildSignalAggregator() {
       }
     },
     /** 
-     * execute all registered handlers for a named signal
+     * Execute all registered handlers for a strongly-typed signal (signalName)
      * @param {key} signalName - signal name - one of `TypedEvents` only!
      * @param {string} id - id of a target element (may be an empty string)
-     * @param {TypedEvents[key]} data - data payload, typed for this category of signal
+     * @param {T[key]} data - data payload, typed for this category of signal
      */
     fire(signalName, id, data) {
       const keyName = signalName + "-" + id;
@@ -1456,7 +1441,6 @@ function buildSignalAggregator() {
   return newSignalBroker;
 }
 __name(buildSignalAggregator, "buildSignalAggregator");
-var signals = buildSignalAggregator();
 
 // ../../Framework/src/render/activeNodes.ts
 var activeNodes = /* @__PURE__ */ new Set();
@@ -1673,6 +1657,7 @@ var cfg = {
       size: { width: 360, height: 350 },
       text: "testing123",
       color: "snow",
+      bind: true,
       multiLine: true
     },
     {
@@ -1691,7 +1676,7 @@ var cfg = {
 
 // src/view_manifest.ts
 var manifest = {
-  views: {},
+  Views: {},
   baseUrl: import.meta.url
 };
 var view_manifest_default = manifest;
