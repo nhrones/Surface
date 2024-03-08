@@ -543,7 +543,6 @@ var TextArea_exports = {};
 __export(TextArea_exports, {
   default: () => TextArea
 });
-var dev = false;
 var caretChar = HAIRSPACE;
 var placeholder = "text";
 var TextArea = class extends Container {
@@ -707,11 +706,6 @@ var TextArea = class extends Container {
     const endTo = selectEnd >= line.end ? line.end : selectEnd;
     const rectWidth = ctx.measureText(text.substring(endFrom, endTo)).width;
     const rectY = location.top + lineHeight * line.index + padding;
-    if (dev) {
-      console.log(`hiStart ${rectX}, hiEnd ${rectWidth}, hiTop ${rectY}`);
-      console.log(`selectStart ${selectStart}, selectEnd ${selectEnd}`);
-      console.log(`lineStart ${line.start}, lineEnd ${line.end}`);
-    }
     ctx.fillStyle = "lightblue";
     ctx.fillRect(
       location.left + padding + rectX,

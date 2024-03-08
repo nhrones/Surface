@@ -94,11 +94,6 @@ export default manifest;
    );
 }
 
-//const views: Map<string, any> = new Map()
-
-// Get the manifest' base URL.
-//const baseUrl = new URL("./", import.meta.url).href //manifest.baseUrl).href;
-
 const unresolvedDirectory = './src';
 const resolvedDirectory = resolve(unresolvedDirectory);
 
