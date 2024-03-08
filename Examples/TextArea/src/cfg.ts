@@ -20,7 +20,7 @@ export const cfg = {
          idx: 0,
          tabOrder: 1,
          location: { left: 10, top: 20 },
-         size: { width: 390, height: 350 },
+         size: { width: 360, height: 350 },
          text: "testing123",
          color: "snow",
          
