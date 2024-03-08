@@ -49,3 +49,4 @@ export { signals, buildSignalAggregator } from './src/events/signalBroker.ts'
 export { initHostEvents } from './src/events/systemEvents.ts'
 export type { CoreEvents } from './src/events/coreEventTypes.ts'
 export * from './src/types.ts'
+  

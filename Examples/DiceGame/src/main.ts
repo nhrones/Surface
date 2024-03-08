@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import { buildSignalAggregator } from  "./deps.ts"
+import { buildSignalAggregator } from "./deps.ts"
 import { initCloseButton, containerInit, hydrateUI, render } from "./deps.ts";
 import * as PlaySound from './ViewModels/sounds.ts'
 import { App, appInstance } from './ViewModels/diceGame.ts';
