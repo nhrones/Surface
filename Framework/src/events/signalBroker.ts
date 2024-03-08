@@ -1,11 +1,13 @@
 
 import type {CoreEvents} from './coreEventTypes.ts'
+import type { SignalBroker, EventContract, EventHandler } from '../types.ts'
 
-import type {
-   SignalBroker, 
-   EventContract, 
-   EventHandler 
-} from '../types.ts'
+
+/** 
+ * We use this factory function to create a new SignalBroker service. 
+ * We could use an intersection type from `CoreEvents` and `LocalEvents` types. 
+ */
+export const signals = buildSignalBroker<CoreEvents>()
 
 /** 
  * A factory function that returns a generic strongly-typed SignalBroker instance 
@@ -80,10 +82,3 @@ export function buildSignalBroker<T extends EventContract<T>>(): SignalBroker<T>
    }
    return newSignalBroker
 }
-
-
-/** 
- * We use this factory function to create a new SignalBroker service. 
- * We could use an intersection type from `CoreEvents` and `LocalEvents` types. 
- */
-export const signals = buildSignalBroker<CoreEvents>()
