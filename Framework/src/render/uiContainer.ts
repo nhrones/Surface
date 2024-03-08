@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import type { Configuration, ElementDescriptor } from '../types.ts'
+import type { Configuration, ElementDescriptor, Manifest } from '../types.ts'
 import { addNode, renderNodes, } from './activeNodes.ts'
 import {
    elementDescriptors,
@@ -20,7 +20,7 @@ let factories: Map<string, any>
 export function containerInit(
    canvas: HTMLCanvasElement,
    cfg: Configuration,
-   manifest: any
+   manifest: Manifest
 ) {
    // initialize our execution context  
    initCFG(canvas, cfg, manifest)

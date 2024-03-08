@@ -266,7 +266,7 @@ export class App {
    /** add a score value for this player */
    addScore = (value: number) => {
       thisPlayer.score += value
-      const text = thisPlayer.score + "" //HACK (thisPlayer.score === 0) ? thisPlayer.playerName : `${thisPlayer.playerName} = ${thisPlayer.score}`
+      const text = thisPlayer.score + ""
       this.updatePlayer(thisPlayer.idx, thisPlayer.color, text)
    }
 

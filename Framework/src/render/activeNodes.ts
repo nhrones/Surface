@@ -41,12 +41,13 @@ export const addNode = (view: View) => {
 
 
 /** 
- * main render function - called from /host/uiContainer 
+ * main render function - called from /host/uiContainer
+ * Only called on app startup and on app reset. 
  */
 export const renderNodes = () => {
 
    // see renderContext.ts
-   // used to render our blinking caret
+   // used to render our blinking caret for text edit nodes
    incrementTickCount()
 
    // insure we have a canvas context ready
@@ -64,7 +65,7 @@ export const renderNodes = () => {
       ctx.strokeRect(0, 0, width, height)
       ctx.restore()
 
-      // render only 'dirty' views
+      // render all views
       for (const el of activeNodes) {
          el.update()       
       }

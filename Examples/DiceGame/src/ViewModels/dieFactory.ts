@@ -1,13 +1,6 @@
 /// <reference lib="dom" />
 import {DIE_CFG} from '../cfg.ts'
 
-// import {
-//    //dieCFG,
-//    CanvasRenderingContext2D, 
-//    createCanvas, 
-//    ImageData 
-// } from '../deps.ts'   //'../../../Framework/mod.ts'
-
 let size = 90
 let r = 0
 

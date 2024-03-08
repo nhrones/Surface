@@ -1,4 +1,4 @@
-import type {ElementDescriptor} from './deps.ts'    //'../../Framework/types.ts'
+import type {ElementDescriptor} from './deps.ts'
 
 export const DIE_CFG = {
    size: { "width":70, "height": 70 },
@@ -13,7 +13,6 @@ export const SCORE_CFG = {
    }
 }
 
-//'darkseagreen'//'mediumaquamarine' //'deepskyblue'
 export const PossibleColor = 'cyan';
 
 const row1Top = 160

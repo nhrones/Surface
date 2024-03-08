@@ -11,7 +11,7 @@ import { signals } from './signalBroker.ts'
 //                Sytem Events Module
 //  Watch for all host generated events.
 //  When appropriate, propagate these host events
-//  to our central eventBus - events. 
+//  to our central signalAggregator - events. 
 //
 //  When an event targets an active node, based on
 //  the event type, set the active nodes state to 
@@ -35,14 +35,14 @@ let focusedNode: View | null = null
  * Initialize an environment for custom canvas mouse/touch event handlers.
  * 
  * Registers event handlers for:     
- *     WindowInputEvent 
- *     WindowKeyboardEvent
+ *     InputEvent 
+ *     KeyboardEvent
  *     mousedown + touchstart => handleClickOrTouch()    
  *     mousemove => handleMouseMove     
  */
 export function initHostEvents(): void {
 
-   // handle all host window `input` events 
+   // handle all host `input` events 
    addEventListener("input", (evt: any) => {
       // look for a focused node, if none, just ignore the event
       if (focusedNode !== null) {

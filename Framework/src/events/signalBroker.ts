@@ -54,10 +54,10 @@ export function buildSignalAggregator<T extends EventContract<T>>(): SignalAggre
       },
 
       /** 
-       * Execute all registered handlers for a typed signal (signalName)
+       * Execute all registered handlers for a strongly-typed signal (signalName)
        * @param {key} signalName - signal name - one of `TypedEvents` only!
        * @param {string} id - id of a target element (may be an empty string)
-       * @param {TypedEvents[key]} data - data payload, typed for this category of signal
+       * @param {T[key]} data - data payload, typed for this category of signal
        */
       fire<SignalName extends keyof T>(
          signalName: SignalName,

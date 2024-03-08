@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import baseManifest from '../../../Components/base_manifest.ts'//TODO FIX
+import baseManifest from '../../../Components/base_manifest.ts'
 
 import type {
    Configuration,
@@ -24,7 +24,6 @@ export let elementDescriptors: ElementDescriptor[];
  * To hold our application View-Manifest 
  */
 let appManifest: Manifest
-
 /** 
  * Initialize our configuration 
  */
@@ -36,7 +35,7 @@ export const initCFG = (
    canvas = theCanvas
    windowCFG = cfg.winCFG
    elementDescriptors = cfg.nodes
-   appManifest = applicationManifest;
+   appManifest = applicationManifest
 }
 
 
@@ -56,7 +55,7 @@ export const getFactories = () => {
    const baseUrl = new URL("./", appManifest.baseUrl).href;
    const factories: Map<string, any> = new Map()
 
-   //add base frameWork components constructors first
+   //add base frameWork component constructors first
    for (const [self, module] of Object.entries(baseManifest.Views)) {
       const url = new URL(self, baseUrl).href;
       const path = url.substring(baseUrl.length).substring("Views".length);
