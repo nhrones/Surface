@@ -1,7 +1,7 @@
-import { events } from '../deps.ts'
+import { signals } from '../deps.ts'
 import * as PlaySound from './sounds.ts'
 
-import {eventBus, Player,  thisPlayer } from '../main.ts'
+import { on, fire, Player,  thisPlayer } from '../main.ts'
 
 import * as dice from './dice.ts'
 import * as Possible from './possible.ts'
@@ -54,16 +54,16 @@ export default class ScoreElement {
       this.scoringDieset = [0, 0, 0, 0, 0]
 
       //================================================
-      //                bind events
+      //                bind signals
       //================================================
 
-      eventBus.on('ScoreButtonTouched', this.index.toString(), (_index: number) => {
+      on('ScoreButtonTouched', this.index.toString(), (_index: number) => {
          if (this.clicked()) {
-            eventBus.fire(`ScoreElementResetTurn`, "", null)
+            fire(`ScoreElementResetTurn`, "", null)
          }
       })
 
-      eventBus.on(`UpdateTooltip`, this.index.toString(), (data: { index: number, hovered: boolean }) => {
+      on(`UpdateTooltip`, this.index.toString(), (data: { index: number, hovered: boolean }) => {
          let msg = ''
          let thisState = LabelState.Normal
 
@@ -87,7 +87,7 @@ export default class ScoreElement {
             msg = ''
          }
 
-         events.fire(`UpdateText`, 'infolabel',
+         signals.fire(`UpdateText`, 'infolabel',
             {
                border: false,
                fill: true,
@@ -101,7 +101,7 @@ export default class ScoreElement {
 
    /** broadcasts a message used to update the bottom infolabel element */
    updateInfo(text: string) {
-      events.fire(`UpdateText`, 'infolabel',
+      signals.fire(`UpdateText`, 'infolabel',
          {
             border: false,
             fill: true,
@@ -125,9 +125,9 @@ export default class ScoreElement {
       }
    }
 
-   /** fires event used to update the score value */
+   /** fires signal used to update the score value */
    renderValue(value: string) {
-      eventBus.fire(`UpdateScoreElement`, this.index.toString(),
+      fire(`UpdateScoreElement`, this.index.toString(),
          {
             index: this.index,
             renderAll: false,
@@ -140,7 +140,7 @@ export default class ScoreElement {
 
    /**  broadcasts a message used to update the score view element */
    updateScoreElement(color: string | null, value: string) {
-      eventBus.fire(`UpdateScoreElement`, this.index.toString(),
+      fire(`UpdateScoreElement`, this.index.toString(),
          {
             index: this.index,
             renderAll: true,
@@ -168,7 +168,7 @@ export default class ScoreElement {
       }
    }
 
-   /** the clicked event handler for this scoreElement.    
+   /** the clicked signal handler for this scoreElement.    
     * returns true if the click caused this score to be    
     * taken by the current player  */
    clicked() {

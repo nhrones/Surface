@@ -1,6 +1,6 @@
 
-import { eventBus } from '../main.ts'
-import { events } from '../deps.ts'
+import { on } from '../main.ts'
+import { signals } from '../deps.ts'
 
 const id = 'player1'
 
@@ -15,7 +15,7 @@ export const state = {
 /** PlayerName ViewModel initialization
  *  Called from DiceGame Controller ctor */
 export const init = () => {
-   eventBus.on("UpdatePlayer", "0", (data: { index: number, color: string, text: string }) => {
+   on("UpdatePlayer", "0", (data: { index: number, color: string, text: string }) => {
       state.text = data.text
       update()
    })
@@ -23,7 +23,7 @@ export const init = () => {
    update()
 }
 
-/** fires an update event with the current state */
+/** fires an update signal with the current state */
 export const update = () => {
-   events.fire('UpdateText', id, state)
+   signals.fire('UpdateText', id, state)
 }

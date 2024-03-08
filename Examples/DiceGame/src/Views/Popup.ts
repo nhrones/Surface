@@ -3,7 +3,7 @@ import {
    setHasVisiblePopup,
    windowCFG,
    ctx,
-   events,
+   signals,
    ElementDescriptor,
    Location,
    View
@@ -50,15 +50,15 @@ export default class Popup implements View {
       this.path = this.hiddenPath
       this.fontSize = el.fontSize || 8
       //================================================
-      //                bind events
+      //                bind signals
       //================================================
 
-      // Our game controller broadcasts this ShowPopup event at the end of a game
-      events.on('ShowPopup', "", (data: { title: string, msg: string[] }) => {
+      // Our game controller broadcasts this ShowPopup signal at the end of a game
+      signals.on('ShowPopup', "", (data: { title: string, msg: string[] }) => {
          this.show(data)
       })
 
-      events.on('HidePopup', "", () => this.hide())
+      signals.on('HidePopup', "", () => this.hide())
    }
    /** build a Path2D */
    buildPath(radius: number) {
@@ -68,7 +68,7 @@ export default class Popup implements View {
    }
    /** show the virtual Popup view */
    show(data: { title: string, msg: string[] }) {
-      events.fire('FocusPopup', " ", this)
+      signals.fire('FocusPopup', " ", this)
       this.title = data.title
       this.text = data.msg
       left = this.location.left
@@ -110,7 +110,7 @@ export default class Popup implements View {
    /** called from Surface/canvasEvents when this element has been touched */
    touched() {
       this.hide()
-      events.fire('PopupReset', '', null)
+      signals.fire('PopupReset', '', null)
    }
 
    /** update this virtual Popups view (render it) */

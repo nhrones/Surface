@@ -8,7 +8,7 @@ import {
    View
 } from '../deps.ts'
 
-import { eventBus } from '../main.ts'
+import { on, fire  } from '../main.ts'
 
 import { SCORE_CFG, PossibleColor } from '../cfg.ts'
 
@@ -61,10 +61,10 @@ export default class ScoreButton implements View {
       this.buildPath()
       
       //================================================
-      //                bind events
+      //                bind signals
       //================================================
 
-      eventBus.on('UpdateScoreElement', this.index.toString(),
+      on('UpdateScoreElement', this.index.toString(),
          (data: {
             index: number,
             renderAll: boolean,
@@ -129,7 +129,7 @@ export default class ScoreButton implements View {
 
    /** called from Surface/canvasEvents when this element has been touched */
    touched() {
-      eventBus.fire('ScoreButtonTouched', this.index.toString(), this.index)
+      fire('ScoreButtonTouched', this.index.toString(), this.index)
    }
 
    /** 

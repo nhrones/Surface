@@ -1,5 +1,4 @@
 // deno-lint-ignore-file no-explicit-any
-//import { Path2D } from './mod.ts'
 
 export const DEBUG = true
 
@@ -39,19 +38,19 @@ export type EventHandler<T = any> = (data: T) => void;
 export type EventContract<T> = { [K in keyof T]: T[K] }
 
 /** 
- * An EventBus interface with typed events and callbacks 
+ * An SignalBroker interface with typed signals and callbacks 
  */
-export interface EventBus<T extends EventContract<T>> {
+export interface SignalBroker<T extends EventContract<T>> {
    /** 
-    * registers a handler function to be executed when an event is sent
+    * registers a handler function to be executed when a signal is sent
     */
-   on<K extends keyof T>(event: K, id: string, handler: EventHandler<T[K]>): void,
+   on<K extends keyof T>(signal: K, id: string, handler: EventHandler<T[K]>): void,
 
    /** 
-    * fire a specific named event with an appropriate payload 
-    * and execute all registered handlers for a named event
+    * fire a specific named signal with an appropriate payload 
+    * and execute all registered handlers for a named signal
     */
-   fire<K extends keyof T>(event: K, id: string, args: T[K]): void
+   fire<K extends keyof T>(signal: K, id: string, args: T[K]): void
 }
 
 

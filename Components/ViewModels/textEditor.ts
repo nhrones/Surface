@@ -3,7 +3,7 @@
 
 import type { Editor, TextLine } from '../../Framework/src/types.ts'
 
-import { events } from '../../Framework/mod.ts'
+import { signals } from '../../Framework/mod.ts'
 import { InsertAt } from '../../Framework/src/constants.ts'
 
 import {
@@ -33,9 +33,9 @@ import { getLines } from './textToLines.ts'
 /** 
  * Text Editing class   
  * Takes a 1-to-1 reference to a View id   
- * Handles all keyboard events for this id    
+ * Handles all keyboard signals for this id    
  * Edits a text string based on keys touched    
- * Fires targeted events to update a View  
+ * Fires targeted signals to update a View  
  */
 export class TextEditor implements Editor {
 
@@ -98,7 +98,7 @@ export class TextEditor implements Editor {
       this.id = id
 
       // a View or a VM will report its TextMetrics on initialization
-      events.on('TextMetrics', this.id, (data: any) => {
+      signals.on('TextMetrics', this.id, (data: any) => {
          this.containerSize = data.size;
          this.textCapacity = data.capacity.columns - 1;
          this.rowCapacity = data.capacity.rows;
@@ -106,24 +106,24 @@ export class TextEditor implements Editor {
       })
 
       // listen for a touch event
-      events.on('TextViewTouched', this.id, () => {
+      signals.on('TextViewTouched', this.id, () => {
          // update the view
          this.updateText(this.id, true, "TextViewTouched")
       })
 
       // listen for a focus change event
-      events.on('Focused', this.id, (hasFocus: boolean) => {
+      signals.on('Focused', this.id, (hasFocus: boolean) => {
          // have liveText update the view (sets liveText focus state)
          this.updateText(this.id, hasFocus, "Focused");
       })
 
       // Input eventhandler -> data: string
-      events.on(`WindowInput`, this.id, (evt: InputEvent) => {
+      signals.on(`WindowInput`, this.id, (evt: InputEvent) => {
          insertChars(this, evt.data as string)
       })
 
       // KeyDown eventhandler for: enter, backspace, delete, arrows, shiftKey, ctrlKey  
-      events.on('WindowKeyDown', this.id, (evt: KeyboardEvent) => { // OK
+      signals.on('WindowKeyDown', this.id, (evt: KeyboardEvent) => { // OK
          const { ctrlKey, shiftKey } = evt
          // a `ctrlKey` implies an edit command 
          // trap and handle the edit commands 
@@ -137,7 +137,7 @@ export class TextEditor implements Editor {
          }
 
          // even though the framework discriminates who 
-         // has focus, we'll assert it on keyboard events  
+         // has focus, we'll assert it on keyboard signals  
          this.focused = true
 
          // which key was pressed 152 - 350
@@ -450,7 +450,7 @@ export class TextEditor implements Editor {
    // Fire an event to update the host view
    updateText(id: string, hasfocus: boolean, reason: string) { // OK
       this.focused = hasfocus
-      events.fire('UpdateTextArea', id,
+      signals.fire('UpdateTextArea', id,
          {
             reason: reason,
             text: this.fullText,

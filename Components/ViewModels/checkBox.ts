@@ -1,6 +1,6 @@
-import { events } from  '../deps.ts'
+import { signals } from  '../deps.ts'
 
-// used to recognize events from a (decoupled) view
+// used to recognize signals from a (decoupled) view
 let thisID: string;
 
 // an exported checkbox state flag
@@ -18,10 +18,10 @@ export const initCheckbox = (id: string) => {
    thisID = id
 
    // listens for a touch event from this checkbox 
-   events.on('CheckBoxTouched', thisID, () => {
+   signals.on('CheckBoxTouched', thisID, () => {
       checked = !checked
       txt = (checked) ? checkmark : empty
-      events.fire('UpdateButton', thisID,
+      signals.fire('UpdateButton', thisID,
          { text: txt, color: "green", enabled: true }
       )
    })

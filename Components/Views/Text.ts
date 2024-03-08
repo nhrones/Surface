@@ -4,7 +4,7 @@ import {
    Location, 
    View,
    ctx, 
-   events, 
+   signals, 
    TextAlign, 
    TextBaseline,
    TextLocation 
@@ -71,10 +71,10 @@ export default class Text implements View {
       this.hasBorder = el.hasBoarder ?? false
       this.calculateMetrics()
  
-      // should this static text `bind` to update events?
+      // should this static text `bind` to update signals?
       if (el.bind) {
 
-         events.on('UpdateText', this.name,
+         signals.on('UpdateText', this.name,
             (data: {
                border: boolean,
                fill: boolean

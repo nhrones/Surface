@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 import { ctx } from '../deps.ts'
-import { eventBus} from '../main.ts'
+import { on, fire } from '../main.ts'
 import {
     ElementDescriptor,
     Location,
@@ -68,10 +68,10 @@ export default class Die implements View {
       this.render()
 
       //================================================
-      //                bind events
+      //                bind signals
       //================================================
 
-      eventBus.on('UpdateDie', this.index.toString(), (
+      on('UpdateDie', this.index.toString(), (
          data: { 
             index: number, 
             value: number, 
@@ -92,7 +92,7 @@ export default class Die implements View {
    /** called from Surface/canvasEvents when this element has been touched */
    touched() {
       // inform Dice with index data
-      eventBus.fire(`DieTouched`, "", ({ index: this.index as DieIndex }))
+      fire(`DieTouched`, "", ({ index: this.index as DieIndex }))
    }
 
    update() {

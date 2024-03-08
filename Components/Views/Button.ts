@@ -4,7 +4,7 @@ import {
    Location,
    View,
    ctx,
-   events
+   signals
 } from '../deps.ts'
 
 import Text from './Text.ts'
@@ -65,11 +65,11 @@ export default class Button implements View {
       this.render()
 
       //================================================
-      //                bind events
+      //                bind signals
       //================================================
 
       // a VM will emit this event whenever it needs to update the view
-      events.on('UpdateButton', this.name,
+      signals.on('UpdateButton', this.name,
          (data: { text: string, color: string, enabled: boolean }) => {
             this.enabled = data.enabled
             this.color = data.color
@@ -97,7 +97,7 @@ export default class Button implements View {
     */
    touched() {
       if (this.enabled) {
-         events.fire('ButtonTouched', this.name, null)
+         signals.fire('ButtonTouched', this.name, null)
       }
    }
 

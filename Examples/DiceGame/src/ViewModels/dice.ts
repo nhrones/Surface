@@ -1,6 +1,6 @@
 
 import { DieIndex } from '../diceGameTypes.ts'
-import { eventBus } from '../main.ts'
+import { on, fire } from '../main.ts'
 import * as evaluator from './diceEvaluator.ts'
 import { appInstance } from './diceGame.ts'
 import * as PlaySound from './sounds.ts'
@@ -46,11 +46,11 @@ export const setfiveOfaKindCount = (val: number) => {
 export const init = () => {
 
    //================================================
-   //                bind events
+   //                bind signals
    //================================================
 
-   // register a callback function for the `internal` DieTouched event
-   eventBus.on(`DieTouched`, "", (data: { index: DieIndex }) => {
+   // register a callback function for the `internal` DieTouched signal
+   on(`DieTouched`, "", (data: { index: DieIndex }) => {
       const { index } = data
       // deno-lint-ignore no-explicit-any
       const thisDie = die[index] as any
@@ -110,12 +110,12 @@ export const roll = (dieValues: number[] | null) => {
    appInstance.evaluatePossibleScores()
 }
 
-/** broadcasts an event to trigger a 'view' update
+/** broadcasts a signal to trigger a 'view' update
  * @param index {number} the index of the Die view to update
  * @param value {number} the die value to show in the view
  * @param frozen {boolean} the frozen state of this die */
 const updateView = (index: number, value: number, frozen: boolean) => {
-   eventBus.fire('UpdateDie', index.toString(), { index: index, value: value, frozen: frozen })
+   fire('UpdateDie', index.toString(), { index: index, value: value, frozen: frozen })
 }
 
 /** returns the set of die values as a formatted string */

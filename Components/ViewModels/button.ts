@@ -1,7 +1,7 @@
 
-import { events } from '../deps.ts'
+import { signals } from '../deps.ts'
 
-// used to recognize events from a (decoupled) view
+// used to recognize signals from a (decoupled) view
 let thisID: string;
 
 /**  
@@ -11,8 +11,8 @@ let thisID: string;
 export const initButton = (id: string) => {
    thisID = id
    // listens for a touch event from a Button view with the same id 
-   events.on('ButtonTouched', thisID, () => {
+   signals.on('ButtonTouched', thisID, () => {
       // fire an event to show a popup
-      events.fire('ShowPopup', '', { title: "", msg: "" })
+      signals.fire('ShowPopup', '', { title: "", msg: [""] })
    })
 }

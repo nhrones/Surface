@@ -6,7 +6,7 @@ import {
    Location,
    View,
    ctx,
-   events,
+   signals,
    tickCount,
    TextLine
 } from '../deps.ts'
@@ -82,7 +82,7 @@ export default class TextArea extends Container implements View {
       )
 
       // report the metrics to any interested party
-      events.fire('TextMetrics', this.name,
+      signals.fire('TextMetrics', this.name,
          {
             size: this.size,
             capacity: { rows: this.rowCapacity, columns: this.textCapacity }
@@ -90,7 +90,7 @@ export default class TextArea extends Container implements View {
       )
 
       // the VM will emit this event whenever it needs to update the View            
-      events.on('UpdateTextArea', this.name, (data: any) => {
+      signals.on('UpdateTextArea', this.name, (data: any) => {
          const {
             _reason,
             text,
@@ -146,7 +146,7 @@ export default class TextArea extends Container implements View {
    }
 
    touched() {
-      events.fire('TextViewTouched', this.name, null)
+      signals.fire('TextViewTouched', this.name, null)
    }
 
    update() {

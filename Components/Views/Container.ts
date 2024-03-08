@@ -2,7 +2,7 @@
 import {
    ElementDescriptor,
    ctx,
-   events
+   signals
 } from '../deps.ts'
 
 import Scrollbar from './Scrollbar.ts'
@@ -59,12 +59,12 @@ export default class Container {
       )
       this.scrollBar = new Scrollbar(this)
       
-      events.on("Scroll", "", (evt) => {
+      signals.on("Scroll", "", (evt) => {
         this.scrollBar.scroll(evt.deltaY)
       })
       
       // a View or a VM will report its TextMetrics on initialization
-      events.on('TextMetrics', this.name, (data: any) => {
+      signals.on('TextMetrics', this.name, (data: any) => {
          this.textCapacity = data.capacity.columns - 1;
          this.rowCapacity = data.capacity.rows;
       })

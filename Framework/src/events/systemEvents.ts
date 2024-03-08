@@ -5,7 +5,7 @@ import { activeNodes } from '../render/activeNodes.ts'
 import { canvas, ctx, hasVisiblePopup } from '../render/renderContext.ts'
 
 import type { View } from '../types.ts';
-import { events } from './eventBus.ts'
+import { signals } from './signalBroker.ts'
 
 //====================================================
 //                Sytem Events Module
@@ -47,7 +47,7 @@ export function initHostEvents(): void {
       // look for a focused node, if none, just ignore the event
       if (focusedNode !== null) {
          // we'll fire this event directly to amy focused node
-         events.fire('WindowInput', focusedNode.name, evt)
+         signals.fire('WindowInput', focusedNode.name, evt)
       }
    })
 
@@ -73,7 +73,7 @@ export function initHostEvents(): void {
       // handle Enter key
       if (evt.code === 'Enter') {
          if (hasVisiblePopup === true) {
-            events.fire(`PopupReset`, "", null)
+            signals.fire(`PopupReset`, "", null)
          } else if (focusedNode !== null) {
             focusedNode.touched()
          }
@@ -82,7 +82,7 @@ export function initHostEvents(): void {
       // look for a currently `focused` node
       if (focusedNode !== null) {
          // we'll signal only the node with focus
-         events.fire('WindowKeyDown', focusedNode.name, evt)
+         signals.fire('WindowKeyDown', focusedNode.name, evt)
       }
    })
 
@@ -95,7 +95,7 @@ export function initHostEvents(): void {
             handleClickOrTouch(evt.pageX, evt.pageY)
          } // a popup was open -> just close it
          else {
-            events.fire(`PopupReset`, "", null)
+            signals.fire(`PopupReset`, "", null)
          }
       }
    }, false)
@@ -114,7 +114,7 @@ export function initHostEvents(): void {
    addEventListener('scroll', (evt: any) => {
       evt.preventDefault();
       const y = (Math.sign(evt.scrollY));
-      events.fire('Scroll', "", { deltaY: y })
+      signals.fire('Scroll', "", { deltaY: y })
    });
 
 }
@@ -188,7 +188,7 @@ function handleClickOrTouch(mX: number, mY: number) {
             focusedNode = node
             // tell others about this newly focused node
             if (focusedNode)
-               events.fire('Focused', focusedNode.name, true);
+               signals.fire('Focused', focusedNode.name, true);
             hit = true
          }
       }
@@ -202,7 +202,7 @@ function clearFocused() {
    if (focusedNode !== null) {
       focusedNode.focused = false;
       focusedNode.hovered = false
-      events.fire('Focused', focusedNode.name, focusedNode.focused);
+      signals.fire('Focused', focusedNode.name, focusedNode.focused);
       focusedNode.update();      // re-render the node
    }
 }
@@ -237,7 +237,7 @@ function focusNext(target: number, _shift: boolean) {
                focusedNode.update()
 
                // tell others about this newly focused node 
-               events.fire('Focused', focusedNode.name, true)
+               signals.fire('Focused', focusedNode.name, true)
             }
             hit = true
          }

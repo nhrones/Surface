@@ -45,7 +45,7 @@ export {
 //      coms 
 //======================================
 
-export { events, buildEventBus } from './src/events/eventBus.ts'
+export { signals, buildSignalBroker } from './src/events/signalBroker.ts'
 export { initHostEvents } from './src/events/systemEvents.ts'
 export type { CoreEvents } from './src/events/coreEventTypes.ts'
 export * from './src/types.ts'

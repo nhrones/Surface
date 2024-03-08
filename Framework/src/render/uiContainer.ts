@@ -26,9 +26,9 @@ export function containerInit(
    initCFG(canvas, cfg, manifest)
 
    // sets shared host member references 
-   setupRenderContext(canvas) //TODO USE CANVAS
+   setupRenderContext(canvas) 
 
-   // initialize the canvas UI event handlers
+   // initialize the canvas UI eventhandlers
    initHostEvents()
 }
 

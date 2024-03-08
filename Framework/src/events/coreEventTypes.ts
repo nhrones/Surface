@@ -3,19 +3,19 @@
 import { TextLine } from "../types.ts";
 
 /** 
- * Named Event types    
- * Each event-type \<name\> is unique    
- * Each event-type registers a payload-type 
- * This payload-type is type-checked when coding event-handles or fire-events
+ * Named Signal types    
+ * Each signal-type \<name\> is unique    
+ * Each signal-type registers a payload-type 
+ * This payload-type is type-checked when coding event-handles or fire-signals
  */
 export type CoreEvents = {
    
-   /*======= System Events =======*/
+   /*======= System Signals =======*/
 
-   /** Focused state-changed event */
+   /** Focused state-changed signal */
    Focused: boolean,
 
-   /** View was added event */
+   /** View was added signal */
    AddedView: {
       type: string,
       index: number,
@@ -25,36 +25,36 @@ export type CoreEvents = {
    /** Delete Row */
    DeleteRow: {index: number},
    
-   /** hide \<Popup\> command event */
+   /** hide \<Popup\> command signal */
    HidePopup: null,
    
    /** PopupReset */
    PopupReset: null,
    
-   /** \<Popup\> view focus command event */
+   /** \<Popup\> view focus command signal */
    FocusPopup: any,
    
-   /** Show \<Popup\> view event */
+   /** Show \<Popup\> view signal */
    ShowPopup: {
       title: string,
       msg: string[]
    },
    
-   /** Window Input event */
+   /** Window Input signal */
    WindowInput: InputEvent,
 
-   /** Window KeyDown event */
+   /** Window KeyDown signal */
    WindowKeyDown: KeyboardEvent,
      
    /*======= Base Events =======*/
    
-   /** \<Button\> view touched event */
+   /** \<Button\> view touched signal */
    ButtonTouched: null,
    
    /** CheckBox Touched */
    CheckBoxTouched: { checked: boolean },
 
-   /** Text Metrics update event */
+   /** Text Metrics update signal */
    TextMetrics: {
       size: {width: number, height: number},
       capacity: {
@@ -63,17 +63,17 @@ export type CoreEvents = {
       }
    },
 
-   /** Update \<Text\> view touched event */
+   /** Update \<Text\> view touched signal */
    TextViewTouched: null,
 
-   /** Update \<Button\> view event */
+   /** Update \<Button\> view signal */
    UpdateButton: {
       text: string,
       color: string,
       enabled: boolean
    },
 
-   /** Update \<CheckBox\> view event */
+   /** Update \<CheckBox\> view signal */
    UpdateCheckBox: {
       text: string,
       color: string,
@@ -87,7 +87,7 @@ export type CoreEvents = {
       text: string
    }
    
-   /** update a \<TextArea\> view event */
+   /** update a \<TextArea\> view signal */
    UpdateTextArea: {
       reason: string
       text: string
@@ -99,7 +99,7 @@ export type CoreEvents = {
       selectEnd: number,
    },
 
-   /** update a \<TextBox\> view event */
+   /** update a \<TextBox\> view signal */
    UpdateTextBox: {
       viewport: string,
       viewportStart: number
@@ -109,7 +109,7 @@ export type CoreEvents = {
       selectEnd: number,
    },
 
-   /** update static \<Text\> view event */
+   /** update static \<Text\> view signal */
    UpdateText: {
       border: boolean,
       fill: boolean,
@@ -118,6 +118,6 @@ export type CoreEvents = {
       text: string
    }
    
-   /** mouse Scroll event */
+   /** mouse Scroll signal */
    Scroll: { deltaY: number }
 };

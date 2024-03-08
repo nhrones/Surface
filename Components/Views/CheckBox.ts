@@ -4,7 +4,7 @@ import {
    Location, 
    View,
    ctx, 
-   events
+   signals
 } from '../deps.ts'
 
 /** 
@@ -52,11 +52,11 @@ export default class CheckBox implements View {
       this.render()
 
       //================================================
-      //                bind events
+      //                bind signals
       //================================================
 
       // a VM will emit this event whenever it needs to update the view
-      events.on('UpdateCheckBox', this.name,
+      signals.on('UpdateCheckBox', this.name,
          (data: { text: string, color: string, checked: boolean }) => {
             this.checked = data.checked
             this.color = data.color
@@ -84,7 +84,7 @@ export default class CheckBox implements View {
     */
    touched() {
       if (this.enabled) {
-         events.fire('CheckBoxTouched', this.name, { checked: this.enabled })
+         signals.fire('CheckBoxTouched', this.name, { checked: this.enabled })
       }
    }
 

@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import { buildEventBus } from "./deps.ts"
+import { buildSignalBroker } from "./deps.ts"
 import { initCloseButton, containerInit, hydrateUI, render } from "./deps.ts";
 import * as PlaySound from './ViewModels/sounds.ts'
 import { App, appInstance } from './ViewModels/diceGame.ts';
@@ -12,17 +12,17 @@ export type Player = {
     score: number
     lastScore: string
 }
-import type { DiceEvents } from "./diceGameTypes.ts";
+import type { DiceSignals } from "./diceGameTypes.ts";
 
 // Import configuration files
 import { cfg } from "./cfg.ts";
 import manifest from './view_manifest.ts'
 
 /** 
- * Use the factory function to create a new EventBus service 
+ * Use the factory function to create a new SignalBroker service 
  */
-export const eventBus = buildEventBus<DiceEvents>()
-
+const diceSignals = buildSignalBroker<DiceSignals>()
+export const { on, fire } = diceSignals
 /** initialize the button */
 initCloseButton('closebutton')
 

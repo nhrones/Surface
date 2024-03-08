@@ -1,5 +1,5 @@
 
-import { events } from '../deps.ts'
+import { signals } from '../deps.ts'
 
 import * as dice from './dice.ts'
 
@@ -11,7 +11,7 @@ export const state = { text: '', color: '', enabled: true }
 /**  Called from DiceGame Controller ctor */ 
 export const init = () => {
     // when this instance rolls dice
-    events.on('ButtonTouched', thisID, () => {
+    signals.on('ButtonTouched', thisID, () => {
         dice.roll(null)
         updateRollState()
     })
@@ -37,8 +37,8 @@ const updateRollState = () => {
     update()
 }
 
-/** fires an update event with the current state */
+/** fires an update signal with the current state */
 export const update = () => {
-   events.fire('UpdateButton', thisID, state)
+   signals.fire('UpdateButton', thisID, state)
 }
 

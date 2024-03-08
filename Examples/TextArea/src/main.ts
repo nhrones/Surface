@@ -4,7 +4,7 @@ import {
    hydrateUI,
    initCloseButton,
    TextEditor,
-   events
+   signals
 } from "./deps.ts";
 
 // Unpack Configuration Files
@@ -30,4 +30,4 @@ Second line.` )
 hydrateUI() // REQUIRED - after the App is initialized
 
 // kickstart our editor session
-events.fire('Focused', "TextArea1", false)
+signals.fire('Focused', "TextArea1", false)

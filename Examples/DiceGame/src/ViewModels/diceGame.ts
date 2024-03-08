@@ -1,9 +1,9 @@
-import { events } from '../deps.ts'
+import { signals } from '../deps.ts'
 import * as PlaySound from './sounds.ts'
 
 import {HighScore, setupHighScore} from './highScore.ts'
 
-import { eventBus } from '../main.ts'
+import {on, fire } from '../main.ts'
 
 import * as playerOne from './playerName.ts'
 import * as dice from './dice.ts'
@@ -56,18 +56,18 @@ export class App {
       playerOne.init()
 
       //================================================
-      //                 bind events 
+      //                 bind signals 
       //================================================
 
       if (!this.isGameComplete()) {
          this.resetTurn()
       }
 
-      events.on(`PopupReset`, "", () => {
+      signals.on(`PopupReset`, "", () => {
          this.resetGame()
       })
 
-      eventBus.on(`ScoreElementResetTurn`, "", () => {
+      on(`ScoreElementResetTurn`, "", () => {
          if (this.isGameComplete()) {
             this.clearPossibleScores()
             this.setLeftScores()
@@ -78,7 +78,7 @@ export class App {
          }
       })
 
-      events.on('AddedView', "", (view: { type: string, index: number, name: string }) => {
+      signals.on('AddedView', "", (view: { type: string, index: number, name: string }) => {
          if (view.type === 'ScoreButton') {
             this.scoreItems.push(new ScoreElement(view.index, view.name))
          }
@@ -115,13 +115,13 @@ export class App {
 
    /** resets game state to start a new game */
    resetGame() {
-      events.fire(`HidePopup`, "", null)
+      signals.fire(`HidePopup`, "", null)
       dice.resetGame()
       for (const scoreItem of this.scoreItems) {
          scoreItem.reset()
       }
       // clear the view
-      eventBus.fire('UpdatePlayer', "1", {
+      fire('UpdatePlayer', "1", {
          index: 0,
          color: "brown",
          text: ""
@@ -132,7 +132,7 @@ export class App {
       this.leftTotal = 0
       this.rightTotal = 0
 
-      events.fire('UpdateText', 'leftscore',
+      signals.fire('UpdateText', 'leftscore',
          {
             border: true,
             fill: true,
@@ -157,7 +157,7 @@ export class App {
       rollButton.state.text = winMsg[0]
       rollButton.update()
       this.updatePlayer(0, 'snow', "")
-      events.fire(`UpdateText`, 'infolabel', {
+      signals.fire(`UpdateText`, 'infolabel', {
          border: false,
          fill: true,
          fillColor: "snow",
@@ -171,7 +171,7 @@ export class App {
          localStorage.setItem("highScore", JSON.stringify(thisPlayer.score));
          winMsg.push("You set a new high score!")
       }
-      events.fire('ShowPopup', "", { title: 'Game Over!', msg: winMsg })
+      signals.fire('ShowPopup', "", { title: 'Game Over!', msg: winMsg })
    }
 
    /** check all scoreElements to see if game is complete */
@@ -208,7 +208,7 @@ export class App {
       }
       if (this.leftTotal > 62) {
          this.addScore(35)
-         events.fire('UpdateText', 'leftscore',
+         signals.fire('UpdateText', 'leftscore',
             {
                border: true,
                fill: true,
@@ -219,7 +219,7 @@ export class App {
          )
       }
       else {
-         events.fire('UpdateText', 'leftscore',
+         signals.fire('UpdateText', 'leftscore',
             {
                border: true,
                fill: true,
@@ -230,7 +230,7 @@ export class App {
          )
       }
       if (this.leftTotal === 0) {
-         events.fire('UpdateText', 'leftscore',
+         signals.fire('UpdateText', 'leftscore',
             {
                border: true,
                fill: true,
@@ -272,7 +272,7 @@ export class App {
 
    /** broadcast an update message to the view element */
    updatePlayer = (index: number, color: string, text: string) => {
-      eventBus.fire('UpdatePlayer', index.toString(), {
+      fire('UpdatePlayer', index.toString(), {
          index: index,
          color: color,
          text: text
