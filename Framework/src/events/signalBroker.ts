@@ -1,30 +1,30 @@
 
 import type {CoreEvents} from './coreEventTypes.ts'
-import type { SignalBroker, EventContract, EventHandler } from '../types.ts'
+import type { SignalAggregator, EventContract, EventHandler } from '../types.ts'
 
 
 /** 
- * We use this factory function to create a new SignalBroker service.      
+ * We use this factory function to create a new SignalAggregator service.      
  * You can use intersection types for the generic type:     
- * @example buildSignalBroker<CoreEvents & LocalEvents>()
+ * @example buildSignalAggregator<CoreEvents & LocalEvents>()
  */
-export const signals = buildSignalBroker<CoreEvents>()
+export const signals = buildSignalAggregator<CoreEvents>()
 
 /** 
- * A factory function that returns a generic strongly-typed SignalBroker instance 
+ * A factory function that returns a generic strongly-typed SignalAggregator instance 
  * @typeParam T - type that extends EventContract\<T\>
- * @returns SignalBroker<T> - a strongly-typed SignalBroker object with the following two methods:   
+ * @returns SignalAggregator<T> - a strongly-typed SignalAggregator object with the following two methods:   
  * @method on - registers a callback function to be called when the named signal is fired. 
  * @method fire - fires (emmits) the signal, triggering the execution of registered callbacks. 
  */
-export function buildSignalBroker<T extends EventContract<T>>(): SignalBroker<T> {
+export function buildSignalAggregator<T extends EventContract<T>>(): SignalAggregator<T> {
 
    /** 
     * holds an array of eventhandler for each registered signal name 
     */
    const eventHandlers: Map<string, EventHandler[]> = new Map()
 
-   const newSignalBroker: SignalBroker<T> = {
+   const newSignalBroker: SignalAggregator<T> = {
 
       /** 
        * on - registers a handler function to be executed when a signal is sent

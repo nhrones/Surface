@@ -38,9 +38,9 @@ export type EventHandler<T = any> = (data: T) => void;
 export type EventContract<T> = { [K in keyof T]: T[K] }
 
 /** 
- * An SignalBroker interface with typed signals and callbacks 
+ * An SignalAggregator interface with typed signals and callbacks 
  */
-export interface SignalBroker<T extends EventContract<T>> {
+export interface SignalAggregator<T extends EventContract<T>> {
    /** 
     * Registers a handler function to be executed when a signal is fired
     */

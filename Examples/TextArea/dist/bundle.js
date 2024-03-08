@@ -1418,7 +1418,7 @@ function sanitizeName(name) {
 __name(sanitizeName, "sanitizeName");
 
 // ../../Framework/src/events/signalBroker.ts
-function buildSignalBroker() {
+function buildSignalAggregator() {
   const eventHandlers = /* @__PURE__ */ new Map();
   const newSignalBroker = {
     /** 
@@ -1455,8 +1455,8 @@ function buildSignalBroker() {
   };
   return newSignalBroker;
 }
-__name(buildSignalBroker, "buildSignalBroker");
-var signals = buildSignalBroker();
+__name(buildSignalAggregator, "buildSignalAggregator");
+var signals = buildSignalAggregator();
 
 // ../../Framework/src/render/activeNodes.ts
 var activeNodes = /* @__PURE__ */ new Set();
