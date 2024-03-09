@@ -63,6 +63,10 @@ export class App {
          this.resetTurn()
       }
 
+      signals.on("ButtonTouched", "help", () => {
+         location.href = 'https://github.com/nhrones/NewDice/blob/main/readme.md'
+      })
+
       signals.on(`PopupReset`, "", () => {
          this.resetGame()
       })

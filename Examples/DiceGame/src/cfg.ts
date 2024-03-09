@@ -260,7 +260,19 @@ export const cfg = {
          size: { width: 350, height: 350 },
          fontSize: 24,
          text: ""
-      },  
+      },
+      {
+         kind: "Button",
+         id: "help",
+         idx: 0,
+         tabOrder: 1,
+         location: { left: col4Left + 40, top: row4Top + 33 },
+         size: { width: 50, height: 40 },
+         boarderWidth: 2,
+         color:"grey",
+         radius: 5,
+         text: "Help"
+      },
       
    ] as ElementDescriptor[]
 }

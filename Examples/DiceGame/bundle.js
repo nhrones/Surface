@@ -700,15 +700,15 @@ var TextArea = class extends Container {
    * Highlight selected text 
    */
   renderHighlight(line) {
-    const { lineHeight, padding, location, selectStart, selectEnd, text } = this;
+    const { lineHeight, padding, location: location2, selectStart, selectEnd, text } = this;
     const rectX = selectStart <= line.start ? 0 : ctx.measureText(text.substring(line.start, selectStart)).width;
     const endFrom = selectStart > line.start ? selectStart : line.start;
     const endTo = selectEnd >= line.end ? line.end : selectEnd;
     const rectWidth = ctx.measureText(text.substring(endFrom, endTo)).width;
-    const rectY = location.top + lineHeight * line.index + padding;
+    const rectY = location2.top + lineHeight * line.index + padding;
     ctx.fillStyle = "lightblue";
     ctx.fillRect(
-      location.left + padding + rectX,
+      location2.left + padding + rectX,
       rectY,
       rectWidth,
       lineHeight
@@ -1823,6 +1823,9 @@ var App = class {
     if (!this.isGameComplete()) {
       this.resetTurn();
     }
+    signals.on("ButtonTouched", "help", () => {
+      location.href = "https://github.com/nhrones/NewDice/blob/main/readme.md";
+    });
     signals.on(`PopupReset`, "", () => {
       this.resetGame();
     });
@@ -2282,6 +2285,18 @@ var cfg = {
       size: { width: 350, height: 350 },
       fontSize: 24,
       text: ""
+    },
+    {
+      kind: "Button",
+      id: "help",
+      idx: 0,
+      tabOrder: 1,
+      location: { left: col4Left + 40, top: row4Top + 33 },
+      size: { width: 50, height: 40 },
+      boarderWidth: 2,
+      color: "grey",
+      radius: 5,
+      text: "Help"
     }
   ]
 };
@@ -2640,8 +2655,8 @@ __export(ScoreButton_exports, {
 });
 
 // src/ViewModels/pathFactory.ts
-function buildRightScore(location, size2) {
-  const { left: left4, right, top: top3, bottom, width, height, radius } = getPathGeometry(location, size2);
+function buildRightScore(location2, size2) {
+  const { left: left4, right, top: top3, bottom, width, height, radius } = getPathGeometry(location2, size2);
   const halfWidth = left4 + width * 0.3;
   const halfHeight = top3 + height * 0.5 + 5;
   const p = new Path2D();
@@ -2655,8 +2670,8 @@ function buildRightScore(location, size2) {
   return p;
 }
 __name(buildRightScore, "buildRightScore");
-function buildLeftScore(location, size2) {
-  const { left: left4, right, top: top3, bottom, width, height, radius } = getPathGeometry(location, size2);
+function buildLeftScore(location2, size2) {
+  const { left: left4, right, top: top3, bottom, width, height, radius } = getPathGeometry(location2, size2);
   const halfWidth = left4 + width * 0.7;
   const halfHeight = top3 + height * 0.5 - 5;
   const p = new Path2D();
@@ -2670,8 +2685,8 @@ function buildLeftScore(location, size2) {
   return p;
 }
 __name(buildLeftScore, "buildLeftScore");
-var getPathGeometry = /* @__PURE__ */ __name((location, size2, radius = 10) => {
-  const { left: left4, top: top3 } = location;
+var getPathGeometry = /* @__PURE__ */ __name((location2, size2, radius = 10) => {
+  const { left: left4, top: top3 } = location2;
   const { width, height } = size2;
   return {
     left: left4,
