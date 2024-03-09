@@ -1218,6 +1218,10 @@ var Woohoo = /* @__PURE__ */ __name(() => {
   if (loaded && woohooBuf)
     playBuffer(woohooBuf);
 }, "Woohoo");
+var Nooo = /* @__PURE__ */ __name(() => {
+  if (loaded && noooBuf)
+    playBuffer(noooBuf);
+}, "Nooo");
 function playBuffer(buffer) {
   if (canPlay) {
     const source = context.createBufferSource();
@@ -1906,7 +1910,6 @@ var App = class {
   /** show a popup with final score */
   showFinalScore() {
     const winMsg = [];
-    Woohoo();
     winMsg.push("You won!");
     state2.color = "black";
     state2.text = winMsg[0];
@@ -1920,9 +1923,11 @@ var App = class {
       text: winMsg[0] + " " + thisPlayer.score
     });
     if (thisPlayer.score > HighScore) {
-      console.log("setting high score to ", thisPlayer.score);
+      Woohoo();
       localStorage.setItem("highScore", JSON.stringify(thisPlayer.score));
       winMsg.push("You set a new high score!");
+    } else {
+      Nooo();
     }
     signals.fire("ShowPopup", "", { title: "Game Over!", msg: winMsg });
   }

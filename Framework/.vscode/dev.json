@@ -1,0 +1,10 @@
+{
+   "build": {
+      "BundleName": "framework.js",
+      "Entry": [
+         "./mod.ts"
+      ],
+      "Minify": false,
+      "Out": "./"
+   }
+}

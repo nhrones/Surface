@@ -151,7 +151,7 @@ export class App {
    /** show a popup with final score */
    showFinalScore() {
       const winMsg =[]
-      PlaySound.Woohoo()
+      
       winMsg.push('You won!')
       rollButton.state.color = 'black'
       rollButton.state.text = winMsg[0]
@@ -167,9 +167,11 @@ export class App {
 
       // check and set high score
       if (thisPlayer.score > HighScore) {
-         console.log("setting high score to ", thisPlayer.score)
+         PlaySound.Woohoo()
          localStorage.setItem("highScore", JSON.stringify(thisPlayer.score));
          winMsg.push("You set a new high score!")
+      } else {
+         PlaySound.Nooo()
       }
       signals.fire('ShowPopup', "", { title: 'Game Over!', msg: winMsg })
    }
