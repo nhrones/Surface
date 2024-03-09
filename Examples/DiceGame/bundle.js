@@ -1248,11 +1248,15 @@ var woohooBuf;
 var loaded = false;
 
 // src/ViewModels/highScore.ts
-var HighScore = 0;
-function setupHighScore() {
-  HighScore = parseInt(localStorage.getItem("highScore")) ?? 0;
-  if (!HighScore)
-    localStorage.setItem("highScore", "10");
+var serverURL = document.location.origin;
+var highScore = 0;
+function setHighScore(value) {
+  highScore = value;
+  fetch(serverURL + "/", {
+    method: "POST",
+    mode: "cors",
+    body: JSON.stringify(value)
+  });
   signals.fire(
     "UpdateText",
     "highScoreValue",
@@ -1261,7 +1265,35 @@ function setupHighScore() {
       fill: true,
       fillColor: "snow",
       fontColor: "black",
-      text: HighScore + ""
+      text: highScore + ""
+    }
+  );
+}
+__name(setHighScore, "setHighScore");
+async function getHighScore() {
+  return await fetch(serverURL + "/highscore", {
+    method: "GET",
+    mode: "cors"
+  });
+}
+__name(getHighScore, "getHighScore");
+async function setupHighScore() {
+  if (highScore === 0) {
+    const response = await getHighScore();
+    const result = await response.json();
+    console.info("setupHighScore ", result.value);
+    highScore = result.value;
+    setHighScore(highScore);
+  }
+  signals.fire(
+    "UpdateText",
+    "highScoreValue",
+    {
+      border: false,
+      fill: true,
+      fillColor: "snow",
+      fontColor: "black",
+      text: highScore + ""
     }
   );
 }
@@ -1925,8 +1957,9 @@ var App = class {
       fontColor: "black",
       text: winMsg[0] + " " + thisPlayer.score
     });
-    if (thisPlayer.score > HighScore) {
+    if (thisPlayer.score > highScore) {
       Woohoo();
+      setHighScore(thisPlayer.score);
       localStorage.setItem("highScore", JSON.stringify(thisPlayer.score));
       winMsg.push("You set a new high score!");
     } else {
@@ -2106,7 +2139,7 @@ var cfg = {
       tabOrder: 0,
       location: { left: 280, top: 40 },
       size: { width: 80, height: 25 },
-      text: "250",
+      text: "0",
       hasBoarder: false,
       bind: true
     },

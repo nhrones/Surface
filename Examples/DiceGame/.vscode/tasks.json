@@ -19,8 +19,9 @@
       },
       {
          "label": "RUN",
-         "type": "shell",
-         "command": "serve",
+         "type": "deno",
+         "command": "run",
+         "args": ["-A", "--unstable-kv","--quiet", "server.ts"],
          "problemMatcher": [
             "$deno"
          ]

@@ -86,7 +86,7 @@ export const cfg = {
          tabOrder: 0,
          location: { left: 280, top: 40 }, 
          size: { width: 80, height: 25 },
-         text: "250",
+         text: "0",
          hasBoarder: false,
          bind: true
       },

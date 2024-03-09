@@ -1,7 +1,7 @@
 import { signals } from '../deps.ts'
 import * as PlaySound from './sounds.ts'
 
-import {HighScore, setupHighScore} from './highScore.ts'
+import {highScore, setHighScore, setupHighScore} from './highScore.ts'
 
 import {on, fire } from '../main.ts'
 
@@ -170,8 +170,9 @@ export class App {
       })
 
       // check and set high score
-      if (thisPlayer.score > HighScore) {
+      if (thisPlayer.score > highScore) {
          PlaySound.Woohoo()
+         setHighScore(thisPlayer.score)
          localStorage.setItem("highScore", JSON.stringify(thisPlayer.score));
          winMsg.push("You set a new high score!")
       } else {
