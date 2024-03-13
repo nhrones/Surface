@@ -6,27 +6,13 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/ViewModels/closeButton.ts
-var thisID;
-var initCloseButton = /* @__PURE__ */ __name((id2) => {
-  thisID = id2;
-  signals.on("ButtonTouched", thisID, () => {
-    console.log("window.close");
-    self.close();
-  });
-}, "initCloseButton");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/ViewModels/constants.ts
-var HAIRSPACE = "\u200A";
-var CARETBAR = "\u258F";
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Button.ts
+// ../../Components/Views/Button.ts
 var Button_exports = {};
 __export(Button_exports, {
   default: () => Button
 });
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Text.ts
+// ../../Components/Views/Text.ts
 var Text_exports = {};
 __export(Text_exports, {
   default: () => Text
@@ -164,7 +150,7 @@ var Text = class {
 };
 __name(Text, "Text");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Button.ts
+// ../../Components/Views/Button.ts
 var Button = class {
   /**
    * instantiate a new vitual Button-View
@@ -267,457 +253,7 @@ var Button = class {
 };
 __name(Button, "Button");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Container.ts
-var Container_exports = {};
-__export(Container_exports, {
-  default: () => Container
-});
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Scrollbar.ts
-var Scrollbar = class {
-  /**
-   *  Scrollbar ctor
-   */
-  constructor(host) {
-    this.mousePos = 0;
-    this.dragging = false;
-    this.hovered = false;
-    this.visible = true;
-    this.left = 0;
-    this.top = 0;
-    this.width = 0;
-    this.height = 0;
-    this.container = host;
-    this.left = host.left + host.width - host.scrollBarWidth, this.top = host.top;
-    this.height = host.height, this.width = host.scrollBarWidth;
-    this.fill = "#dedede";
-    this.cursor = {
-      index: 0,
-      top: 0,
-      bottom: host.height - host.scrollBarWidth,
-      left: this.left + this.width - host.scrollBarWidth,
-      width: host.scrollBarWidth,
-      length: host.scrollBarWidth,
-      fill: "#bababa"
-    };
-    this.path = new Path2D();
-    this.path.rect(
-      this.left,
-      this.top,
-      this.width - 2,
-      this.height
-    );
-    this.mousePos = 0;
-  }
-  /**
-   *  called from - container.ts - 97
-   */
-  render(ItemsLength, capacity) {
-    const ratio = capacity / ItemsLength;
-    this.cursor.length = 100;
-    ctx.save();
-    ctx.fillStyle = this.fill;
-    ctx.fill(this.path);
-    ctx.fillStyle = "red";
-    ctx.fillRect(
-      this.cursor.left,
-      this.container.top + this.cursor.top,
-      this.cursor.width,
-      this.cursor.length
-    );
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = this.hovered ? "orange" : "#bababa";
-    ctx.stroke(this.path);
-    ctx.restore();
-  }
-  /** 
-   * called by the scroll event - container.ts - 63 
-   */
-  scroll(delta) {
-    const { height, lineHeight, rowCapacity, top: top3 } = this.container;
-    this.cursor.index -= delta;
-    if (this.cursor.index < 0)
-      this.cursor.index = 0;
-    const newTop = this.cursor.index * lineHeight;
-    if (newTop + this.cursor.length >= height + top3) {
-    } else {
-      this.cursor.top = newTop;
-    }
-    if (this.cursor.top < 0)
-      this.cursor.top = 0;
-    this.container.render();
-  }
-};
-__name(Scrollbar, "Scrollbar");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Container.ts
-var Container = class {
-  /** 
-   * Container ctor 
-   */
-  constructor(el) {
-    this.id = 0;
-    this.activeView = true;
-    this.index = 1;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.padding = 10;
-    this.left = 0;
-    this.top = 0;
-    this.lineHeight = 0;
-    this.showPlaceholder = true;
-    this.scrollBarWidth = 25;
-    /** the number of characters that will fit in this width */
-    this.textCapacity = 0;
-    /** number of rows that will fit container height */
-    this.rowCapacity = 0;
-    this.name = el.id;
-    this.tabOrder = el.tabOrder || 0;
-    this.left = el.location.left;
-    this.top = el.location.top;
-    this.width = el.size?.width ?? 100;
-    this.height = el.size?.height ?? 40;
-    this.color = el.color || "white";
-    this.path = new Path2D();
-    this.path.rect(
-      this.left,
-      this.top,
-      this.width,
-      this.height
-    );
-    this.scrollBar = new Scrollbar(this);
-    signals.on("Scroll", "", (evt) => {
-      this.scrollBar.scroll(evt.deltaY);
-    });
-    signals.on("TextMetrics", this.name, (data) => {
-      this.textCapacity = data.capacity.columns - 1;
-      this.rowCapacity = data.capacity.rows;
-    });
-  }
-  touched() {
-  }
-  update() {
-    this.render();
-  }
-  render() {
-    ctx.save();
-    ctx.lineWidth = 2;
-    if (this.focused === false) {
-      ctx.strokeStyle = this.hovered ? "orange" : "black";
-      ctx.fillStyle = this.color;
-    } else {
-      ctx.strokeStyle = "blue";
-      ctx.fillStyle = "white";
-    }
-    ctx.stroke(this.path);
-    ctx.fill(this.path);
-    ctx.restore();
-    if (this.focused === true) {
-      this.scrollBar.render(50, 27);
-    }
-  }
-};
-__name(Container, "Container");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/Popup.ts
-var Popup_exports = {};
-__export(Popup_exports, {
-  default: () => Popup
-});
-var left = 1;
-var top = 1;
-var Popup = class {
-  /** ctor that instantiates a new vitual Popup view */
-  constructor(el) {
-    this.id = 0;
-    // assigned by activeViews.add() 
-    this.index = -1;
-    this.activeView = true;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.color = "black";
-    this.text = "";
-    this.fontColor = "red";
-    this.fontSize = 28;
-    this.visible = true;
-    this.tabOrder = el.tabOrder || 0;
-    this.enabled = true;
-    this.color = "white";
-    this.location = el.location;
-    this.hiddenPath = new Path2D();
-    this.hiddenPath.rect(1, 1, 1, 1);
-    this.size = el.size || { width: 300, height: 300 };
-    this.shownPath = this.buildPath(el.radius || 30);
-    this.path = this.hiddenPath;
-    this.fontSize = el.fontSize || 24;
-    this.textNode = new Text(
-      {
-        kind: "Text",
-        idx: -1,
-        tabOrder: 0,
-        id: this.name + "Label",
-        text: el.text || "",
-        location: this.location,
-        size: this.size,
-        bind: true
-      }
-    );
-    signals.on("ShowPopup", "", (data) => {
-      this.show(data.msg);
-    });
-    signals.on("HidePopup", "", () => this.hide());
-  }
-  /** build a Path2D */
-  buildPath(radius) {
-    const path = new Path2D();
-    path.roundRect(this.location.left, this.location.top, this.size.width, this.size.height, radius);
-    return path;
-  }
-  /** show the virtual Popup view */
-  show(msg) {
-    signals.fire("FocusPopup", " ", this);
-    this.text = msg;
-    left = this.location.left;
-    top = this.location.top;
-    this.path = this.shownPath;
-    this.visible = true;
-    setHasVisiblePopup(true);
-    this.render();
-  }
-  /** hide the virtual Popup view */
-  hide() {
-    if (this.visible) {
-      left = 1;
-      top = 1;
-      this.path = this.hiddenPath;
-      this.visible = false;
-      setHasVisiblePopup(false);
-    }
-  }
-  /** called from Surface/canvasEvents when this element has been touched */
-  touched() {
-    this.hide();
-    signals.fire("PopupReset", "", null);
-  }
-  /** update this virtual Popups view (render it) */
-  update() {
-    if (this.visible)
-      this.render();
-  }
-  /** render this virtual Popup view */
-  render() {
-    ctx.save();
-    ctx.shadowColor = "#404040";
-    ctx.shadowBlur = 45;
-    ctx.shadowOffsetX = 5;
-    ctx.shadowOffsetY = 5;
-    ctx.fillStyle = windowCFG.containerColor;
-    ctx.fill(this.path);
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = windowCFG.textColor;
-    ctx.stroke(this.path);
-    this.textNode.fontSize = this.fontSize;
-    this.textNode.fillColor = this.color;
-    this.textNode.fontColor = this.fontColor;
-    this.textNode.text = this.text;
-    this.textNode.update();
-    ctx.restore();
-    this.visible = true;
-  }
-};
-__name(Popup, "Popup");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/TextArea.ts
-var TextArea_exports = {};
-__export(TextArea_exports, {
-  default: () => TextArea
-});
-var caretChar = HAIRSPACE;
-var placeholder = "text";
-var TextArea = class extends Container {
-  constructor(el) {
-    super(el);
-    this.id = 0;
-    this.activeView = true;
-    this.index = 1;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.log = false;
-    this.padding = 10;
-    this.lineHeight = 0;
-    this.text = "";
-    this.lines = [];
-    this.trimmedLeft = "";
-    this.trimmedRight = "";
-    this.insertionColumn = 0;
-    this.insertionRow = 0;
-    this.selectStart = 0;
-    this.selectEnd = 0;
-    this.widthPerChar = 15;
-    /** 
-     * the number of characters that will fit in this width  
-     */
-    this.textCapacity = 0;
-    this.rowCapacity = 0;
-    this.showPlaceholder = true;
-    this.name = el.id;
-    this.tabOrder = el.tabOrder || 0;
-    this.location = el.location;
-    this.size = el.size || { width: 100, height: 40 };
-    this.color = el.color || "white";
-    this.fontColor = "black";
-    this.fontSize = el.fontSize || 28;
-    this.getMetrics();
-    this.path = new Path2D();
-    this.path.rect(
-      this.location.left,
-      this.location.top,
-      this.size.width,
-      this.size.height
-    );
-    signals.fire(
-      "TextMetrics",
-      this.name,
-      {
-        size: this.size,
-        capacity: { rows: this.rowCapacity, columns: this.textCapacity }
-      }
-    );
-    signals.on("UpdateTextArea", this.name, (data) => {
-      const {
-        _reason,
-        text,
-        lines,
-        focused,
-        insertionColumn,
-        insertionRow,
-        selectStart,
-        selectEnd
-      } = data;
-      this.insertionColumn = insertionColumn;
-      this.insertionRow = insertionRow;
-      this.selectStart = selectStart;
-      this.selectEnd = selectEnd;
-      this.focused = focused;
-      this.lines = lines;
-      this.text = text;
-      this.showPlaceholder = this.text.length === 0;
-      if (this.focused === true) {
-        caretChar = CARETBAR;
-      }
-      let str = "";
-      for (const line of this.lines) {
-        str += `${JSON.stringify(line)}
-            `;
-      }
-      this.render();
-    });
-    this.render();
-  }
-  getMetrics() {
-    ctx.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
-    const t = "This is a test! A very very long text!";
-    const m = ctx.measureText(t);
-    this.lineHeight = m.fontBoundingBoxAscent + m.fontBoundingBoxDescent;
-    this.size.height = this.size.height;
-    this.widthPerChar = m.width / t.length;
-    this.textCapacity = this.size.width / this.widthPerChar;
-  }
-  getUnusedSpace() {
-    return this.size.width - ctx.measureText(this.text).width;
-  }
-  touched() {
-    signals.fire("TextViewTouched", this.name, null);
-  }
-  update() {
-    this.render();
-  }
-  /** render the container and text */
-  render() {
-    super.render();
-    ctx.textAlign = "left";
-    ctx.textBaseline = "alphabetic";
-    ctx.save();
-    if (this.focused === true) {
-      if (tickCount === 30)
-        caretChar = HAIRSPACE;
-      if (tickCount === 0)
-        caretChar = CARETBAR;
-    } else {
-      caretChar = "";
-    }
-    let lineNumber = 0;
-    for (const line of this.lines) {
-      if (line.length <= 0)
-        continue;
-      const textTop = this.location.top + this.lineHeight * (lineNumber + 1);
-      if (this.showPlaceholder && this.focused === false) {
-        ctx.fillStyle = "Gray";
-        ctx.fillText(
-          placeholder,
-          this.location.left + this.padding,
-          textTop
-        );
-      } else {
-        let txt = "";
-        this.positionCaret(line.text);
-        if (line.hasSelection)
-          this.renderHighlight(line);
-        txt = this.insertionRow === lineNumber ? this.trimmedLeft + caretChar + this.trimmedRight : line.text;
-        ctx.fillStyle = this.fontColor;
-        ctx.fillText(
-          txt,
-          this.location.left + this.padding,
-          textTop
-        );
-      }
-      ctx.restore();
-      lineNumber++;
-    }
-  }
-  /** locate Caret */
-  positionCaret(line) {
-    const col = this.insertionColumn;
-    this.trimmedLeft = line.substring(0, col);
-    this.trimmedRight = line.substring(col);
-  }
-  /** 
-   * Highlight selected text 
-   */
-  renderHighlight(line) {
-    const { lineHeight, padding, location: location2, selectStart, selectEnd, text } = this;
-    const rectX = selectStart <= line.start ? 0 : ctx.measureText(text.substring(line.start, selectStart)).width;
-    const endFrom = selectStart > line.start ? selectStart : line.start;
-    const endTo = selectEnd >= line.end ? line.end : selectEnd;
-    const rectWidth = ctx.measureText(text.substring(endFrom, endTo)).width;
-    const rectY = location2.top + lineHeight * line.index + padding;
-    ctx.fillStyle = "lightblue";
-    ctx.fillRect(
-      location2.left + padding + rectX,
-      rectY,
-      rectWidth,
-      lineHeight
-    );
-  }
-};
-__name(TextArea, "TextArea");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/Views/CheckBox.ts
+// ../../Components/Views/CheckBox.ts
 var CheckBox_exports = {};
 __export(CheckBox_exports, {
   default: () => CheckBox
@@ -822,7 +358,468 @@ var CheckBox = class {
 };
 __name(CheckBox, "CheckBox");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Components/base_manifest.ts
+// ../../Components/Views/Container.ts
+var Container_exports = {};
+__export(Container_exports, {
+  default: () => Container
+});
+
+// ../../Components/Views/Scrollbar.ts
+var Scrollbar = class {
+  /**
+   *  Scrollbar ctor
+   */
+  constructor(host) {
+    this.mousePos = 0;
+    this.dragging = false;
+    this.hovered = false;
+    this.visible = true;
+    this.left = 0;
+    this.top = 0;
+    this.width = 0;
+    this.height = 0;
+    this.container = host;
+    this.left = host.left + host.width - host.scrollBarWidth, this.top = host.top;
+    this.height = host.height, this.width = host.scrollBarWidth;
+    this.fill = "#dedede";
+    this.cursor = {
+      index: 0,
+      top: 0,
+      bottom: host.height - host.scrollBarWidth,
+      left: this.left + this.width - host.scrollBarWidth,
+      width: host.scrollBarWidth,
+      length: host.scrollBarWidth,
+      fill: "#bababa"
+    };
+    this.path = new Path2D();
+    this.path.rect(
+      this.left,
+      this.top,
+      this.width - 2,
+      this.height
+    );
+    this.mousePos = 0;
+  }
+  /**
+   *  called from - container.ts - 97
+   */
+  render(ItemsLength, capacity) {
+    const ratio = capacity / ItemsLength;
+    this.cursor.length = 100;
+    ctx.save();
+    ctx.fillStyle = this.fill;
+    ctx.fill(this.path);
+    ctx.fillStyle = "red";
+    ctx.fillRect(
+      this.cursor.left,
+      this.container.top + this.cursor.top,
+      this.cursor.width,
+      this.cursor.length
+    );
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = this.hovered ? "orange" : "#bababa";
+    ctx.stroke(this.path);
+    ctx.restore();
+  }
+  /** 
+   * called by the scroll event - container.ts - 63 
+   */
+  scroll(delta) {
+    const { height, lineHeight, rowCapacity, top: top3 } = this.container;
+    this.cursor.index -= delta;
+    if (this.cursor.index < 0)
+      this.cursor.index = 0;
+    const newTop = this.cursor.index * lineHeight;
+    if (newTop + this.cursor.length >= height + top3) {
+    } else {
+      this.cursor.top = newTop;
+    }
+    if (this.cursor.top < 0)
+      this.cursor.top = 0;
+    this.container.render();
+  }
+};
+__name(Scrollbar, "Scrollbar");
+
+// ../../Components/Views/Container.ts
+var Container = class {
+  /** 
+   * Container ctor 
+   */
+  constructor(el) {
+    this.id = 0;
+    this.activeView = true;
+    this.index = 1;
+    this.zOrder = 0;
+    this.tabOrder = 0;
+    this.name = "";
+    this.enabled = true;
+    this.hovered = false;
+    this.focused = false;
+    this.padding = 10;
+    this.left = 0;
+    this.top = 0;
+    this.lineHeight = 0;
+    this.showPlaceholder = true;
+    this.scrollBarWidth = 25;
+    /** the number of characters that will fit in this width */
+    this.textCapacity = 0;
+    /** number of rows that will fit container height */
+    this.rowCapacity = 0;
+    this.name = el.id;
+    this.tabOrder = el.tabOrder || 0;
+    this.left = el.location.left;
+    this.top = el.location.top;
+    this.width = el.size?.width ?? 100;
+    this.height = el.size?.height ?? 40;
+    this.color = el.color || "white";
+    this.path = new Path2D();
+    this.path.rect(
+      this.left,
+      this.top,
+      this.width,
+      this.height
+    );
+    this.scrollBar = new Scrollbar(this);
+    signals.on("Scroll", "", (evt) => {
+      this.scrollBar.scroll(evt.deltaY);
+    });
+    signals.on("TextMetrics", this.name, (data) => {
+      this.textCapacity = data.capacity.columns - 1;
+      this.rowCapacity = data.capacity.rows;
+    });
+  }
+  touched() {
+  }
+  update() {
+    this.render();
+  }
+  render() {
+    ctx.save();
+    ctx.lineWidth = 2;
+    if (this.focused === false) {
+      ctx.strokeStyle = this.hovered ? "orange" : "black";
+      ctx.fillStyle = this.color;
+    } else {
+      ctx.strokeStyle = "blue";
+      ctx.fillStyle = "white";
+    }
+    ctx.stroke(this.path);
+    ctx.fill(this.path);
+    ctx.restore();
+    if (this.focused === true) {
+      this.scrollBar.render(50, 27);
+    }
+  }
+};
+__name(Container, "Container");
+
+// ../../Components/Views/Popup.ts
+var Popup_exports = {};
+__export(Popup_exports, {
+  default: () => Popup
+});
+var left = 1;
+var top = 1;
+var Popup = class {
+  /** ctor that instantiates a new vitual Popup view */
+  constructor(el) {
+    this.id = 0;
+    // assigned by activeViews.add() 
+    this.index = -1;
+    this.activeView = true;
+    this.zOrder = 0;
+    this.tabOrder = 0;
+    this.name = "";
+    this.enabled = true;
+    this.hovered = false;
+    this.focused = false;
+    this.color = "black";
+    this.text = "";
+    this.fontColor = "red";
+    this.fontSize = 28;
+    this.visible = true;
+    this.tabOrder = el.tabOrder || 0;
+    this.enabled = true;
+    this.color = "white";
+    this.location = el.location;
+    this.hiddenPath = new Path2D();
+    this.hiddenPath.rect(1, 1, 1, 1);
+    this.size = el.size || { width: 300, height: 300 };
+    this.shownPath = this.buildPath(el.radius || 30);
+    this.path = this.hiddenPath;
+    this.fontSize = el.fontSize || 24;
+    this.textNode = new Text(
+      {
+        kind: "Text",
+        idx: -1,
+        tabOrder: 0,
+        id: this.name + "Label",
+        text: el.text || "",
+        location: this.location,
+        size: this.size,
+        bind: true
+      }
+    );
+    signals.on("ShowPopup", "", (data) => {
+      this.show(data.msg);
+    });
+    signals.on("HidePopup", "", () => this.hide());
+  }
+  /** build a Path2D */
+  buildPath(radius) {
+    const path = new Path2D();
+    path.roundRect(this.location.left, this.location.top, this.size.width, this.size.height, radius);
+    return path;
+  }
+  /** show the virtual Popup view */
+  show(msg) {
+    signals.fire("FocusPopup", " ", this);
+    this.text = msg[0];
+    left = this.location.left;
+    top = this.location.top;
+    this.path = this.shownPath;
+    this.visible = true;
+    setHasVisiblePopup(true);
+    this.render();
+  }
+  /** hide the virtual Popup view */
+  hide() {
+    if (this.visible) {
+      left = 1;
+      top = 1;
+      this.path = this.hiddenPath;
+      this.visible = false;
+      setHasVisiblePopup(false);
+    }
+  }
+  /** called from Surface/canvasEvents when this element has been touched */
+  touched() {
+    this.hide();
+    signals.fire("PopupReset", "", null);
+  }
+  /** update this virtual Popups view (render it) */
+  update() {
+    if (this.visible)
+      this.render();
+  }
+  /** render this virtual Popup view */
+  render() {
+    ctx.save();
+    ctx.shadowColor = "#404040";
+    ctx.shadowBlur = 45;
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 5;
+    ctx.fillStyle = windowCFG.containerColor;
+    ctx.fill(this.path);
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = windowCFG.textColor;
+    ctx.stroke(this.path);
+    this.textNode.fontSize = this.fontSize;
+    this.textNode.fillColor = this.color;
+    this.textNode.fontColor = this.fontColor;
+    this.textNode.text = this.text;
+    this.textNode.update();
+    ctx.restore();
+    this.visible = true;
+  }
+};
+__name(Popup, "Popup");
+
+// ../../Components/Views/TextArea.ts
+var TextArea_exports = {};
+__export(TextArea_exports, {
+  default: () => TextArea
+});
+var caretChar = HAIRSPACE;
+var placeholder = "text";
+var TextArea = class extends Container {
+  constructor(el) {
+    super(el);
+    this.id = 0;
+    this.activeView = true;
+    this.index = 1;
+    this.zOrder = 0;
+    this.tabOrder = 0;
+    this.name = "";
+    this.enabled = true;
+    this.hovered = false;
+    this.focused = false;
+    this.log = false;
+    this.padding = 10;
+    this.lineHeight = 0;
+    this.text = "";
+    this.lines = [];
+    this.trimmedLeft = "";
+    this.trimmedRight = "";
+    this.insertionColumn = 0;
+    this.insertionRow = 0;
+    this.selectStart = 0;
+    this.selectEnd = 0;
+    this.widthPerChar = 15;
+    this.solidCaret = true;
+    /** 
+     * the number of characters that will fit in this width  
+     */
+    this.textCapacity = 0;
+    this.rowCapacity = 0;
+    this.showPlaceholder = true;
+    this.name = el.id;
+    this.tabOrder = el.tabOrder || 0;
+    this.location = el.location;
+    this.size = el.size || { width: 100, height: 40 };
+    this.color = el.color || "white";
+    this.fontColor = "black";
+    this.fontSize = el.fontSize || 28;
+    this.getMetrics();
+    this.path = new Path2D();
+    this.path.rect(
+      this.location.left,
+      this.location.top,
+      this.size.width,
+      this.size.height
+    );
+    signals.fire(
+      "TextMetrics",
+      this.name,
+      {
+        size: this.size,
+        capacity: { rows: this.rowCapacity, columns: this.textCapacity }
+      }
+    );
+    signals.on("Blink", "", (data) => {
+      this.solidCaret = data;
+      this.render();
+      console.log("Blink");
+    });
+    signals.on("UpdateTextArea", this.name, (data) => {
+      const {
+        _reason,
+        text,
+        lines,
+        focused,
+        insertionColumn,
+        insertionRow,
+        selectStart,
+        selectEnd
+      } = data;
+      this.insertionColumn = insertionColumn;
+      this.insertionRow = insertionRow;
+      this.selectStart = selectStart;
+      this.selectEnd = selectEnd;
+      this.focused = focused;
+      this.lines = lines;
+      this.text = text;
+      this.showPlaceholder = this.text.length === 0;
+      if (this.focused === true) {
+        caretChar = CARETBAR;
+      }
+      let str = "";
+      for (const line of this.lines) {
+        str += `${JSON.stringify(line)}
+            `;
+      }
+      const A = true;
+      if (A)
+        console.log(` 
+         focused: ${this.focused} insertionRow: ${this.insertionRow} 
+         highlighted text: ${text.substring(this.selectStart, this.selectEnd)}
+         selection -- start: ${this.selectStart}, end: ${this.selectEnd} 
+         insertion -- row: ${this.insertionRow}, column: ${this.insertionColumn}
+         ${str}`, "TextArea.UpdateTextArea");
+      this.render();
+    });
+    this.render();
+  }
+  getMetrics() {
+    ctx.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
+    const t = "This is a test! A very very long text!";
+    const m = ctx.measureText(t);
+    this.lineHeight = m.fontBoundingBoxAscent + m.fontBoundingBoxDescent;
+    this.size.height = this.size.height;
+    this.widthPerChar = m.width / t.length;
+    this.textCapacity = this.size.width / this.widthPerChar;
+  }
+  getUnusedSpace() {
+    return this.size.width - ctx.measureText(this.text).width;
+  }
+  touched() {
+    signals.fire("TextViewTouched", this.name, null);
+  }
+  update() {
+    this.render();
+  }
+  /** render the container and text */
+  render() {
+    super.render();
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
+    ctx.save();
+    if (this.focused === true) {
+      caretChar = CARETBAR;
+    } else {
+      caretChar = "";
+    }
+    let lineNumber = 0;
+    for (const line of this.lines) {
+      if (line.length <= 0)
+        continue;
+      const textTop = this.location.top + this.lineHeight * (lineNumber + 1);
+      if (this.showPlaceholder && this.focused === false) {
+        ctx.fillStyle = "Gray";
+        ctx.fillText(
+          placeholder,
+          this.location.left + this.padding,
+          textTop
+        );
+      } else {
+        let txt = "";
+        this.positionCaret(line.text);
+        if (line.hasSelection)
+          this.renderHighlight(line);
+        txt = this.insertionRow === lineNumber ? this.trimmedLeft + caretChar + this.trimmedRight : line.text;
+        ctx.fillStyle = this.fontColor;
+        ctx.fillText(
+          txt,
+          this.location.left + this.padding,
+          textTop
+        );
+      }
+      ctx.restore();
+      lineNumber++;
+    }
+  }
+  /** locate Caret */
+  positionCaret(line) {
+    const col = this.insertionColumn;
+    this.trimmedLeft = line.substring(0, col);
+    this.trimmedRight = line.substring(col);
+  }
+  /** 
+   * Highlight selected text 
+   */
+  renderHighlight(line) {
+    const { lineHeight, padding, location: location2, selectStart, selectEnd, text } = this;
+    const rectX = selectStart <= line.start ? 0 : ctx.measureText(text.substring(line.start, selectStart)).width;
+    const endFrom = selectStart > line.start ? selectStart : line.start;
+    const endTo = selectEnd >= line.end ? line.end : selectEnd;
+    const rectWidth = ctx.measureText(text.substring(endFrom, endTo)).width;
+    const rectY = location2.top + lineHeight * line.index + padding;
+    ctx.fillStyle = "lightblue";
+    ctx.fillRect(
+      location2.left + padding + rectX,
+      rectY,
+      rectWidth,
+      lineHeight
+    );
+  }
+};
+__name(TextArea, "TextArea");
+
+// ../../Components/base_manifest.ts
 var baseManifest = {
   Views: {
     "./Views/Button.ts": Button_exports,
@@ -836,7 +833,48 @@ var baseManifest = {
 };
 var base_manifest_default = baseManifest;
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/render/renderContext.ts
+// ../../Framework/src/events/signals.ts
+var signals = buildSignalAggregator();
+function buildSignalAggregator() {
+  const eventHandlers = /* @__PURE__ */ new Map();
+  const newSignalAggregator = {
+    /** 
+     * on - registers a handler function to be executed when a signal is sent
+     *  
+     * @param {T} signalName - signal name (one of `TypedEvents` only)!
+     * @param {string} id - id of a target element (may be an empty string)
+     * @param {Handler} handler - eventhandler callback function
+     */
+    on(signalName, id2, handler) {
+      const keyName = signalName + "-" + id2;
+      if (eventHandlers.has(keyName)) {
+        const handlers = eventHandlers.get(keyName);
+        handlers.push(handler);
+      } else {
+        eventHandlers.set(keyName, [handler]);
+      }
+    },
+    /** 
+     * Execute all registered handlers for a strongly-typed signal (signalName)
+     * @param {key} signalName - signal name - one of `TypedEvents` only!
+     * @param {string} id - id of a target element (may be an empty string)
+     * @param {T[key]} data - data payload, typed for this category of signal
+     */
+    fire(signalName, id2, data) {
+      const keyName = signalName + "-" + id2;
+      const handlers = eventHandlers.get(keyName);
+      if (handlers) {
+        for (const handler of handlers) {
+          handler(data);
+        }
+      }
+    }
+  };
+  return newSignalAggregator;
+}
+__name(buildSignalAggregator, "buildSignalAggregator");
+
+// ../../Framework/src/render/renderContext.ts
 var windowCFG = {
   containerColor: "snow",
   textColor: "black"
@@ -877,10 +915,13 @@ var getFactories = /* @__PURE__ */ __name(() => {
 var hasVisiblePopup = false;
 var setHasVisiblePopup = /* @__PURE__ */ __name((val) => hasVisiblePopup = val, "setHasVisiblePopup");
 var tickCount = 0;
+var solid = true;
 var incrementTickCount = /* @__PURE__ */ __name(() => {
   tickCount++;
-  if (tickCount > 60)
+  if (tickCount > 60) {
     tickCount = 0;
+    signals.fire("Blink", "", solid);
+  }
 }, "incrementTickCount");
 var canvas;
 var ctx;
@@ -908,48 +949,7 @@ function sanitizeName(name) {
 }
 __name(sanitizeName, "sanitizeName");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/events/signalBroker.ts
-var signals = buildSignalAggregator();
-function buildSignalAggregator() {
-  const eventHandlers = /* @__PURE__ */ new Map();
-  const newSignalBroker = {
-    /** 
-     * on - registers a handler function to be executed when a signal is sent
-     *  
-     * @param {T} signalName - signal name (one of `TypedEvents` only)!
-     * @param {string} id - id of a target element (may be an empty string)
-     * @param {Handler} handler - eventhandler callback function
-     */
-    on(signalName, id2, handler) {
-      const keyName = signalName + "-" + id2;
-      if (eventHandlers.has(keyName)) {
-        const handlers = eventHandlers.get(keyName);
-        handlers.push(handler);
-      } else {
-        eventHandlers.set(keyName, [handler]);
-      }
-    },
-    /** 
-     * Execute all registered handlers for a strongly-typed signal (signalName)
-     * @param {key} signalName - signal name - one of `TypedEvents` only!
-     * @param {string} id - id of a target element (may be an empty string)
-     * @param {T[key]} data - data payload, typed for this category of signal
-     */
-    fire(signalName, id2, data) {
-      const keyName = signalName + "-" + id2;
-      const handlers = eventHandlers.get(keyName);
-      if (handlers) {
-        for (const handler of handlers) {
-          handler(data);
-        }
-      }
-    }
-  };
-  return newSignalBroker;
-}
-__name(buildSignalAggregator, "buildSignalAggregator");
-
-// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/render/activeNodes.ts
+// ../../Framework/src/render/activeNodes.ts
 var activeNodes = /* @__PURE__ */ new Set();
 var addNode = /* @__PURE__ */ __name((view) => {
   activeNodes.add(view);
@@ -981,7 +981,7 @@ var renderNodes = /* @__PURE__ */ __name(() => {
   }
 }, "renderNodes");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/events/systemEvents.ts
+// ../../Framework/src/events/systemEvents.ts
 var left2 = 0;
 var x = 0;
 var y = 0;
@@ -1130,7 +1130,7 @@ function focusNext(target, _shift) {
 }
 __name(focusNext, "focusNext");
 
-// https://raw.githubusercontent.com/nhrones/Surface/main/Framework/src/render/uiContainer.ts
+// ../../Framework/src/render/uiContainer.ts
 var factories;
 function containerInit(canvas2, cfg2, manifest2) {
   initCFG(canvas2, cfg2, manifest2);
@@ -1160,6 +1160,20 @@ Make sure your view_manifest is up to date!`;
   }
 }
 __name(addElement, "addElement");
+
+// ../../Components/ViewModels/closeButton.ts
+var thisID;
+var initCloseButton = /* @__PURE__ */ __name((id2) => {
+  thisID = id2;
+  signals.on("ButtonTouched", thisID, () => {
+    console.log("window.close");
+    self.close();
+  });
+}, "initCloseButton");
+
+// ../../Components/ViewModels/constants.ts
+var HAIRSPACE = "\u200A";
+var CARETBAR = "|";
 
 // src/ViewModels/sounds.ts
 var context;

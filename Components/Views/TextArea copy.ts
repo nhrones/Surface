@@ -1,19 +1,19 @@
 // deno-lint-ignore-file no-explicit-any
-/// <reference lib="dom" />
 import Container from './Container.ts'
 import {
    ElementDescriptor,
    Location,
    View,
    ctx,
-   signals,
+   signals, //events,
+   tickCount,
    TextLine
 } from '../deps.ts'
 
 import {
    HAIRSPACE,
    CARETBAR,
-} from '../mod.ts'
+} from '../mod.ts'  //'../ViewModels/constants.ts'
 
 const dev = false
 
@@ -48,7 +48,6 @@ export default class TextArea extends Container implements View {
    selectStart = 0;
    selectEnd = 0;
    widthPerChar = 15
-   solidCaret = true
 
    /** 
     * the number of characters that will fit in this width  
@@ -62,7 +61,7 @@ export default class TextArea extends Container implements View {
    constructor(el: ElementDescriptor) {
 
       super(el)
-      
+
       this.name = el.id
       this.tabOrder = el.tabOrder || 0
       this.location = el.location
@@ -88,12 +87,6 @@ export default class TextArea extends Container implements View {
             capacity: { rows: this.rowCapacity, columns: this.textCapacity }
          }
       )
-
-      signals.on("Blink", "", (data: boolean) => {
-         this.solidCaret = data
-         this.render()
-         console.log('Blink')
-      })
 
       // the VM will emit this event whenever it needs to update the View            
       signals.on('UpdateTextArea', this.name, (data: any) => {
@@ -128,14 +121,14 @@ export default class TextArea extends Container implements View {
             str += `${JSON.stringify(line)}
             `
          }
-
-         const A = true
+         const A = false
          if (A) console.log(` 
          focused: ${this.focused} insertionRow: ${this.insertionRow} 
          highlighted text: ${text.substring(this.selectStart, this.selectEnd)}
          selection -- start: ${this.selectStart}, end: ${this.selectEnd} 
          insertion -- row: ${this.insertionRow}, column: ${this.insertionColumn}
          ${str}`, "TextArea.UpdateTextArea")
+
          this.render()
       })
 
@@ -180,7 +173,8 @@ export default class TextArea extends Container implements View {
 
       // blink the caret
       if (this.focused === true) {
-         caretChar = CARETBAR//hack (this.solidCaret)? HAIRSPACE : CARETBAR
+         if (tickCount === 30) caretChar = HAIRSPACE
+         if (tickCount === 0) caretChar = CARETBAR
       } else {
          caretChar = ''
       }
@@ -264,11 +258,11 @@ export default class TextArea extends Container implements View {
       // Finally, get the measurement for the top of the highlight rectangle
       const rectY = location.top + (lineHeight * (line.index)) + padding
 
-      // if (dev) {
-      //    console.log(`hiStart ${rectX}, hiEnd ${rectWidth}, hiTop ${rectY}`)
-      //    console.log(`selectStart ${selectStart}, selectEnd ${selectEnd}`)
-      //    console.log(`lineStart ${line.start}, lineEnd ${line.end}`)
-      // }
+      if (dev) {
+         console.log(`hiStart ${rectX}, hiEnd ${rectWidth}, hiTop ${rectY}`)
+         console.log(`selectStart ${selectStart}, selectEnd ${selectEnd}`)
+         console.log(`lineStart ${line.start}, lineEnd ${line.end}`)
+      }
 
       ctx.fillStyle = 'lightblue'
       ctx.fillRect(

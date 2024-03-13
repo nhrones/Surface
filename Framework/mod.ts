@@ -2,7 +2,7 @@
 //=================================================
 //    Component Deps
 //=================================================
-export * from '../Components/mod.ts'
+//export * from '../Components/mod.ts'
 
 //======================================
 //      render 
@@ -44,7 +44,7 @@ export {
 //      coms 
 //======================================
 
-export { signals, buildSignalAggregator } from './src/events/signalBroker.ts'
+export { signals, buildSignalAggregator } from './src/events/signals.ts'
 export { initHostEvents } from './src/events/systemEvents.ts'
 export type { CoreEvents } from './src/events/coreEventTypes.ts'
 export * from './src/types.ts'

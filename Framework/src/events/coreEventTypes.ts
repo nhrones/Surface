@@ -12,6 +12,9 @@ export type CoreEvents = {
    
    /*======= System Signals =======*/
 
+   /** a caret blink signal */
+   Blink: boolean,
+
    /** Focused state-changed signal */
    Focused: boolean,
 

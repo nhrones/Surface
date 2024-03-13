@@ -1,7 +1,7 @@
 
 import { ctx, incrementTickCount } from './renderContext.ts'
 import type { View } from '../types.ts'
-import { signals } from '../events/signalBroker.ts'
+import { signals } from '../events/signals.ts'
 
 //===============================  activeNodes  ======================================
 //       

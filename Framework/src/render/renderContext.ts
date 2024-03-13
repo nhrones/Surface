@@ -1,5 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 import baseManifest from '../../../Components/base_manifest.ts'
+import { signals } from '../events/signals.ts'
 
 import type {
    Configuration,
@@ -24,6 +25,7 @@ export let elementDescriptors: ElementDescriptor[];
  * To hold our application View-Manifest 
  */
 let appManifest: Manifest
+
 /** 
  * Initialize our configuration 
  */
@@ -38,9 +40,7 @@ export const initCFG = (
    appManifest = applicationManifest
 }
 
-
 export const fontColor = 'white'
-
 
 /** 
  * Build a set of View factories from both 
@@ -92,13 +92,18 @@ export const setHasVisiblePopup = (val: boolean) => hasVisiblePopup = val
  * A counter used to blink the caret (cursor) 
  */
 export let tickCount = 0
-
+export let solid = true
 /**  
  *  we use this tickcounter (0-60) to drive a blinking caret 
  */
 export const incrementTickCount = () => {
    tickCount++;
-   if (tickCount > 60) tickCount = 0
+   if (tickCount > 60) {
+      tickCount = 0 
+
+      //TODO fire 'blink' event
+      signals.fire('Blink', "", solid)
+   }
 }
 
 /** 

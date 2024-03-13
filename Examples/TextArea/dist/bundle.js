@@ -18,7 +18,7 @@ var initCloseButton = /* @__PURE__ */ __name((id) => {
 
 // ../../Components/ViewModels/constants.ts
 var HAIRSPACE = "\u200A";
-var CARETBAR = "\u258F";
+var CARETBAR = "|";
 var PLACEHOLDER = "\u200B";
 
 // ../../Framework/src/constants.ts
@@ -1067,6 +1067,7 @@ var TextArea = class extends Container {
     this.selectStart = 0;
     this.selectEnd = 0;
     this.widthPerChar = 15;
+    this.solidCaret = true;
     /** 
      * the number of characters that will fit in this width  
      */
@@ -1096,6 +1097,11 @@ var TextArea = class extends Container {
         capacity: { rows: this.rowCapacity, columns: this.textCapacity }
       }
     );
+    signals.on("Blink", "", (data) => {
+      this.solidCaret = data;
+      this.render();
+      console.log("Blink");
+    });
     signals.on("UpdateTextArea", this.name, (data) => {
       const {
         _reason,
@@ -1123,6 +1129,14 @@ var TextArea = class extends Container {
         str += `${JSON.stringify(line)}
             `;
       }
+      const A = true;
+      if (A)
+        console.log(` 
+         focused: ${this.focused} insertionRow: ${this.insertionRow} 
+         highlighted text: ${text.substring(this.selectStart, this.selectEnd)}
+         selection -- start: ${this.selectStart}, end: ${this.selectEnd} 
+         insertion -- row: ${this.insertionRow}, column: ${this.insertionColumn}
+         ${str}`, "TextArea.UpdateTextArea");
       this.render();
     });
     this.render();
@@ -1152,10 +1166,7 @@ var TextArea = class extends Container {
     ctx.textBaseline = "alphabetic";
     ctx.save();
     if (this.focused === true) {
-      if (tickCount === 30)
-        caretChar = HAIRSPACE;
-      if (tickCount === 0)
-        caretChar = CARETBAR;
+      caretChar = CARETBAR;
     } else {
       caretChar = "";
     }
@@ -1334,73 +1345,6 @@ var baseManifest = {
 };
 var base_manifest_default = baseManifest;
 
-// ../../Framework/src/render/renderContext.ts
-var windowCFG = {
-  containerColor: "snow",
-  textColor: "black"
-};
-var elementDescriptors;
-var appManifest;
-var initCFG = /* @__PURE__ */ __name((theCanvas, cfg2, applicationManifest) => {
-  canvas = theCanvas;
-  windowCFG = cfg2.winCFG;
-  elementDescriptors = cfg2.nodes;
-  appManifest = applicationManifest;
-}, "initCFG");
-var getFactories = /* @__PURE__ */ __name(() => {
-  const baseUrl = new URL("./", appManifest.baseUrl).href;
-  const factories2 = /* @__PURE__ */ new Map();
-  for (const [self2, module] of Object.entries(base_manifest_default.Views)) {
-    const url = new URL(self2, baseUrl).href;
-    const path = url.substring(baseUrl.length).substring("Views".length);
-    const baseRoute = path.substring(1, path.length - 3);
-    const name = sanitizeName(baseRoute);
-    const id = name.toLowerCase();
-    const newView = { id, name, url, component: module.default };
-    factories2.set(id, newView);
-  }
-  if (appManifest.Views) {
-    for (const [self2, module] of Object.entries(appManifest.Views)) {
-      const url = new URL(self2, baseUrl).href;
-      const path = url.substring(baseUrl.length).substring("Views".length);
-      const baseRoute = path.substring(1, path.length - 3);
-      const name = sanitizeName(baseRoute);
-      const id = name.toLowerCase();
-      const newView = { id, name, url, component: module.default };
-      factories2.set(id, newView);
-    }
-  }
-  return factories2;
-}, "getFactories");
-var hasVisiblePopup = false;
-var setHasVisiblePopup = /* @__PURE__ */ __name((val) => hasVisiblePopup = val, "setHasVisiblePopup");
-var tickCount = 0;
-var canvas;
-var ctx;
-var setupRenderContext = /* @__PURE__ */ __name((canvas2) => {
-  ctx = canvas2.getContext("2d");
-  refreshCanvasContext();
-}, "setupRenderContext");
-var refreshCanvasContext = /* @__PURE__ */ __name(() => {
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = windowCFG.containerColor;
-  ctx.fillStyle = windowCFG.containerColor;
-  ctx.font = "28px Tahoma, Verdana, sans-serif";
-  ctx.textAlign = "center";
-}, "refreshCanvasContext");
-function toPascalCase(text) {
-  return text.replace(
-    /(^\w|-\w)/g,
-    (substring) => substring.replace(/-/, "").toUpperCase()
-  );
-}
-__name(toPascalCase, "toPascalCase");
-function sanitizeName(name) {
-  const fileName = name.replace("/", "");
-  return toPascalCase(fileName);
-}
-__name(sanitizeName, "sanitizeName");
-
 // ../../Framework/src/events/signalBroker.ts
 var signals = buildSignalAggregator();
 function buildSignalAggregator() {
@@ -1441,6 +1385,72 @@ function buildSignalAggregator() {
   return newSignalBroker;
 }
 __name(buildSignalAggregator, "buildSignalAggregator");
+
+// ../../Framework/src/render/renderContext.ts
+var windowCFG = {
+  containerColor: "snow",
+  textColor: "black"
+};
+var elementDescriptors;
+var appManifest;
+var initCFG = /* @__PURE__ */ __name((theCanvas, cfg2, applicationManifest) => {
+  canvas = theCanvas;
+  windowCFG = cfg2.winCFG;
+  elementDescriptors = cfg2.nodes;
+  appManifest = applicationManifest;
+}, "initCFG");
+var getFactories = /* @__PURE__ */ __name(() => {
+  const baseUrl = new URL("./", appManifest.baseUrl).href;
+  const factories2 = /* @__PURE__ */ new Map();
+  for (const [self2, module] of Object.entries(base_manifest_default.Views)) {
+    const url = new URL(self2, baseUrl).href;
+    const path = url.substring(baseUrl.length).substring("Views".length);
+    const baseRoute = path.substring(1, path.length - 3);
+    const name = sanitizeName(baseRoute);
+    const id = name.toLowerCase();
+    const newView = { id, name, url, component: module.default };
+    factories2.set(id, newView);
+  }
+  if (appManifest.Views) {
+    for (const [self2, module] of Object.entries(appManifest.Views)) {
+      const url = new URL(self2, baseUrl).href;
+      const path = url.substring(baseUrl.length).substring("Views".length);
+      const baseRoute = path.substring(1, path.length - 3);
+      const name = sanitizeName(baseRoute);
+      const id = name.toLowerCase();
+      const newView = { id, name, url, component: module.default };
+      factories2.set(id, newView);
+    }
+  }
+  return factories2;
+}, "getFactories");
+var hasVisiblePopup = false;
+var setHasVisiblePopup = /* @__PURE__ */ __name((val) => hasVisiblePopup = val, "setHasVisiblePopup");
+var canvas;
+var ctx;
+var setupRenderContext = /* @__PURE__ */ __name((canvas2) => {
+  ctx = canvas2.getContext("2d");
+  refreshCanvasContext();
+}, "setupRenderContext");
+var refreshCanvasContext = /* @__PURE__ */ __name(() => {
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = windowCFG.containerColor;
+  ctx.fillStyle = windowCFG.containerColor;
+  ctx.font = "28px Tahoma, Verdana, sans-serif";
+  ctx.textAlign = "center";
+}, "refreshCanvasContext");
+function toPascalCase(text) {
+  return text.replace(
+    /(^\w|-\w)/g,
+    (substring) => substring.replace(/-/, "").toUpperCase()
+  );
+}
+__name(toPascalCase, "toPascalCase");
+function sanitizeName(name) {
+  const fileName = name.replace("/", "");
+  return toPascalCase(fileName);
+}
+__name(sanitizeName, "sanitizeName");
 
 // ../../Framework/src/render/activeNodes.ts
 var activeNodes = /* @__PURE__ */ new Set();

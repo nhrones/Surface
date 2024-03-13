@@ -68,7 +68,7 @@ export default class Popup implements View {
       //================================================
 
       // Our game controller broadcasts this ShowPopup event at the end of a game
-      signals.on('ShowPopup',"", (data: { title: string, msg: string }) => {
+      signals.on('ShowPopup',"", (data: { title: string, msg: string[] }) => {
          this.show(data.msg)
       })
 
@@ -81,9 +81,9 @@ export default class Popup implements View {
       return path
    }
    /** show the virtual Popup view */
-   show(msg: string) {
+   show(msg: string[]) {
       signals.fire('FocusPopup'," ", this)
-      this.text = msg
+      this.text = msg[0]
       left = this.location.left
       top = this.location.top
       this.path = this.shownPath

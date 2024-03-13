@@ -24,7 +24,7 @@ export function buildSignalAggregator<T extends EventContract<T>>(): SignalAggre
     */
    const eventHandlers: Map<string, EventHandler[]> = new Map()
 
-   const newSignalBroker: SignalAggregator<T> = {
+   const newSignalAggregator: SignalAggregator<T> = {
 
       /** 
        * on - registers a handler function to be executed when a signal is sent
@@ -79,5 +79,5 @@ export function buildSignalAggregator<T extends EventContract<T>>(): SignalAggre
       }
       
    }
-   return newSignalBroker
+   return newSignalAggregator
 }

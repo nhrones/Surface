@@ -1,6 +1,6 @@
 
 import { Editor } from '../deps.ts'
-import { PLACEHOLDER, Insert } from './constants.ts'
+import { PLACEHOLDER } from './constants.ts'
 
 //================================================
 //                Clipboard 

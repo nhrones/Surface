@@ -1,7 +1,7 @@
 
 // characters for blinking caret
 export const HAIRSPACE = ' '; // unicode (Hair Space)
-export const CARETBAR = "▏"; // unicode (Box Drawings Light Vertical)
+export const CARETBAR = "|"; // "▏"; // unicode (Box Drawings Light Vertical)
 export const PLACEHOLDER = "​"   // unicode (Zero Width Space)
 export const EDIT = "✍" // "🖉"
 export const CLOSE = "❌"
