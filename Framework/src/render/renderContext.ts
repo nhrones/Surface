@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import baseManifest from '../../../Components/base_manifest.ts'
+import baseManifest from "../../base_manifest.ts"
 import { signals } from '../events/signals.ts'
 
 import type {
@@ -100,7 +100,7 @@ export const incrementTickCount = () => {
    tickCount++;
    if (tickCount > 60) {
       tickCount = 0 
-
+      solid = !solid
       //TODO fire 'blink' event
       signals.fire('Blink', "", solid)
    }

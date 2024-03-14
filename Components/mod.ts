@@ -16,4 +16,4 @@ export * as Popup from './Views/Popup.ts'
 export * as Text from './Views/Text.ts'
 export * as TextArea from './Views/TextArea.ts'
 
-export * from './base_manifest.ts'
+//HACK moved to Framework export * from './base_manifest.ts'
