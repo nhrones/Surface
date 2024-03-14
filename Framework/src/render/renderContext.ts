@@ -53,12 +53,13 @@ export const getFactories = () => {
 
    // Get the view_Manifest' base URL.
    const baseUrl = new URL("./", appManifest.baseUrl).href;
+   console.log('getFactories baseUrl ', baseUrl )
    const factories: Map<string, any> = new Map()
 
    //add base frameWork component constructors first
    for (const [self, module] of Object.entries(baseManifest.Views)) {
       const url = new URL(self, baseUrl).href;
-      const path = url.substring(baseUrl.length).substring("Views".length);
+      const path = url.substring(baseUrl.length).substring("Components/Views".length);
       const baseRoute = path.substring(1, path.length - 3);
       const name = sanitizeName(baseRoute);
       const id = name.toLowerCase();

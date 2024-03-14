@@ -2,8 +2,8 @@
 //=================================================
 //    Component Deps
 //=================================================
-export * from '../../../Components/mod.ts';
-
+//export * from '../../../Components/mod.ts';
+export { initCloseButton, Text } from '../../../Components/mod.ts';
 //=================================================
 //    Framework Deps
 //=================================================

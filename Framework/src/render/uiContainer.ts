@@ -53,7 +53,6 @@ export const render = () => {
   mouseEvents (SEE: ./coms/systemEvents.ts). 
 */
 export const hydrateUI = () => {
-
    // get our view factories from our auto-generated `/views_manifest.ts`
    factories = getFactories()
    // loop over each elementDescriptor  
@@ -65,7 +64,6 @@ export const hydrateUI = () => {
 export function addElement(el: ElementDescriptor) {
    // get the `kind` of the view being requested
    const thisKind = el.kind.toLowerCase()
-
    // test if we have a registered factory for this kind
    if (factories.has(thisKind)) {
       // to hydrate the View-element,

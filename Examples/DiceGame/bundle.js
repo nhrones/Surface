@@ -819,15 +819,15 @@ var TextArea = class extends Container {
 };
 __name(TextArea, "TextArea");
 
-// ../../Components/base_manifest.ts
+// ../../Framework/base_manifest.ts
 var baseManifest = {
   Views: {
-    "./Views/Button.ts": Button_exports,
-    "./Views/CheckBox.ts": CheckBox_exports,
-    "./Views/Container.ts": Container_exports,
-    "./Views/Popup.ts": Popup_exports,
-    "./Views/Text.ts": Text_exports,
-    "./Views/TextArea.ts": TextArea_exports
+    "../Components/Views/Button.ts": Button_exports,
+    "../Components/Views/CheckBox.ts": CheckBox_exports,
+    "../Components/Views/Container.ts": Container_exports,
+    "../Components/Views/Popup.ts": Popup_exports,
+    "../Components/Views/Text.ts": Text_exports,
+    "../Components/Views/TextArea.ts": TextArea_exports
   },
   baseUrl: import.meta.url
 };
@@ -889,10 +889,11 @@ var initCFG = /* @__PURE__ */ __name((theCanvas, cfg2, applicationManifest) => {
 }, "initCFG");
 var getFactories = /* @__PURE__ */ __name(() => {
   const baseUrl = new URL("./", appManifest.baseUrl).href;
+  console.log("getFactories baseUrl ", baseUrl);
   const factories2 = /* @__PURE__ */ new Map();
   for (const [self2, module] of Object.entries(base_manifest_default.Views)) {
     const url = new URL(self2, baseUrl).href;
-    const path = url.substring(baseUrl.length).substring("Views".length);
+    const path = url.substring(baseUrl.length).substring("Components/Views".length);
     const baseRoute = path.substring(1, path.length - 3);
     const name = sanitizeName(baseRoute);
     const id2 = name.toLowerCase();
@@ -920,6 +921,7 @@ var incrementTickCount = /* @__PURE__ */ __name(() => {
   tickCount++;
   if (tickCount > 60) {
     tickCount = 0;
+    solid = !solid;
     signals.fire("Blink", "", solid);
   }
 }, "incrementTickCount");
