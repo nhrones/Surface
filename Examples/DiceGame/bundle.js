@@ -1268,11 +1268,7 @@ var serverURL = document.location.origin;
 var highScore = 0;
 function setHighScore(value) {
   highScore = value;
-  fetch(serverURL + "/", {
-    method: "POST",
-    mode: "cors",
-    body: JSON.stringify(value)
-  });
+  localStorage.setItem("highscore", value + "");
   signals.fire(
     "UpdateText",
     "highScoreValue",
@@ -1286,21 +1282,16 @@ function setHighScore(value) {
   );
 }
 __name(setHighScore, "setHighScore");
-async function getHighScore() {
-  return await fetch(serverURL + "/highscore", {
-    method: "GET",
-    mode: "cors"
-  });
+function getHighScore() {
+  if (highScore === 0) {
+    highScore = parseInt(localStorage.getItem("highscore") ?? "0");
+  }
 }
 __name(getHighScore, "getHighScore");
-async function setupHighScore() {
-  if (highScore === 0) {
-    const response = await getHighScore();
-    const result = await response.json();
-    console.info("setupHighScore ", result.value);
-    highScore = result.value;
-    setHighScore(highScore);
-  }
+function setupHighScore() {
+  if (highScore === 0)
+    getHighScore();
+  setHighScore(highScore);
   signals.fire(
     "UpdateText",
     "highScoreValue",
