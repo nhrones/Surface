@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 import baseManifest from "../../base_manifest.ts"
-import { signals } from '../events/signals.ts'
+import { signals } from '../signals/signals.ts'
 
 import type {
    Configuration,
@@ -53,7 +53,7 @@ export const getFactories = () => {
 
    // Get the view_Manifest' base URL.
    const baseUrl = new URL("./", appManifest.baseUrl).href;
-   console.log('getFactories baseUrl ', baseUrl )
+
    const factories: Map<string, any> = new Map()
 
    //add base frameWork component constructors first

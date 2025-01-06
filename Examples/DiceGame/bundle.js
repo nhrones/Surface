@@ -18,26 +18,41 @@ __export(Text_exports, {
   default: () => Text
 });
 var Text = class {
+  static {
+    __name(this, "Text");
+  }
+  id = 0;
+  // N/A
+  activeView = false;
+  enabled = false;
+  hovered = false;
+  focused = false;
+  path = new Path2D();
+  index = 0;
+  zOrder = 0;
+  // assigned by activeViews.add()
+  tabOrder = 0;
+  // N/A
+  name;
+  size;
+  textSize;
+  location;
+  textLocation;
+  padding = 10;
+  strokeColor = "black";
+  fillColor;
+  fontColor;
+  fontSize;
+  text;
+  lastText;
+  hasBorder = false;
+  fill = true;
+  textAlign;
+  textBaseline = "middle";
+  TextLocation = "middle";
+  boundingBox = { left: 0, top: 0, width: 0, height: 0 };
   /** ctor that instantiates a new virtual Text view */
   constructor(el) {
-    this.id = 0;
-    // N/A
-    this.activeView = false;
-    this.enabled = false;
-    this.hovered = false;
-    this.focused = false;
-    this.path = new Path2D();
-    this.index = 0;
-    this.zOrder = 0;
-    // assigned by activeViews.add()
-    this.tabOrder = 0;
-    this.padding = 10;
-    this.strokeColor = "black";
-    this.hasBorder = false;
-    this.fill = true;
-    this.textBaseline = "middle";
-    this.TextLocation = "middle";
-    this.boundingBox = { left: 0, top: 0, width: 0, height: 0 };
     this.name = el.id;
     this.index = el.idx;
     this.text = el.text ?? "";
@@ -148,24 +163,33 @@ var Text = class {
     this.render();
   }
 };
-__name(Text, "Text");
 
 // ../../Components/Views/Button.ts
 var Button = class {
+  static {
+    __name(this, "Button");
+  }
+  id = 0;
+  activeView = true;
+  index = -1;
+  zOrder = 0;
+  tabOrder = 0;
+  name = "";
+  enabled = true;
+  hovered = false;
+  focused = false;
+  path;
+  size;
+  location;
+  color;
+  fontColor;
+  textNode;
+  boarderWidth;
+  text = "";
   /**
    * instantiate a new vitual Button-View
    */
   constructor(el) {
-    this.id = 0;
-    this.activeView = true;
-    this.index = -1;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.text = "";
     this.name = el.id;
     this.zOrder = 0;
     this.tabOrder = el.tabOrder || 0;
@@ -251,7 +275,6 @@ var Button = class {
     this.textNode.update();
   }
 };
-__name(Button, "Button");
 
 // ../../Components/Views/CheckBox.ts
 var CheckBox_exports = {};
@@ -259,21 +282,31 @@ __export(CheckBox_exports, {
   default: () => CheckBox
 });
 var CheckBox = class {
+  static {
+    __name(this, "CheckBox");
+  }
+  id = 0;
+  activeView = true;
+  index = -1;
+  zOrder = 0;
+  tabOrder = 0;
+  name = "";
+  enabled = true;
+  hovered = false;
+  focused = false;
+  path;
+  size;
+  location;
+  color;
+  fontColor;
+  boarderWidth;
+  fontSize;
+  text = "";
+  checked = false;
   /**
    * instantiate a new vitual CheckBox-View
    */
   constructor(el) {
-    this.id = 0;
-    this.activeView = true;
-    this.index = -1;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.text = "";
-    this.checked = false;
     this.name = el.id;
     this.zOrder = 0;
     this.tabOrder = el.tabOrder || 0;
@@ -356,7 +389,6 @@ var CheckBox = class {
     ctx.restore();
   }
 };
-__name(CheckBox, "CheckBox");
 
 // ../../Components/Views/Container.ts
 var Container_exports = {};
@@ -366,18 +398,25 @@ __export(Container_exports, {
 
 // ../../Components/Views/Scrollbar.ts
 var Scrollbar = class {
+  static {
+    __name(this, "Scrollbar");
+  }
+  container;
+  mousePos = 0;
+  dragging = false;
+  hovered = false;
+  visible = true;
+  left = 0;
+  top = 0;
+  width = 0;
+  height = 0;
+  fill;
+  cursor;
+  path;
   /**
    *  Scrollbar ctor
    */
   constructor(host) {
-    this.mousePos = 0;
-    this.dragging = false;
-    this.hovered = false;
-    this.visible = true;
-    this.left = 0;
-    this.top = 0;
-    this.width = 0;
-    this.height = 0;
     this.container = host;
     this.left = host.left + host.width - host.scrollBarWidth, this.top = host.top;
     this.height = host.height, this.width = host.scrollBarWidth;
@@ -427,45 +466,50 @@ var Scrollbar = class {
   scroll(delta) {
     const { height, lineHeight, rowCapacity, top: top3 } = this.container;
     this.cursor.index -= delta;
-    if (this.cursor.index < 0)
-      this.cursor.index = 0;
+    if (this.cursor.index < 0) this.cursor.index = 0;
     const newTop = this.cursor.index * lineHeight;
     if (newTop + this.cursor.length >= height + top3) {
     } else {
       this.cursor.top = newTop;
     }
-    if (this.cursor.top < 0)
-      this.cursor.top = 0;
+    if (this.cursor.top < 0) this.cursor.top = 0;
     this.container.render();
   }
 };
-__name(Scrollbar, "Scrollbar");
 
 // ../../Components/Views/Container.ts
 var Container = class {
+  static {
+    __name(this, "Container");
+  }
+  id = 0;
+  activeView = true;
+  index = 1;
+  zOrder = 0;
+  tabOrder = 0;
+  name = "";
+  enabled = true;
+  hovered = false;
+  focused = false;
+  path;
+  height;
+  width;
+  padding = 10;
+  left = 0;
+  top = 0;
+  color;
+  lineHeight = 0;
+  showPlaceholder = true;
+  scrollBarWidth = 25;
+  /** the number of characters that will fit in this width */
+  textCapacity = 0;
+  /** number of rows that will fit container height */
+  rowCapacity = 0;
+  scrollBar;
   /** 
    * Container ctor 
    */
   constructor(el) {
-    this.id = 0;
-    this.activeView = true;
-    this.index = 1;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.padding = 10;
-    this.left = 0;
-    this.top = 0;
-    this.lineHeight = 0;
-    this.showPlaceholder = true;
-    this.scrollBarWidth = 25;
-    /** the number of characters that will fit in this width */
-    this.textCapacity = 0;
-    /** number of rows that will fit container height */
-    this.rowCapacity = 0;
     this.name = el.id;
     this.tabOrder = el.tabOrder || 0;
     this.left = el.location.left;
@@ -512,7 +556,6 @@ var Container = class {
     }
   }
 };
-__name(Container, "Container");
 
 // ../../Components/Views/Popup.ts
 var Popup_exports = {};
@@ -522,23 +565,32 @@ __export(Popup_exports, {
 var left = 1;
 var top = 1;
 var Popup = class {
+  static {
+    __name(this, "Popup");
+  }
+  id = 0;
+  // assigned by activeViews.add() 
+  index = -1;
+  activeView = true;
+  zOrder = 0;
+  tabOrder = 0;
+  name = "";
+  enabled = true;
+  hovered = false;
+  focused = false;
+  path;
+  shownPath;
+  hiddenPath;
+  location;
+  size;
+  color = "black";
+  textNode;
+  text = "";
+  fontColor = "red";
+  fontSize = 28;
+  visible = true;
   /** ctor that instantiates a new vitual Popup view */
   constructor(el) {
-    this.id = 0;
-    // assigned by activeViews.add() 
-    this.index = -1;
-    this.activeView = true;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.color = "black";
-    this.text = "";
-    this.fontColor = "red";
-    this.fontSize = 28;
-    this.visible = true;
     this.tabOrder = el.tabOrder || 0;
     this.enabled = true;
     this.color = "white";
@@ -600,8 +652,7 @@ var Popup = class {
   }
   /** update this virtual Popups view (render it) */
   update() {
-    if (this.visible)
-      this.render();
+    if (this.visible) this.render();
   }
   /** render this virtual Popup view */
   render() {
@@ -627,46 +678,54 @@ var Popup = class {
     this.visible = true;
   }
 };
-__name(Popup, "Popup");
 
 // ../../Components/Views/TextArea.ts
 var TextArea_exports = {};
 __export(TextArea_exports, {
   default: () => TextArea
 });
+var dev = false;
 var caretChar = HAIRSPACE;
 var placeholder = "text";
 var TextArea = class extends Container {
+  static {
+    __name(this, "TextArea");
+  }
+  id = 0;
+  activeView = true;
+  index = 1;
+  zOrder = 0;
+  tabOrder = 0;
+  name = "";
+  enabled = true;
+  hovered = false;
+  focused = false;
+  log = false;
+  path;
+  size;
+  padding = 10;
+  location;
+  color;
+  fontColor;
+  lineHeight = 0;
+  text = "";
+  lines = [];
+  trimmedLeft = "";
+  trimmedRight = "";
+  insertionColumn = 0;
+  insertionRow = 0;
+  selectStart = 0;
+  selectEnd = 0;
+  widthPerChar = 15;
+  /** 
+   * the number of characters that will fit in this width  
+   */
+  textCapacity = 0;
+  rowCapacity = 0;
+  showPlaceholder = true;
+  fontSize;
   constructor(el) {
     super(el);
-    this.id = 0;
-    this.activeView = true;
-    this.index = 1;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.log = false;
-    this.padding = 10;
-    this.lineHeight = 0;
-    this.text = "";
-    this.lines = [];
-    this.trimmedLeft = "";
-    this.trimmedRight = "";
-    this.insertionColumn = 0;
-    this.insertionRow = 0;
-    this.selectStart = 0;
-    this.selectEnd = 0;
-    this.widthPerChar = 15;
-    this.solidCaret = true;
-    /** 
-     * the number of characters that will fit in this width  
-     */
-    this.textCapacity = 0;
-    this.rowCapacity = 0;
-    this.showPlaceholder = true;
     this.name = el.id;
     this.tabOrder = el.tabOrder || 0;
     this.location = el.location;
@@ -690,11 +749,6 @@ var TextArea = class extends Container {
         capacity: { rows: this.rowCapacity, columns: this.textCapacity }
       }
     );
-    signals.on("Blink", "", (data) => {
-      this.solidCaret = data;
-      this.render();
-      console.log("Blink");
-    });
     signals.on("UpdateTextArea", this.name, (data) => {
       const {
         _reason,
@@ -722,9 +776,8 @@ var TextArea = class extends Container {
         str += `${JSON.stringify(line)}
             `;
       }
-      const A = true;
-      if (A)
-        console.log(` 
+      const A = false;
+      if (A) console.log(` 
          focused: ${this.focused} insertionRow: ${this.insertionRow} 
          highlighted text: ${text.substring(this.selectStart, this.selectEnd)}
          selection -- start: ${this.selectStart}, end: ${this.selectEnd} 
@@ -759,14 +812,14 @@ var TextArea = class extends Container {
     ctx.textBaseline = "alphabetic";
     ctx.save();
     if (this.focused === true) {
-      caretChar = CARETBAR;
+      if (tickCount === 30) caretChar = HAIRSPACE;
+      if (tickCount === 0) caretChar = CARETBAR;
     } else {
       caretChar = "";
     }
     let lineNumber = 0;
     for (const line of this.lines) {
-      if (line.length <= 0)
-        continue;
+      if (line.length <= 0) continue;
       const textTop = this.location.top + this.lineHeight * (lineNumber + 1);
       if (this.showPlaceholder && this.focused === false) {
         ctx.fillStyle = "Gray";
@@ -778,8 +831,7 @@ var TextArea = class extends Container {
       } else {
         let txt = "";
         this.positionCaret(line.text);
-        if (line.hasSelection)
-          this.renderHighlight(line);
+        if (line.hasSelection) this.renderHighlight(line);
         txt = this.insertionRow === lineNumber ? this.trimmedLeft + caretChar + this.trimmedRight : line.text;
         ctx.fillStyle = this.fontColor;
         ctx.fillText(
@@ -808,6 +860,11 @@ var TextArea = class extends Container {
     const endTo = selectEnd >= line.end ? line.end : selectEnd;
     const rectWidth = ctx.measureText(text.substring(endFrom, endTo)).width;
     const rectY = location2.top + lineHeight * line.index + padding;
+    if (dev) {
+      console.log(`hiStart ${rectX}, hiEnd ${rectWidth}, hiTop ${rectY}`);
+      console.log(`selectStart ${selectStart}, selectEnd ${selectEnd}`);
+      console.log(`lineStart ${line.start}, lineEnd ${line.end}`);
+    }
     ctx.fillStyle = "lightblue";
     ctx.fillRect(
       location2.left + padding + rectX,
@@ -817,7 +874,6 @@ var TextArea = class extends Container {
     );
   }
 };
-__name(TextArea, "TextArea");
 
 // ../../Framework/base_manifest.ts
 var baseManifest = {
@@ -833,7 +889,7 @@ var baseManifest = {
 };
 var base_manifest_default = baseManifest;
 
-// ../../Framework/src/events/signals.ts
+// ../../Framework/src/signals/signals.ts
 var signals = buildSignalAggregator();
 function buildSignalAggregator() {
   const eventHandlers = /* @__PURE__ */ new Map();
@@ -983,7 +1039,7 @@ var renderNodes = /* @__PURE__ */ __name(() => {
   }
 }, "renderNodes");
 
-// ../../Framework/src/events/systemEvents.ts
+// ../../Framework/src/signals/systemEvents.ts
 var left2 = 0;
 var x = 0;
 var y = 0;
@@ -1089,8 +1145,7 @@ function handleClickOrTouch(mX, mY) {
       }
     }
   }
-  if (!hit)
-    clearFocused();
+  if (!hit) clearFocused();
 }
 __name(handleClickOrTouch, "handleClickOrTouch");
 function clearFocused() {
@@ -1211,32 +1266,25 @@ async function init(thisContext) {
 }
 __name(init, "init");
 var Cluck = /* @__PURE__ */ __name(() => {
-  if (loaded && cluckBuf)
-    playBuffer(cluckBuf);
+  if (loaded && cluckBuf) playBuffer(cluckBuf);
 }, "Cluck");
 var Dohh = /* @__PURE__ */ __name(() => {
-  if (loaded && dohhBuf)
-    playBuffer(dohhBuf);
+  if (loaded && dohhBuf) playBuffer(dohhBuf);
 }, "Dohh");
 var Heehee = /* @__PURE__ */ __name(() => {
-  if (loaded && heeheeBuf)
-    playBuffer(heeheeBuf);
+  if (loaded && heeheeBuf) playBuffer(heeheeBuf);
 }, "Heehee");
 var Roll = /* @__PURE__ */ __name(() => {
-  if (loaded && rollBuf)
-    playBuffer(rollBuf);
+  if (loaded && rollBuf) playBuffer(rollBuf);
 }, "Roll");
 var Select = /* @__PURE__ */ __name(() => {
-  if (loaded && rollBuf)
-    playBuffer(selectBuf);
+  if (loaded && rollBuf) playBuffer(selectBuf);
 }, "Select");
 var Woohoo = /* @__PURE__ */ __name(() => {
-  if (loaded && woohooBuf)
-    playBuffer(woohooBuf);
+  if (loaded && woohooBuf) playBuffer(woohooBuf);
 }, "Woohoo");
 var Nooo = /* @__PURE__ */ __name(() => {
-  if (loaded && noooBuf)
-    playBuffer(noooBuf);
+  if (loaded && noooBuf) playBuffer(noooBuf);
 }, "Nooo");
 function playBuffer(buffer) {
   if (canPlay) {
@@ -1289,8 +1337,7 @@ function getHighScore() {
 }
 __name(getHighScore, "getHighScore");
 function setupHighScore() {
-  if (highScore === 0)
-    getHighScore();
+  if (highScore === 0) getHighScore();
   setHighScore(highScore);
   signals.fire(
     "UpdateText",
@@ -1502,8 +1549,7 @@ var toString = /* @__PURE__ */ __name(() => {
   let str = "[";
   die.forEach((thisDie, index) => {
     str += thisDie.value;
-    if (index < 4)
-      str += ",";
+    if (index < 4) str += ",";
   });
   return str + "]";
 }, "toString");
@@ -1564,15 +1610,25 @@ var FullHouse = 10;
 var emptyString = "";
 var black = "black";
 var ScoreElement = class {
+  static {
+    __name(this, "ScoreElement");
+  }
+  available;
+  owned;
+  index;
+  name;
+  owner = null;
+  finalValue;
+  possibleValue;
+  scoringDieset;
+  scoringDiesetSum = 0;
+  hasFiveOfaKind = false;
   /** constructor ... called from DiceGame.buildScoreItems()
    * @param dice {Dice} Dice dependency injection
    * @param index {number} index of this instance
    * @param name {string} the name of this instance
    */
   constructor(index, name) {
-    this.owner = null;
-    this.scoringDiesetSum = 0;
-    this.hasFiveOfaKind = false;
     this.available = false;
     this.owned = false;
     this.index = index;
@@ -1685,8 +1741,7 @@ var ScoreElement = class {
    * returns true if the click caused this score to be    
    * taken by the current player  */
   clicked() {
-    if (toString() === "[0,0,0,0,0]")
-      return false;
+    if (toString() === "[0,0,0,0,0]") return false;
     let scoreTaken = false;
     if (!this.owned) {
       if (this.possibleValue === 0) {
@@ -1798,7 +1853,6 @@ var ScoreElement = class {
     }
   }
 };
-__name(ScoreElement, "ScoreElement");
 
 // src/ViewModels/rollButton.ts
 var thisID2 = "rollbutton";
@@ -1834,23 +1888,26 @@ var update2 = /* @__PURE__ */ __name(() => {
 // src/ViewModels/diceGame.ts
 var SHORTCUT_GAMEOVER = false;
 var appInstance;
-var App = class {
+var App = class _App {
+  static {
+    __name(this, "App");
+  }
+  scoreItems;
+  leftBonus;
+  fiveOkindBonus;
+  leftTotal;
+  rightTotal;
+  /** DiceGame private instance, exposed by init() */
+  static _instance;
+  /** singleton initialization */
+  static init() {
+    if (!_App._instance) {
+      _App._instance = new _App();
+      appInstance = _App._instance;
+    }
+  }
   /** private singleton constructor, called from init() */
   constructor() {
-    /** add a score value for this player */
-    this.addScore = (value) => {
-      thisPlayer.score += value;
-      const text = thisPlayer.score + "";
-      this.updatePlayer(thisPlayer.idx, thisPlayer.color, text);
-    };
-    /** broadcast an update message to the view element */
-    this.updatePlayer = (index, color, text) => {
-      fire("UpdatePlayer", index.toString(), {
-        index,
-        color,
-        text
-      });
-    };
     this.scoreItems = [];
     this.leftBonus = 0;
     this.fiveOkindBonus = 0;
@@ -1883,13 +1940,6 @@ var App = class {
         this.scoreItems.push(new ScoreElement(view.index, view.name));
       }
     });
-  }
-  /** singleton initialization */
-  static init() {
-    if (!App._instance) {
-      App._instance = new App();
-      appInstance = App._instance;
-    }
   }
   /** clear all scoreElements possible score value */
   clearPossibleScores() {
@@ -2062,8 +2112,21 @@ var App = class {
       }
     }
   }
+  /** add a score value for this player */
+  addScore = /* @__PURE__ */ __name((value) => {
+    thisPlayer.score += value;
+    const text = thisPlayer.score + "";
+    this.updatePlayer(thisPlayer.idx, thisPlayer.color, text);
+  }, "addScore");
+  /** broadcast an update message to the view element */
+  updatePlayer = /* @__PURE__ */ __name((index, color, text) => {
+    fire("UpdatePlayer", index.toString(), {
+      index,
+      color,
+      text
+    });
+  }, "updatePlayer");
 };
-__name(App, "App");
 
 // src/cfg.ts
 var DIE_CFG = {
@@ -2480,24 +2543,38 @@ __name(drawDot, "drawDot");
 
 // src/Views/Die.ts
 var needToBuild = true;
-var Die = class {
+var Die = class _Die {
+  static {
+    __name(this, "Die");
+  }
+  id = 0;
+  // assigned by activeViews.add()    
+  index = 0;
+  activeView = true;
+  zOrder = 0;
+  tabOrder = 0;
+  name;
+  enabled = true;
+  hovered = false;
+  focused = false;
+  path;
+  location;
+  size;
+  left;
+  top;
+  width;
+  height;
+  color;
+  frozen = false;
+  value = 0;
+  static frozenFaces;
+  static faces;
   /** ctor that instantiates a new vitual Die view  and faces*/
   constructor(el) {
-    this.id = 0;
-    // assigned by activeViews.add()    
-    this.index = 0;
-    this.activeView = true;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.frozen = false;
-    this.value = 0;
     if (needToBuild) {
       const { faces, frozenFaces } = buildDieFaces();
-      Die.faces = faces;
-      Die.frozenFaces = frozenFaces;
+      _Die.faces = faces;
+      _Die.frozenFaces = frozenFaces;
       needToBuild = false;
     }
     this.index = el.idx;
@@ -2533,7 +2610,7 @@ var Die = class {
   }
   render() {
     ctx.save();
-    const image = this.frozen ? Die.frozenFaces[this.value] : Die.faces[this.value];
+    const image = this.frozen ? _Die.frozenFaces[this.value] : _Die.faces[this.value];
     ctx.putImageData(image, this.left, this.top);
     ctx.lineWidth = 2;
     if (this.hovered) {
@@ -2547,7 +2624,6 @@ var Die = class {
     ctx.restore();
   }
 };
-__name(Die, "Die");
 Die.faces = [
   new ImageData(1, 1),
   new ImageData(1, 1),
@@ -2573,25 +2649,33 @@ __export(Popup_exports2, {
 var left3 = 1;
 var top2 = 1;
 var Popup2 = class {
+  static {
+    __name(this, "Popup");
+  }
+  id = 0;
+  // assigned by activeViews.add() 
+  index = -1;
+  activeView = true;
+  zOrder = 0;
+  tabOrder = 0;
+  name = "";
+  enabled = true;
+  hovered = false;
+  focused = false;
+  path;
+  shownPath;
+  hiddenPath;
+  location;
+  size;
+  color = "black";
+  text = [""];
+  title = "";
+  textAlign = "center";
+  visible = true;
+  buffer = null;
+  fontSize = 28;
   /** ctor that instantiates a new vitual Popup view */
   constructor(el) {
-    this.id = 0;
-    // assigned by activeViews.add() 
-    this.index = -1;
-    this.activeView = true;
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.name = "";
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.color = "black";
-    this.text = [""];
-    this.title = "";
-    this.textAlign = "center";
-    this.visible = true;
-    this.buffer = null;
-    this.fontSize = 28;
     this.tabOrder = el.tabOrder || 0;
     this.enabled = true;
     this.color = "white";
@@ -2657,8 +2741,7 @@ var Popup2 = class {
   }
   /** update this virtual Popups view (render it) */
   update() {
-    if (this.visible)
-      this.render();
+    if (this.visible) this.render();
   }
   /** render this virtual Popup view */
   render() {
@@ -2686,7 +2769,6 @@ var Popup2 = class {
     this.visible = true;
   }
 };
-__name(Popup2, "Popup");
 
 // src/Views/ScoreButton.ts
 var ScoreButton_exports = {};
@@ -2741,26 +2823,35 @@ var getPathGeometry = /* @__PURE__ */ __name((location2, size2, radius = 10) => 
 
 // src/Views/ScoreButton.ts
 var ScoreButton = class {
+  static {
+    __name(this, "ScoreButton");
+  }
+  id = 0;
+  // assigned by activeViews.add()   
+  zOrder = 0;
+  tabOrder = 0;
+  name;
+  index;
+  activeView = true;
+  enabled = true;
+  hovered = false;
+  focused = false;
+  path = new Path2D();
+  size;
+  location;
+  text;
+  color = "black";
+  isLeftHanded;
+  scoreText = "";
+  available = false;
+  tooltip = "";
+  upperText = "";
+  lowerText = "";
+  upperName = null;
+  lowerName = null;
+  scoreBox = null;
   /** Creates an instance of a virtual ScoreButton. */
   constructor(el) {
-    this.id = 0;
-    // assigned by activeViews.add()   
-    this.zOrder = 0;
-    this.tabOrder = 0;
-    this.activeView = true;
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.path = new Path2D();
-    this.color = "black";
-    this.scoreText = "";
-    this.available = false;
-    this.tooltip = "";
-    this.upperText = "";
-    this.lowerText = "";
-    this.upperName = null;
-    this.lowerName = null;
-    this.scoreBox = null;
     this.index = el.idx;
     this.tabOrder = el.tabOrder || 0;
     this.name = el.id;
@@ -2915,7 +3006,6 @@ var ScoreButton = class {
     }
   }
 };
-__name(ScoreButton, "ScoreButton");
 
 // src/view_manifest.ts
 var manifest = {

@@ -1,15 +1,16 @@
 {
-   "build": {
-      "Out": "./",
-      "FileName": "bundle.js",
+   "BUILD": {
+      "BundleName": "bundle.js",
       "Entry": [
          "./src/main.ts"
       ],
-      "Minify": false
+      "Minify": false,
+      "OutPath": ""
    },
-   "simple": {
-      "DEV": true,
+   "RUN": {
+      "Serve": "",
       "Port": 80,
-      "Serve": ""
+      "DEV": true,
+      "HtmlName": "index.html"
    }
 }

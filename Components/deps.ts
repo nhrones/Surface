@@ -8,7 +8,7 @@ export type {
    ElementDescriptor,
    Location,
    View,
-   TextLine ,
+   TextLine,
    TextAlign, 
    TextBaseline,
    TextLocation 
