@@ -17,7 +17,7 @@ var initCloseButton = /* @__PURE__ */ __name((id) => {
 }, "initCloseButton");
 
 // ../../Components/ViewModels/constants.ts
-var HAIRSPACE = "\u200A";
+var HAIRSPACE = "\u202F";
 var CARETBAR = "|";
 var PLACEHOLDER = "\u200B";
 
@@ -249,7 +249,7 @@ var TextEditor = class {
       this.updateText(this.id, hasFocus, "Focused");
     });
     signals.on(`WindowInput`, this.id, (evt) => {
-      insertChars(this, evt.key);
+      insertChars(this, evt.data);
     });
     signals.on("WindowKeyDown", this.id, (evt) => {
       const { ctrlKey, shiftKey } = evt;
@@ -1091,7 +1091,7 @@ var TextArea_exports = {};
 __export(TextArea_exports, {
   default: () => TextArea
 });
-var DEV = false;
+var dev = false;
 var caretChar = HAIRSPACE;
 var placeholder = "text";
 var TextArea = class extends Container {
@@ -1183,8 +1183,8 @@ var TextArea = class extends Container {
         str += `${JSON.stringify(line)}
             `;
       }
-
-      if (DEV) console.log(` 
+      const A = false;
+      if (A) console.log(` 
          focused: ${this.focused} insertionRow: ${this.insertionRow} 
          highlighted text: ${text.substring(this.selectStart, this.selectEnd)}
          selection -- start: ${this.selectStart}, end: ${this.selectEnd} 
@@ -1219,7 +1219,7 @@ var TextArea = class extends Container {
     ctx.textBaseline = "alphabetic";
     ctx.save();
     if (this.focused === true) {
-      if (tickCount === 30) caretChar = HAIRSPACE;
+      if (tickCount === 30) caretChar = PLACEHOLDER; //HAIRSPACE;
       if (tickCount === 0) caretChar = CARETBAR;
     } else {
       caretChar = "";
@@ -1543,7 +1543,7 @@ var node = null;
 var hoveredNode = null;
 var focusedNode = null;
 function initHostEvents() {
-  document.addEventListener("keypress", (evt) => {
+  addEventListener("input", (evt) => {
     if (focusedNode !== null) {
       signals.fire("WindowInput", focusedNode.name, evt);
     }
@@ -1563,7 +1563,6 @@ function initHostEvents() {
       }
       return;
     }
-
     if (evt.code === "Enter") {
       if (hasVisiblePopup === true) {
         signals.fire(`PopupReset`, "", null);
