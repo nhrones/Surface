@@ -124,11 +124,12 @@ export class TextEditor implements Editor {
          // even though the framework discriminates who 
          // has focus, we'll assert it on keyboard signals  
          this.focused = true
+
          // which key was pressed 152 - 350
          switch (evt.code) {
             
             // remove a character left
-            case "Backspace": // OK
+            case "Backspace": // OK // todo use constants
             
                //ndh why both???
                if (this.insertionColumn > 0 && this.insertionIndex > 0) {
@@ -363,6 +364,7 @@ export class TextEditor implements Editor {
 
    /** update the insertion column and row from insertion index */
    updateInsertionPoint(from: string, insertAt = InsertAt.Calc) { // OK
+      
       switch (insertAt) {
 
          // calculate and set index from row and column 

@@ -142,7 +142,6 @@ export default class TextArea extends Container implements View {
       const t = 'This is a test! A very very long text!'
       const m = ctx.measureText(t)
       this.lineHeight = (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent);
-      // deno-lint-ignore no-self-assign
       this.size.height = this.size.height
       this.widthPerChar = m.width / t.length
       this.textCapacity = this.size.width / this.widthPerChar

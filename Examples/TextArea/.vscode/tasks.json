@@ -22,6 +22,26 @@
       "label": "RUN",
       "type": "shell",
       "command": "deno run --allow-all --no-config https://jsr.io/@ndh/simple/1.1.4/mod.ts"
+   },
+   {
+      "label": "BUILD",
+      "type": "shell",
+      "command": "build"
+   },
+   {
+      "label": "RUN",
+      "type": "shell",
+      "command": "deno run --allow-all --no-config https://jsr.io/@ndh/simple/1.1.4/mod.ts"
+   },
+   {
+      "label": "BUILD",
+      "type": "shell",
+      "command": "build"
+   },
+   {
+      "label": "RUN",
+      "type": "shell",
+      "command": "deno run --allow-all --no-config https://jsr.io/@ndh/simple/1.1.4/mod.ts"
    }
 ]       
    }

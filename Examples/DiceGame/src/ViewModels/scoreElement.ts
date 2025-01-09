@@ -1,8 +1,8 @@
 import { signals } from '../deps.ts'
 import * as PlaySound from './sounds.ts'
 
-import { on, fire, Player,  thisPlayer } from '../main.ts'
-
+import {Player,  thisPlayer } from '../main.ts'
+const { on, fire } = signals
 import * as dice from './dice.ts'
 import * as Possible from './possible.ts'
 

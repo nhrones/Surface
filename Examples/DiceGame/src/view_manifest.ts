@@ -2,15 +2,13 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
-import * as $0 from "./Views/Die.ts";
-import * as $1 from "./Views/Popup.ts";
-import * as $2 from "./Views/ScoreButton.ts";
+//import * as $0 from "./Views/Die.ts";
+//import * as $1 from "./Views/ScoreButton.ts";
 
 const manifest = {
   Views: {
-    "./Views/Die.ts": $0,
-    "./Views/Popup.ts": $1,
-    "./Views/ScoreButton.ts": $2,
+    //"./Views/Die.ts": $0,
+    //"./Views/ScoreButton.ts": $1,
   },
   baseUrl: import.meta.url,
 };

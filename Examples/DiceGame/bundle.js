@@ -311,7 +311,7 @@ var CheckBox = class {
     this.zOrder = 0;
     this.tabOrder = el.tabOrder || 0;
     this.location = el.location;
-    const { left: left4, top: top3 } = el.location;
+    const { left: left3, top: top2 } = el.location;
     this.boarderWidth = el.boarderWidth || 1;
     this.size = el.size || { width: 50, height: 30 };
     const { width, height } = this.size;
@@ -383,9 +383,9 @@ var CheckBox = class {
     ctx.fillStyle = "limegreen";
     ctx.fillRect(this.location.left, this.location.top, this.size.width, this.size.height);
     ctx.fillStyle = this.fontColor;
-    const top3 = this.location.top + this.size.height * 0.5;
-    const left4 = this.location.left + this.size.width * 0.5;
-    ctx.fillText(this.text + " ", left4, top3);
+    const top2 = this.location.top + this.size.height * 0.5;
+    const left3 = this.location.left + this.size.width * 0.5;
+    ctx.fillText(this.text + " ", left3, top2);
     ctx.restore();
   }
 };
@@ -464,11 +464,11 @@ var Scrollbar = class {
    * called by the scroll event - container.ts - 63 
    */
   scroll(delta) {
-    const { height, lineHeight, rowCapacity, top: top3 } = this.container;
+    const { height, lineHeight, rowCapacity, top: top2 } = this.container;
     this.cursor.index -= delta;
     if (this.cursor.index < 0) this.cursor.index = 0;
     const newTop = this.cursor.index * lineHeight;
-    if (newTop + this.cursor.length >= height + top3) {
+    if (newTop + this.cursor.length >= height + top2) {
     } else {
       this.cursor.top = newTop;
     }
@@ -584,11 +584,12 @@ var Popup = class {
   location;
   size;
   color = "black";
-  textNode;
-  text = "";
-  fontColor = "red";
-  fontSize = 28;
+  text = [""];
+  title = "";
+  textAlign = "center";
   visible = true;
+  buffer = null;
+  fontSize = 28;
   /** ctor that instantiates a new vitual Popup view */
   constructor(el) {
     this.tabOrder = el.tabOrder || 0;
@@ -600,21 +601,9 @@ var Popup = class {
     this.size = el.size || { width: 300, height: 300 };
     this.shownPath = this.buildPath(el.radius || 30);
     this.path = this.hiddenPath;
-    this.fontSize = el.fontSize || 24;
-    this.textNode = new Text(
-      {
-        kind: "Text",
-        idx: -1,
-        tabOrder: 0,
-        id: this.name + "Label",
-        text: el.text || "",
-        location: this.location,
-        size: this.size,
-        bind: true
-      }
-    );
+    this.fontSize = el.fontSize || 8;
     signals.on("ShowPopup", "", (data) => {
-      this.show(data.msg);
+      this.show(data);
     });
     signals.on("HidePopup", "", () => this.hide());
   }
@@ -625,13 +614,15 @@ var Popup = class {
     return path;
   }
   /** show the virtual Popup view */
-  show(msg) {
+  show(data) {
     signals.fire("FocusPopup", " ", this);
-    this.text = msg[0];
+    this.title = data.title;
+    this.text = data.msg;
     left = this.location.left;
     top = this.location.top;
     this.path = this.shownPath;
     this.visible = true;
+    this.saveScreenToBuffer();
     setHasVisiblePopup(true);
     this.render();
   }
@@ -641,8 +632,22 @@ var Popup = class {
       left = 1;
       top = 1;
       this.path = this.hiddenPath;
+      this.restoreScreenFromBuffer();
       this.visible = false;
       setHasVisiblePopup(false);
+    }
+  }
+  /** takes a snapshot of our current canvas bitmap */
+  saveScreenToBuffer() {
+    const { left: left3, top: top2 } = this.location;
+    const { width, height } = this.size;
+    console.log(`Buffer = left:${left3}, top:${top2}, width:${width}, height:${height}`);
+    this.buffer = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
+  /** paint the canvas with our current snapshot */
+  restoreScreenFromBuffer() {
+    if (this.buffer) {
+      return ctx.putImageData(this.buffer, 0, 0);
     }
   }
   /** called from Surface/canvasEvents when this element has been touched */
@@ -669,11 +674,13 @@ var Popup = class {
     ctx.lineWidth = 1;
     ctx.strokeStyle = windowCFG.textColor;
     ctx.stroke(this.path);
-    this.textNode.fontSize = this.fontSize;
-    this.textNode.fillColor = this.color;
-    this.textNode.fontColor = this.fontColor;
-    this.textNode.text = this.text;
-    this.textNode.update();
+    ctx.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
+    ctx.textAlign = this.textAlign;
+    ctx.strokeText(this.title + " ", left + 175, top + 100);
+    let txtTop = top + 100;
+    this.text.forEach((str) => {
+      ctx.strokeText(str + " ", left + 175, txtTop += 50);
+    });
     ctx.restore();
     this.visible = true;
   }
@@ -875,6 +882,500 @@ var TextArea = class extends Container {
   }
 };
 
+// ../../Components/Views/Die.ts
+var Die_exports = {};
+__export(Die_exports, {
+  DIE_CFG: () => DIE_CFG2,
+  default: () => Die
+});
+
+// ../../Components/ViewModels/dieFactory.ts
+var DIE_CFG = {
+  size: { "width": 70, "height": 70 },
+  radius: 10,
+  color: "white"
+};
+var size = 90;
+var r = 0;
+function buildDieFaces() {
+  console.log("buildDieFaces");
+  const { size: dieSize, radius, color } = DIE_CFG;
+  r = radius;
+  const start = performance.now();
+  const canvas2 = document.createElement("canvas");
+  const ctx2 = canvas2.getContext("2d");
+  canvas2.width = dieSize.width;
+  canvas2.height = dieSize.height;
+  const faces = [
+    new ImageData(1, 1),
+    new ImageData(1, 1),
+    new ImageData(1, 1),
+    new ImageData(1, 1),
+    new ImageData(1, 1)
+  ];
+  const frozenFaces = [
+    new ImageData(1, 1),
+    new ImageData(1, 1),
+    new ImageData(1, 1),
+    new ImageData(1, 1),
+    new ImageData(1, 1)
+  ];
+  size = dieSize.width;
+  ctx2.fillStyle = color;
+  ctx2.fillRect(0, 0, size, size);
+  for (let i = 0; i < 7; i++) {
+    faces[i] = drawDie(ctx2, false, i);
+    frozenFaces[i] = drawDie(ctx2, true, i);
+  }
+  console.log(`Building 12 die face images took ${(performance.now() - start).toFixed()}ms!`);
+  return { faces, frozenFaces };
+}
+__name(buildDieFaces, "buildDieFaces");
+function drawDie(ctx2, frozen, value) {
+  ctx2.save();
+  if (frozen) {
+    ctx2.strokeStyle = "silver";
+    ctx2.fillStyle = "WhiteSmoke";
+  } else {
+    ctx2.strokeStyle = "black";
+    ctx2.fillStyle = "white";
+  }
+  drawDieFace(ctx2);
+  drawGlare(ctx2);
+  ctx2.fillStyle = frozen ? "silver" : "black";
+  drawDots(ctx2, value);
+  ctx2.restore();
+  return ctx2.getImageData(0, 0, size, size);
+}
+__name(drawDie, "drawDie");
+function drawDieFace(ctx2) {
+  ctx2.beginPath();
+  ctx2.roundRect(0, 0, size, size, r);
+  ctx2.closePath();
+  ctx2.fill();
+  ctx2.lineWidth = 2;
+  ctx2.strokeStyle = "black";
+  ctx2.stroke();
+  ctx2.lineWidth = 1;
+}
+__name(drawDieFace, "drawDieFace");
+function drawGlare(ctx2) {
+  const offset = 5;
+  const bottomLeftX = offset;
+  const bottomLeftY = size - offset;
+  const bottomRightX = size - offset;
+  const bottomRightY = size - offset;
+  const quarter = size * 0.25;
+  const threeQuarter = quarter * 3;
+  ctx2.fillStyle = "rgba(200, 200, 200, 0.4)";
+  ctx2.beginPath();
+  ctx2.moveTo(bottomLeftX, bottomLeftY);
+  ctx2.lineTo(bottomRightX, bottomRightY);
+  ctx2.bezierCurveTo(quarter, threeQuarter, quarter, threeQuarter, offset, offset);
+  ctx2.closePath();
+  ctx2.fill();
+  ctx2.save();
+}
+__name(drawGlare, "drawGlare");
+function drawDots(ctx2, dieValue) {
+  const quarter = size / 4;
+  const center = quarter * 2;
+  const middle = quarter * 2;
+  const left3 = quarter;
+  const top2 = quarter;
+  const right = quarter * 3;
+  const bottom = quarter * 3;
+  const dotSize = size / 12;
+  const doDot = drawDot;
+  if (dieValue === 1) {
+    doDot(ctx2, middle, center, dotSize);
+  } else if (dieValue === 2) {
+    doDot(ctx2, top2, left3, dotSize);
+    doDot(ctx2, bottom, right, dotSize);
+  } else if (dieValue === 3) {
+    drawDot(ctx2, top2, left3, dotSize);
+    drawDot(ctx2, middle, center, dotSize);
+    drawDot(ctx2, bottom, right, dotSize);
+  } else if (dieValue === 4) {
+    drawDot(ctx2, top2, left3, dotSize);
+    drawDot(ctx2, top2, right, dotSize);
+    drawDot(ctx2, bottom, left3, dotSize);
+    drawDot(ctx2, bottom, right, dotSize);
+  } else if (dieValue === 5) {
+    drawDot(ctx2, top2, left3, dotSize);
+    drawDot(ctx2, top2, right, dotSize);
+    drawDot(ctx2, middle, center, dotSize);
+    drawDot(ctx2, bottom, left3, dotSize);
+    drawDot(ctx2, bottom, right, dotSize);
+  } else if (dieValue === 6) {
+    drawDot(ctx2, top2, left3, dotSize);
+    drawDot(ctx2, top2, right, dotSize);
+    drawDot(ctx2, middle, left3, dotSize);
+    drawDot(ctx2, middle, right, dotSize);
+    drawDot(ctx2, bottom, left3, dotSize);
+    drawDot(ctx2, bottom, right, dotSize);
+  }
+}
+__name(drawDots, "drawDots");
+function drawDot(ctx2, y2, x2, dotSize) {
+  ctx2.beginPath();
+  ctx2.arc(x2, y2, dotSize, 0, Math.PI * 2, true);
+  ctx2.closePath();
+  ctx2.fill();
+}
+__name(drawDot, "drawDot");
+
+// ../../Components/Views/Die.ts
+var DIE_CFG2 = {
+  size: { "width": 70, "height": 70 },
+  radius: 10,
+  color: "white"
+};
+var needToBuild = true;
+var Die = class _Die {
+  static {
+    __name(this, "Die");
+  }
+  id = 0;
+  // assigned by activeViews.add()    
+  index = 0;
+  activeView = true;
+  zOrder = 0;
+  tabOrder = 0;
+  name;
+  enabled = true;
+  hovered = false;
+  focused = false;
+  path;
+  location;
+  size;
+  left;
+  top;
+  width;
+  height;
+  color;
+  frozen = false;
+  value = 0;
+  static frozenFaces;
+  static faces;
+  /** ctor that instantiates a new vitual Die view  and faces*/
+  constructor(el) {
+    if (needToBuild) {
+      const { faces, frozenFaces } = buildDieFaces();
+      _Die.faces = faces;
+      _Die.frozenFaces = frozenFaces;
+      needToBuild = false;
+    }
+    this.index = el.idx;
+    this.tabOrder = el.tabOrder || 0;
+    this.name = el.id;
+    this.enabled = true;
+    this.size = DIE_CFG2.size;
+    this.width = this.size.width;
+    this.height = this.size.height;
+    this.location = el.location;
+    this.top = el.location.top;
+    this.left = el.location.left;
+    this.color = "transparent";
+    this.path = this.buildPath(DIE_CFG2.radius);
+    this.render();
+    signals.on("UpdateDie", this.index.toString(), (data) => {
+      this.frozen = data.frozen;
+      this.value = data.value;
+      this.render();
+    });
+  }
+  buildPath(radius) {
+    const path = new Path2D();
+    path.roundRect(this.left, this.top, this.width, this.height, radius);
+    return path;
+  }
+  /** called from Surface/canvasEvents when this element has been touched */
+  touched() {
+    signals.fire(`DieTouched`, "", { index: this.index });
+  }
+  update() {
+    this.render();
+  }
+  render() {
+    ctx.save();
+    const image = this.frozen ? _Die.frozenFaces[this.value] : _Die.faces[this.value];
+    ctx.putImageData(image, this.left, this.top);
+    ctx.lineWidth = 2;
+    if (this.hovered) {
+      ctx.strokeStyle = "orange";
+      ctx.lineWidth = 2;
+    } else {
+      ctx.strokeStyle = "silver";
+      ctx.lineWidth = 2;
+    }
+    ctx.stroke(this.path);
+    ctx.restore();
+  }
+};
+Die.faces = [
+  new ImageData(1, 1),
+  new ImageData(1, 1),
+  new ImageData(1, 1),
+  new ImageData(1, 1),
+  new ImageData(1, 1),
+  new ImageData(1, 1)
+];
+Die.frozenFaces = [
+  new ImageData(1, 1),
+  new ImageData(1, 1),
+  new ImageData(1, 1),
+  new ImageData(1, 1),
+  new ImageData(1, 1),
+  new ImageData(1, 1)
+];
+
+// ../../Components/Views/ScoreButton.ts
+var ScoreButton_exports = {};
+__export(ScoreButton_exports, {
+  PossibleColor: () => PossibleColor,
+  SCORE_CFG: () => SCORE_CFG,
+  default: () => ScoreButton
+});
+
+// ../../Components/ViewModels/pathFactory.ts
+function buildRightScore(location2, size2) {
+  const { left: left3, right, top: top2, bottom, width, height, radius } = getPathGeometry(location2, size2);
+  const halfWidth = left3 + width * 0.3;
+  const halfHeight = top2 + height * 0.5 + 5;
+  const p = new Path2D();
+  p.moveTo(halfWidth + radius, top2);
+  p.arcTo(right, top2, right, top2 + radius, radius);
+  p.arcTo(right, bottom, right - radius, bottom, radius);
+  p.arcTo(left3, bottom, left3, bottom - radius, radius);
+  p.arcTo(left3, halfHeight, left3 + radius, halfHeight, radius);
+  p.arcTo(halfWidth, halfHeight, halfWidth, halfHeight - radius, radius);
+  p.arcTo(halfWidth, top2, halfWidth + radius, top2, radius);
+  return p;
+}
+__name(buildRightScore, "buildRightScore");
+function buildLeftScore(location2, size2) {
+  const { left: left3, right, top: top2, bottom, width, height, radius } = getPathGeometry(location2, size2);
+  const halfWidth = left3 + width * 0.7;
+  const halfHeight = top2 + height * 0.5 - 5;
+  const p = new Path2D();
+  p.moveTo(left3 + radius, top2);
+  p.arcTo(right, top2, right, top2 + radius, radius);
+  p.arcTo(right, halfHeight, right - radius, halfHeight, radius);
+  p.arcTo(halfWidth, halfHeight, halfWidth, halfHeight + radius, radius);
+  p.arcTo(halfWidth, bottom, halfWidth - radius, bottom, radius);
+  p.arcTo(left3, bottom, left3, bottom - radius, radius);
+  p.arcTo(left3, top2, left3 + radius, top2, radius);
+  return p;
+}
+__name(buildLeftScore, "buildLeftScore");
+var getPathGeometry = /* @__PURE__ */ __name((location2, size2, radius = 10) => {
+  const { left: left3, top: top2 } = location2;
+  const { width, height } = size2;
+  return {
+    left: left3,
+    right: left3 + width,
+    top: top2,
+    bottom: top2 + height,
+    width,
+    height,
+    radius
+  };
+}, "getPathGeometry");
+
+// ../../Components/Views/ScoreButton.ts
+var SCORE_CFG = {
+  size: {
+    "width": 95,
+    "height": 75
+  }
+};
+var PossibleColor = "cyan";
+var ScoreButton = class {
+  static {
+    __name(this, "ScoreButton");
+  }
+  id = 0;
+  // assigned by activeViews.add()   
+  zOrder = 0;
+  tabOrder = 0;
+  name;
+  index;
+  activeView = true;
+  enabled = true;
+  hovered = false;
+  focused = false;
+  path = new Path2D();
+  size;
+  location;
+  text;
+  color = "black";
+  isLeftHanded;
+  scoreText = "";
+  available = false;
+  tooltip = "";
+  upperText = "";
+  lowerText = "";
+  upperName = null;
+  lowerName = null;
+  scoreBox = null;
+  /** Creates an instance of a virtual ScoreButton. */
+  constructor(el) {
+    this.index = el.idx;
+    this.tabOrder = el.tabOrder || 0;
+    this.name = el.id;
+    this.text = el.text || "";
+    this.tooltip = `${this.name} available`;
+    this.enabled = true;
+    this.hovered = false;
+    this.focused = false;
+    this.size = SCORE_CFG.size;
+    this.location = el.location;
+    this.upperText = this.text.split(" ")[0];
+    this.lowerText = this.text.split(" ")[1] || "";
+    this.isLeftHanded = el.idx % 2 === 1;
+    this.buildPath();
+    signals.on(
+      "UpdateScoreElement",
+      this.index.toString(),
+      (data) => {
+        if (data.renderAll) {
+          this.color = data.fillColor;
+          this.render();
+        }
+        this.available = data.available;
+        this.scoreText = data.value;
+        this.renderScore(data.value, data.available);
+      }
+    );
+  }
+  /** build the correct (left/right) path and Txt locations */
+  buildPath() {
+    const s = this;
+    const { left: left3, top: top2 } = s.location;
+    if (this.isLeftHanded) {
+      s.path = buildRightScore(s.location, s.size);
+      s.upperName = new Text({
+        kind: "text",
+        idx: -1,
+        tabOrder: 0,
+        id: s.name + "-upperText",
+        text: s.upperText,
+        location: { left: left3 + 40, top: top2 + 10 },
+        size: { width: 55, height: 30 },
+        color: s.color,
+        bind: false
+      });
+      s.lowerName = new Text({
+        kind: "text",
+        idx: -1,
+        tabOrder: 0,
+        id: s.name + "-lowerText",
+        text: s.lowerText,
+        location: { left: left3 + 40, top: top2 + 40 },
+        size: { width: 55, height: 30 },
+        color: s.color,
+        bind: false
+      });
+      s.scoreBox = new Text({
+        kind: "text",
+        idx: -1,
+        tabOrder: 0,
+        id: s.name + "-score",
+        text: "",
+        location: { left: left3 + 5, top: top2 + 50 },
+        size: { width: 24, height: 24 },
+        color: s.color,
+        padding: 10,
+        bind: false
+      });
+    } else {
+      s.path = buildLeftScore(s.location, s.size);
+      s.upperName = new Text({
+        kind: "text",
+        idx: -1,
+        tabOrder: 0,
+        id: s.name + "-upperText",
+        text: s.upperText,
+        location: { left: left3 + 10, top: top2 + 10 },
+        size: { width: 55, height: 30 },
+        color: s.color,
+        bind: false
+      });
+      s.lowerName = new Text({
+        kind: "text",
+        idx: -1,
+        tabOrder: 0,
+        id: s.name + "-lowerText",
+        text: s.lowerText,
+        location: { left: left3 + 10, top: top2 + 40 },
+        size: { width: 55, height: 30 },
+        color: s.color,
+        bind: false
+      });
+      s.scoreBox = new Text({
+        kind: "text",
+        idx: -1,
+        tabOrder: 0,
+        id: s.name + "-score",
+        text: "",
+        location: { left: left3 + 70, top: top2 + 3 },
+        size: { width: 24, height: 24 },
+        color: s.color,
+        padding: 10,
+        bind: false
+      });
+    }
+  }
+  /** called from Surface/canvasEvents when this element has been touched */
+  touched() {
+    signals.fire("ScoreButtonTouched", this.index.toString(), this.index);
+  }
+  /** 
+   * updates and renders the virtual ScoreButton view 
+   * Caution: called 60fps - keep it clean
+  */
+  update() {
+    this.render();
+    this.renderScore(this.scoreText, this.available);
+  }
+  /** render this vitual ScoreButtons shape (path) onto the canvas */
+  render() {
+    ctx.save();
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = this.hovered === true ? "orange" : this.color;
+    ctx.stroke(this.path);
+    ctx.restore();
+    ctx.fillStyle = this.color;
+    ctx.fill(this.path);
+    if (this.upperName) {
+      this.upperName.fillColor = this.color;
+      this.upperName.fontColor = windowCFG.containerColor;
+      this.upperName.text = this.upperText;
+      this.upperName.update();
+    }
+    if (this.lowerName) {
+      this.lowerName.fillColor = this.color;
+      this.lowerName.fontColor = windowCFG.containerColor;
+      this.lowerName.text = this.lowerText;
+      this.lowerName.update();
+    }
+  }
+  /** renders the score value inside the vitual ScoreButton view */
+  renderScore(scoretext, available) {
+    let scoreColor = available ? PossibleColor : windowCFG.containerColor;
+    if (scoretext === "") {
+      scoreColor = this.color;
+    }
+    if (this.scoreBox !== null) {
+      this.scoreBox.fontColor = scoreColor;
+      this.scoreBox.fillColor = this.color;
+      this.scoreBox.text = scoretext;
+      this.scoreBox.update();
+    }
+  }
+};
+
 // ../../Framework/base_manifest.ts
 var baseManifest = {
   Views: {
@@ -883,7 +1384,9 @@ var baseManifest = {
     "../Components/Views/Container.ts": Container_exports,
     "../Components/Views/Popup.ts": Popup_exports,
     "../Components/Views/Text.ts": Text_exports,
-    "../Components/Views/TextArea.ts": TextArea_exports
+    "../Components/Views/TextArea.ts": TextArea_exports,
+    "../Components/Views/Die.ts": Die_exports,
+    "../Components/Views/ScoreButton.ts": ScoreButton_exports
   },
   baseUrl: import.meta.url
 };
@@ -945,7 +1448,6 @@ var initCFG = /* @__PURE__ */ __name((theCanvas, cfg2, applicationManifest) => {
 }, "initCFG");
 var getFactories = /* @__PURE__ */ __name(() => {
   const baseUrl = new URL("./", appManifest.baseUrl).href;
-  console.log("getFactories baseUrl ", baseUrl);
   const factories2 = /* @__PURE__ */ new Map();
   for (const [self2, module] of Object.entries(base_manifest_default.Views)) {
     const url = new URL(self2, baseUrl).href;
@@ -1363,7 +1865,7 @@ var state = {
   text: "Score:"
 };
 var init2 = /* @__PURE__ */ __name(() => {
-  on("UpdatePlayer", "0", (data) => {
+  signals.on("UpdatePlayer", "0", (data) => {
     state.text = data.text;
     update();
   });
@@ -1495,7 +1997,7 @@ var setfiveOfaKindCount = /* @__PURE__ */ __name((val) => {
   fiveOfaKindCount = val;
 }, "setfiveOfaKindCount");
 var init3 = /* @__PURE__ */ __name(() => {
-  on(`DieTouched`, "", (data) => {
+  signals.on(`DieTouched`, "", (data) => {
     const { index } = data;
     const thisDie = die[index];
     if (thisDie.value > 0) {
@@ -1543,7 +2045,7 @@ var roll = /* @__PURE__ */ __name((dieValues) => {
   appInstance.evaluatePossibleScores();
 }, "roll");
 var updateView = /* @__PURE__ */ __name((index, value, frozen) => {
-  fire("UpdateDie", index.toString(), { index, value, frozen });
+  signals.fire("UpdateDie", index.toString(), { index, value, frozen });
 }, "updateView");
 var toString = /* @__PURE__ */ __name(() => {
   let str = "[";
@@ -1598,6 +2100,7 @@ var evaluateNumbers = /* @__PURE__ */ __name((id2) => {
 }, "evaluateNumbers");
 
 // src/ViewModels/scoreElement.ts
+var { on, fire } = signals;
 var LabelState = {
   Normal: 0,
   Hovered: 1,
@@ -1886,6 +2389,7 @@ var update2 = /* @__PURE__ */ __name(() => {
 }, "update");
 
 // src/ViewModels/diceGame.ts
+var { on: on2, fire: fire2 } = signals;
 var SHORTCUT_GAMEOVER = false;
 var appInstance;
 var App = class _App {
@@ -1925,7 +2429,7 @@ var App = class _App {
     signals.on(`PopupReset`, "", () => {
       this.resetGame();
     });
-    on(`ScoreElementResetTurn`, "", () => {
+    on2(`ScoreElementResetTurn`, "", () => {
       if (this.isGameComplete()) {
         this.clearPossibleScores();
         this.setLeftScores();
@@ -1973,7 +2477,7 @@ var App = class _App {
     for (const scoreItem of this.scoreItems) {
       scoreItem.reset();
     }
-    fire("UpdatePlayer", "1", {
+    fire2("UpdatePlayer", "1", {
       index: 0,
       color: "brown",
       text: ""
@@ -2120,7 +2624,7 @@ var App = class _App {
   }, "addScore");
   /** broadcast an update message to the view element */
   updatePlayer = /* @__PURE__ */ __name((index, color, text) => {
-    fire("UpdatePlayer", index.toString(), {
+    fire2("UpdatePlayer", index.toString(), {
       index,
       color,
       text
@@ -2129,18 +2633,6 @@ var App = class _App {
 };
 
 // src/cfg.ts
-var DIE_CFG = {
-  size: { "width": 70, "height": 70 },
-  radius: 10,
-  color: "white"
-};
-var SCORE_CFG = {
-  size: {
-    "width": 95,
-    "height": 75
-  }
-};
-var PossibleColor = "cyan";
 var row1Top = 160;
 var row2Top = 245;
 var row3Top = 330;
@@ -2404,623 +2896,17 @@ var cfg = {
   ]
 };
 
-// src/Views/Die.ts
-var Die_exports = {};
-__export(Die_exports, {
-  default: () => Die
-});
-
-// src/ViewModels/dieFactory.ts
-var size = 90;
-var r = 0;
-function buildDieFaces() {
-  console.log("buildDieFaces");
-  const { size: dieSize, radius, color } = DIE_CFG;
-  r = radius;
-  const start = performance.now();
-  const canvas2 = document.createElement("canvas");
-  const ctx2 = canvas2.getContext("2d");
-  canvas2.width = dieSize.width;
-  canvas2.height = dieSize.height;
-  const faces = [
-    new ImageData(1, 1),
-    new ImageData(1, 1),
-    new ImageData(1, 1),
-    new ImageData(1, 1),
-    new ImageData(1, 1)
-  ];
-  const frozenFaces = [
-    new ImageData(1, 1),
-    new ImageData(1, 1),
-    new ImageData(1, 1),
-    new ImageData(1, 1),
-    new ImageData(1, 1)
-  ];
-  size = dieSize.width;
-  ctx2.fillStyle = color;
-  ctx2.fillRect(0, 0, size, size);
-  for (let i = 0; i < 7; i++) {
-    faces[i] = drawDie(ctx2, false, i);
-    frozenFaces[i] = drawDie(ctx2, true, i);
-  }
-  console.log(`Building 12 die face images took ${(performance.now() - start).toFixed()}ms!`);
-  return { faces, frozenFaces };
-}
-__name(buildDieFaces, "buildDieFaces");
-function drawDie(ctx2, frozen, value) {
-  ctx2.save();
-  if (frozen) {
-    ctx2.strokeStyle = "silver";
-    ctx2.fillStyle = "WhiteSmoke";
-  } else {
-    ctx2.strokeStyle = "black";
-    ctx2.fillStyle = "white";
-  }
-  drawDieFace(ctx2);
-  drawGlare(ctx2);
-  ctx2.fillStyle = frozen ? "silver" : "black";
-  drawDots(ctx2, value);
-  ctx2.restore();
-  return ctx2.getImageData(0, 0, size, size);
-}
-__name(drawDie, "drawDie");
-function drawDieFace(ctx2) {
-  ctx2.beginPath();
-  ctx2.roundRect(0, 0, size, size, r);
-  ctx2.closePath();
-  ctx2.fill();
-  ctx2.lineWidth = 2;
-  ctx2.strokeStyle = "black";
-  ctx2.stroke();
-  ctx2.lineWidth = 1;
-}
-__name(drawDieFace, "drawDieFace");
-function drawGlare(ctx2) {
-  const offset = 5;
-  const bottomLeftX = offset;
-  const bottomLeftY = size - offset;
-  const bottomRightX = size - offset;
-  const bottomRightY = size - offset;
-  const quarter = size * 0.25;
-  const threeQuarter = quarter * 3;
-  ctx2.fillStyle = "rgba(200, 200, 200, 0.4)";
-  ctx2.beginPath();
-  ctx2.moveTo(bottomLeftX, bottomLeftY);
-  ctx2.lineTo(bottomRightX, bottomRightY);
-  ctx2.bezierCurveTo(quarter, threeQuarter, quarter, threeQuarter, offset, offset);
-  ctx2.closePath();
-  ctx2.fill();
-  ctx2.save();
-}
-__name(drawGlare, "drawGlare");
-function drawDots(ctx2, dieValue) {
-  const quarter = size / 4;
-  const center = quarter * 2;
-  const middle = quarter * 2;
-  const left4 = quarter;
-  const top3 = quarter;
-  const right = quarter * 3;
-  const bottom = quarter * 3;
-  const dotSize = size / 12;
-  const doDot = drawDot;
-  if (dieValue === 1) {
-    doDot(ctx2, middle, center, dotSize);
-  } else if (dieValue === 2) {
-    doDot(ctx2, top3, left4, dotSize);
-    doDot(ctx2, bottom, right, dotSize);
-  } else if (dieValue === 3) {
-    drawDot(ctx2, top3, left4, dotSize);
-    drawDot(ctx2, middle, center, dotSize);
-    drawDot(ctx2, bottom, right, dotSize);
-  } else if (dieValue === 4) {
-    drawDot(ctx2, top3, left4, dotSize);
-    drawDot(ctx2, top3, right, dotSize);
-    drawDot(ctx2, bottom, left4, dotSize);
-    drawDot(ctx2, bottom, right, dotSize);
-  } else if (dieValue === 5) {
-    drawDot(ctx2, top3, left4, dotSize);
-    drawDot(ctx2, top3, right, dotSize);
-    drawDot(ctx2, middle, center, dotSize);
-    drawDot(ctx2, bottom, left4, dotSize);
-    drawDot(ctx2, bottom, right, dotSize);
-  } else if (dieValue === 6) {
-    drawDot(ctx2, top3, left4, dotSize);
-    drawDot(ctx2, top3, right, dotSize);
-    drawDot(ctx2, middle, left4, dotSize);
-    drawDot(ctx2, middle, right, dotSize);
-    drawDot(ctx2, bottom, left4, dotSize);
-    drawDot(ctx2, bottom, right, dotSize);
-  }
-}
-__name(drawDots, "drawDots");
-function drawDot(ctx2, y2, x2, dotSize) {
-  ctx2.beginPath();
-  ctx2.arc(x2, y2, dotSize, 0, Math.PI * 2, true);
-  ctx2.closePath();
-  ctx2.fill();
-}
-__name(drawDot, "drawDot");
-
-// src/Views/Die.ts
-var needToBuild = true;
-var Die = class _Die {
-  static {
-    __name(this, "Die");
-  }
-  id = 0;
-  // assigned by activeViews.add()    
-  index = 0;
-  activeView = true;
-  zOrder = 0;
-  tabOrder = 0;
-  name;
-  enabled = true;
-  hovered = false;
-  focused = false;
-  path;
-  location;
-  size;
-  left;
-  top;
-  width;
-  height;
-  color;
-  frozen = false;
-  value = 0;
-  static frozenFaces;
-  static faces;
-  /** ctor that instantiates a new vitual Die view  and faces*/
-  constructor(el) {
-    if (needToBuild) {
-      const { faces, frozenFaces } = buildDieFaces();
-      _Die.faces = faces;
-      _Die.frozenFaces = frozenFaces;
-      needToBuild = false;
-    }
-    this.index = el.idx;
-    this.tabOrder = el.tabOrder || 0;
-    this.name = el.id;
-    this.enabled = true;
-    this.size = DIE_CFG.size;
-    this.width = this.size.width;
-    this.height = this.size.height;
-    this.location = el.location;
-    this.top = el.location.top;
-    this.left = el.location.left;
-    this.color = "transparent";
-    this.path = this.buildPath(DIE_CFG.radius);
-    this.render();
-    on("UpdateDie", this.index.toString(), (data) => {
-      this.frozen = data.frozen;
-      this.value = data.value;
-      this.render();
-    });
-  }
-  buildPath(radius) {
-    const path = new Path2D();
-    path.roundRect(this.left, this.top, this.width, this.height, radius);
-    return path;
-  }
-  /** called from Surface/canvasEvents when this element has been touched */
-  touched() {
-    fire(`DieTouched`, "", { index: this.index });
-  }
-  update() {
-    this.render();
-  }
-  render() {
-    ctx.save();
-    const image = this.frozen ? _Die.frozenFaces[this.value] : _Die.faces[this.value];
-    ctx.putImageData(image, this.left, this.top);
-    ctx.lineWidth = 2;
-    if (this.hovered) {
-      ctx.strokeStyle = "orange";
-      ctx.lineWidth = 2;
-    } else {
-      ctx.strokeStyle = "silver";
-      ctx.lineWidth = 2;
-    }
-    ctx.stroke(this.path);
-    ctx.restore();
-  }
-};
-Die.faces = [
-  new ImageData(1, 1),
-  new ImageData(1, 1),
-  new ImageData(1, 1),
-  new ImageData(1, 1),
-  new ImageData(1, 1),
-  new ImageData(1, 1)
-];
-Die.frozenFaces = [
-  new ImageData(1, 1),
-  new ImageData(1, 1),
-  new ImageData(1, 1),
-  new ImageData(1, 1),
-  new ImageData(1, 1),
-  new ImageData(1, 1)
-];
-
-// src/Views/Popup.ts
-var Popup_exports2 = {};
-__export(Popup_exports2, {
-  default: () => Popup2
-});
-var left3 = 1;
-var top2 = 1;
-var Popup2 = class {
-  static {
-    __name(this, "Popup");
-  }
-  id = 0;
-  // assigned by activeViews.add() 
-  index = -1;
-  activeView = true;
-  zOrder = 0;
-  tabOrder = 0;
-  name = "";
-  enabled = true;
-  hovered = false;
-  focused = false;
-  path;
-  shownPath;
-  hiddenPath;
-  location;
-  size;
-  color = "black";
-  text = [""];
-  title = "";
-  textAlign = "center";
-  visible = true;
-  buffer = null;
-  fontSize = 28;
-  /** ctor that instantiates a new vitual Popup view */
-  constructor(el) {
-    this.tabOrder = el.tabOrder || 0;
-    this.enabled = true;
-    this.color = "white";
-    this.location = el.location;
-    this.hiddenPath = new Path2D();
-    this.hiddenPath.rect(1, 1, 1, 1);
-    this.size = el.size || { width: 300, height: 300 };
-    this.shownPath = this.buildPath(el.radius || 30);
-    this.path = this.hiddenPath;
-    this.fontSize = el.fontSize || 8;
-    signals.on("ShowPopup", "", (data) => {
-      this.show(data);
-    });
-    signals.on("HidePopup", "", () => this.hide());
-  }
-  /** build a Path2D */
-  buildPath(radius) {
-    const path = new Path2D();
-    path.roundRect(this.location.left, this.location.top, this.size.width, this.size.height, radius);
-    return path;
-  }
-  /** show the virtual Popup view */
-  show(data) {
-    signals.fire("FocusPopup", " ", this);
-    this.title = data.title;
-    this.text = data.msg;
-    left3 = this.location.left;
-    top2 = this.location.top;
-    this.path = this.shownPath;
-    this.visible = true;
-    this.saveScreenToBuffer();
-    setHasVisiblePopup(true);
-    this.render();
-  }
-  /** hide the virtual Popup view */
-  hide() {
-    if (this.visible) {
-      left3 = 1;
-      top2 = 1;
-      this.path = this.hiddenPath;
-      this.restoreScreenFromBuffer();
-      this.visible = false;
-      setHasVisiblePopup(false);
-    }
-  }
-  /** takes a snapshot of our current canvas bitmap */
-  saveScreenToBuffer() {
-    const { left: left4, top: top3 } = this.location;
-    const { width, height } = this.size;
-    console.log(`Buffer = left:${left4}, top:${top3}, width:${width}, height:${height}`);
-    this.buffer = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-  }
-  /** paint the canvas with our current snapshot */
-  restoreScreenFromBuffer() {
-    if (this.buffer) {
-      return ctx.putImageData(this.buffer, 0, 0);
-    }
-  }
-  /** called from Surface/canvasEvents when this element has been touched */
-  touched() {
-    this.hide();
-    signals.fire("PopupReset", "", null);
-  }
-  /** update this virtual Popups view (render it) */
-  update() {
-    if (this.visible) this.render();
-  }
-  /** render this virtual Popup view */
-  render() {
-    ctx.save();
-    ctx.shadowColor = "#404040";
-    ctx.shadowBlur = 45;
-    ctx.shadowOffsetX = 5;
-    ctx.shadowOffsetY = 5;
-    ctx.fillStyle = windowCFG.containerColor;
-    ctx.fill(this.path);
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = windowCFG.textColor;
-    ctx.stroke(this.path);
-    ctx.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
-    ctx.textAlign = this.textAlign;
-    ctx.strokeText(this.title + " ", left3 + 175, top2 + 100);
-    let txtTop = top2 + 100;
-    this.text.forEach((str) => {
-      ctx.strokeText(str + " ", left3 + 175, txtTop += 50);
-    });
-    ctx.restore();
-    this.visible = true;
-  }
-};
-
-// src/Views/ScoreButton.ts
-var ScoreButton_exports = {};
-__export(ScoreButton_exports, {
-  default: () => ScoreButton
-});
-
-// src/ViewModels/pathFactory.ts
-function buildRightScore(location2, size2) {
-  const { left: left4, right, top: top3, bottom, width, height, radius } = getPathGeometry(location2, size2);
-  const halfWidth = left4 + width * 0.3;
-  const halfHeight = top3 + height * 0.5 + 5;
-  const p = new Path2D();
-  p.moveTo(halfWidth + radius, top3);
-  p.arcTo(right, top3, right, top3 + radius, radius);
-  p.arcTo(right, bottom, right - radius, bottom, radius);
-  p.arcTo(left4, bottom, left4, bottom - radius, radius);
-  p.arcTo(left4, halfHeight, left4 + radius, halfHeight, radius);
-  p.arcTo(halfWidth, halfHeight, halfWidth, halfHeight - radius, radius);
-  p.arcTo(halfWidth, top3, halfWidth + radius, top3, radius);
-  return p;
-}
-__name(buildRightScore, "buildRightScore");
-function buildLeftScore(location2, size2) {
-  const { left: left4, right, top: top3, bottom, width, height, radius } = getPathGeometry(location2, size2);
-  const halfWidth = left4 + width * 0.7;
-  const halfHeight = top3 + height * 0.5 - 5;
-  const p = new Path2D();
-  p.moveTo(left4 + radius, top3);
-  p.arcTo(right, top3, right, top3 + radius, radius);
-  p.arcTo(right, halfHeight, right - radius, halfHeight, radius);
-  p.arcTo(halfWidth, halfHeight, halfWidth, halfHeight + radius, radius);
-  p.arcTo(halfWidth, bottom, halfWidth - radius, bottom, radius);
-  p.arcTo(left4, bottom, left4, bottom - radius, radius);
-  p.arcTo(left4, top3, left4 + radius, top3, radius);
-  return p;
-}
-__name(buildLeftScore, "buildLeftScore");
-var getPathGeometry = /* @__PURE__ */ __name((location2, size2, radius = 10) => {
-  const { left: left4, top: top3 } = location2;
-  const { width, height } = size2;
-  return {
-    left: left4,
-    right: left4 + width,
-    top: top3,
-    bottom: top3 + height,
-    width,
-    height,
-    radius
-  };
-}, "getPathGeometry");
-
-// src/Views/ScoreButton.ts
-var ScoreButton = class {
-  static {
-    __name(this, "ScoreButton");
-  }
-  id = 0;
-  // assigned by activeViews.add()   
-  zOrder = 0;
-  tabOrder = 0;
-  name;
-  index;
-  activeView = true;
-  enabled = true;
-  hovered = false;
-  focused = false;
-  path = new Path2D();
-  size;
-  location;
-  text;
-  color = "black";
-  isLeftHanded;
-  scoreText = "";
-  available = false;
-  tooltip = "";
-  upperText = "";
-  lowerText = "";
-  upperName = null;
-  lowerName = null;
-  scoreBox = null;
-  /** Creates an instance of a virtual ScoreButton. */
-  constructor(el) {
-    this.index = el.idx;
-    this.tabOrder = el.tabOrder || 0;
-    this.name = el.id;
-    this.text = el.text || "";
-    this.tooltip = `${this.name} available`;
-    this.enabled = true;
-    this.hovered = false;
-    this.focused = false;
-    this.size = SCORE_CFG.size;
-    this.location = el.location;
-    this.upperText = this.text.split(" ")[0];
-    this.lowerText = this.text.split(" ")[1] || "";
-    this.isLeftHanded = el.idx % 2 === 1;
-    this.buildPath();
-    on(
-      "UpdateScoreElement",
-      this.index.toString(),
-      (data) => {
-        if (data.renderAll) {
-          this.color = data.fillColor;
-          this.render();
-        }
-        this.available = data.available;
-        this.scoreText = data.value;
-        this.renderScore(data.value, data.available);
-      }
-    );
-  }
-  /** build the correct (left/right) path and Txt locations */
-  buildPath() {
-    const s = this;
-    const { left: left4, top: top3 } = s.location;
-    if (this.isLeftHanded) {
-      s.path = buildRightScore(s.location, s.size);
-      s.upperName = new Text_exports.default({
-        kind: "text",
-        idx: -1,
-        tabOrder: 0,
-        id: s.name + "-upperText",
-        text: s.upperText,
-        location: { left: left4 + 40, top: top3 + 10 },
-        size: { width: 55, height: 30 },
-        color: s.color,
-        bind: false
-      });
-      s.lowerName = new Text_exports.default({
-        kind: "text",
-        idx: -1,
-        tabOrder: 0,
-        id: s.name + "-lowerText",
-        text: s.lowerText,
-        location: { left: left4 + 40, top: top3 + 40 },
-        size: { width: 55, height: 30 },
-        color: s.color,
-        bind: false
-      });
-      s.scoreBox = new Text_exports.default({
-        kind: "text",
-        idx: -1,
-        tabOrder: 0,
-        id: s.name + "-score",
-        text: "",
-        location: { left: left4 + 5, top: top3 + 50 },
-        size: { width: 24, height: 24 },
-        color: s.color,
-        padding: 10,
-        bind: false
-      });
-    } else {
-      s.path = buildLeftScore(s.location, s.size);
-      s.upperName = new Text_exports.default({
-        kind: "text",
-        idx: -1,
-        tabOrder: 0,
-        id: s.name + "-upperText",
-        text: s.upperText,
-        location: { left: left4 + 10, top: top3 + 10 },
-        size: { width: 55, height: 30 },
-        color: s.color,
-        bind: false
-      });
-      s.lowerName = new Text_exports.default({
-        kind: "text",
-        idx: -1,
-        tabOrder: 0,
-        id: s.name + "-lowerText",
-        text: s.lowerText,
-        location: { left: left4 + 10, top: top3 + 40 },
-        size: { width: 55, height: 30 },
-        color: s.color,
-        bind: false
-      });
-      s.scoreBox = new Text_exports.default({
-        kind: "text",
-        idx: -1,
-        tabOrder: 0,
-        id: s.name + "-score",
-        text: "",
-        location: { left: left4 + 70, top: top3 + 3 },
-        size: { width: 24, height: 24 },
-        color: s.color,
-        padding: 10,
-        bind: false
-      });
-    }
-  }
-  /** called from Surface/canvasEvents when this element has been touched */
-  touched() {
-    fire("ScoreButtonTouched", this.index.toString(), this.index);
-  }
-  /** 
-   * updates and renders the virtual ScoreButton view 
-   * Caution: called 60fps - keep it clean
-  */
-  update() {
-    this.render();
-    this.renderScore(this.scoreText, this.available);
-  }
-  /** render this vitual ScoreButtons shape (path) onto the canvas */
-  render() {
-    ctx.save();
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = this.hovered === true ? "orange" : this.color;
-    ctx.stroke(this.path);
-    ctx.restore();
-    ctx.fillStyle = this.color;
-    ctx.fill(this.path);
-    if (this.upperName) {
-      this.upperName.fillColor = this.color;
-      this.upperName.fontColor = windowCFG.containerColor;
-      this.upperName.text = this.upperText;
-      this.upperName.update();
-    }
-    if (this.lowerName) {
-      this.lowerName.fillColor = this.color;
-      this.lowerName.fontColor = windowCFG.containerColor;
-      this.lowerName.text = this.lowerText;
-      this.lowerName.update();
-    }
-  }
-  /** renders the score value inside the vitual ScoreButton view */
-  renderScore(scoretext, available) {
-    let scoreColor = available ? PossibleColor : windowCFG.containerColor;
-    if (scoretext === "") {
-      scoreColor = this.color;
-    }
-    if (this.scoreBox !== null) {
-      this.scoreBox.fontColor = scoreColor;
-      this.scoreBox.fillColor = this.color;
-      this.scoreBox.text = scoretext;
-      this.scoreBox.update();
-    }
-  }
-};
-
 // src/view_manifest.ts
 var manifest = {
   Views: {
-    "./Views/Die.ts": Die_exports,
-    "./Views/Popup.ts": Popup_exports2,
-    "./Views/ScoreButton.ts": ScoreButton_exports
+    //"./Views/Die.ts": $0,
+    //"./Views/ScoreButton.ts": $1,
   },
   baseUrl: import.meta.url
 };
 var view_manifest_default = manifest;
 
 // src/main.ts
-var diceSignals = buildSignalAggregator();
-var { on, fire } = diceSignals;
 initCloseButton("closebutton");
 var AudioContext = globalThis.AudioContext;
 var context2 = new AudioContext();
@@ -3044,7 +2930,5 @@ var thisPlayer = {
 appInstance.resetTurn();
 render();
 export {
-  fire,
-  on,
   thisPlayer
 };

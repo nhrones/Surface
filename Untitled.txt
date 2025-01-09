@@ -1,0 +1,7 @@
+
+Right-click: on a .ts file.
+Select "Open with" and then click "Choose another app".
+Check the box that says "Always use this app to open .ts files".
+Scroll down and select "Look for another app on this PC".
+Navigate to the location of your TypeScript compiler (e.g., C:\Program Files\nodejs\node_modules\typescript\bin\tsc.exe).
+Select "tsc.exe" and click "Open".

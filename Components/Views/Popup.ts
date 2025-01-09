@@ -1,15 +1,13 @@
 /// <reference lib="dom" />
-import {  
-   ElementDescriptor, 
-   Location, 
-   View,
-   ctx, 
-   setHasVisiblePopup, 
+import {
+   setHasVisiblePopup,
+   windowCFG,
+   ctx,
    signals,
-   windowCFG 
+   ElementDescriptor,
+   Location,
+   View
 } from '../deps.ts'
-
-import Text from './Text.ts'
 
 let left = 1
 let top = 1
@@ -30,17 +28,18 @@ export default class Popup implements View {
    shownPath: Path2D
    hiddenPath: Path2D
    location: Location
-   size: { height:number, width: number }
+   size: { height: number, width: number }
    color = "black"
-   textNode: Text
-   text = ""
-   fontColor = "red"
-   fontSize = 28
+   text: string[] = [""]
+   title = ""
+   textAlign = "center"
    visible = true
+   buffer: ImageData | null = null
+   fontSize = 28
 
    /** ctor that instantiates a new vitual Popup view */
    constructor(el: ElementDescriptor) {
-      this.tabOrder = el.tabOrder  || 0
+      this.tabOrder = el.tabOrder || 0
       this.enabled = true
       this.color = 'white'
       this.location = el.location
@@ -49,27 +48,14 @@ export default class Popup implements View {
       this.size = el.size || { width: 300, height: 300 }
       this.shownPath = this.buildPath(el.radius || 30)
       this.path = this.hiddenPath
-      this.fontSize = el.fontSize || 24
-      this.textNode = new Text (
-         {
-            kind: 'Text',
-            idx: -1,
-            tabOrder: 0,
-            id: this.name + 'Label',
-            text: el.text || "",
-            location: this.location,
-            size: this.size,
-            bind: true
-         }
-      )
-
+      this.fontSize = el.fontSize || 8
       //================================================
       //                bind signals
       //================================================
 
-      // Our game controller broadcasts this ShowPopup event at the end of a game
-      signals.on('ShowPopup',"", (data: { title: string, msg: string[] }) => {
-         this.show(data.msg)
+      // Our game controller broadcasts this ShowPopup signal at the end of a game
+      signals.on('ShowPopup', "", (data: { title: string, msg: string[] }) => {
+         this.show(data)
       })
 
       signals.on('HidePopup', "", () => this.hide())
@@ -81,13 +67,15 @@ export default class Popup implements View {
       return path
    }
    /** show the virtual Popup view */
-   show(msg: string[]) {
-      signals.fire('FocusPopup'," ", this)
-      this.text = msg[0]
+   show(data: { title: string, msg: string[] }) {
+      signals.fire('FocusPopup', " ", this)
+      this.title = data.title
+      this.text = data.msg
       left = this.location.left
       top = this.location.top
       this.path = this.shownPath
       this.visible = true
+      this.saveScreenToBuffer()
       setHasVisiblePopup(true)
       this.render()
    }
@@ -98,15 +86,31 @@ export default class Popup implements View {
          left = 1
          top = 1
          this.path = this.hiddenPath
+         this.restoreScreenFromBuffer()
          this.visible = false
          setHasVisiblePopup(false)
+      }
+   }
+
+   /** takes a snapshot of our current canvas bitmap */
+   saveScreenToBuffer() {
+      const { left, top } = this.location
+      const { width, height } = this.size
+      console.log(`Buffer = left:${left}, top:${top}, width:${width}, height:${height}`)
+      this.buffer = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
+   }
+
+   /** paint the canvas with our current snapshot */
+   restoreScreenFromBuffer() {
+      if (this.buffer) {
+         return ctx.putImageData(this.buffer, 0, 0)
       }
    }
 
    /** called from Surface/canvasEvents when this element has been touched */
    touched() {
       this.hide()
-      signals.fire('PopupReset','', null)
+      signals.fire('PopupReset', '', null)
    }
 
    /** update this virtual Popups view (render it) */
@@ -129,11 +133,14 @@ export default class Popup implements View {
       ctx.lineWidth = 1
       ctx.strokeStyle = windowCFG.textColor
       ctx.stroke(this.path)
-      this.textNode.fontSize = this.fontSize
-      this.textNode.fillColor = this.color
-      this.textNode.fontColor = this.fontColor
-      this.textNode.text = this.text
-      this.textNode.update()
+      ctx.font = `${this.fontSize}px Tahoma, Verdana, sans-serif`;
+      ctx.textAlign = this.textAlign as "center" | "left" | "right" | "start" | "end"
+      ctx.strokeText(this.title + ' ', left + 175, top + 100)
+      let txtTop = top + 100
+      // stroke each string in the array
+      this.text.forEach(str => {
+         ctx.strokeText(str + ' ', left + 175, txtTop+=50)
+      });
       ctx.restore()
       this.visible = true
    }

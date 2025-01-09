@@ -1,5 +1,5 @@
 
-import { on } from '../main.ts'
+//import { on } from '../main.ts'
 import { signals } from '../deps.ts'
 
 const id = 'player1'
@@ -15,7 +15,7 @@ export const state = {
 /** PlayerName ViewModel initialization
  *  Called from DiceGame Controller ctor */
 export const init = () => {
-   on("UpdatePlayer", "0", (data: { index: number, color: string, text: string }) => {
+   signals.on("UpdatePlayer", "0", (data: { index: number, color: string, text: string }) => {
       state.text = data.text
       update()
    })

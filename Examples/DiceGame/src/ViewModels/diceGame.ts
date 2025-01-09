@@ -3,7 +3,8 @@ import * as PlaySound from './sounds.ts'
 
 import {highScore, setHighScore, setupHighScore} from './highScore.ts'
 
-import {on, fire } from '../main.ts'
+//import {on, fire } from '../main.ts'
+const { on, fire } = signals
 
 import * as playerOne from './playerName.ts'
 import * as dice from './dice.ts'
@@ -154,7 +155,7 @@ export class App {
 
    /** show a popup with final score */
    showFinalScore() {
-      const winMsg =[]
+      const winMsg:string[] =[]
       
       winMsg.push('You won!')
       rollButton.state.color = 'black'

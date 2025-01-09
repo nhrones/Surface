@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import { buildSignalAggregator } from "./deps.ts"
+//import { buildSignalAggregator } from "./deps.ts"
 import { initCloseButton, containerInit, hydrateUI, render } from "./deps.ts";
 import * as PlaySound from './ViewModels/sounds.ts'
 import { App, appInstance } from './ViewModels/diceGame.ts';
@@ -12,7 +12,7 @@ export type Player = {
     score: number
     lastScore: string
 }
-import type { DiceSignals } from "./diceGameTypes.ts";
+//import type { DiceSignals } from "./diceGameTypes.ts";
 
 // Import configuration files
 import { cfg } from "./cfg.ts";
@@ -21,8 +21,8 @@ import manifest from './view_manifest.ts'
 /** 
  * Use the factory function to create a new SignalAggregator service 
  */
-const diceSignals = buildSignalAggregator<DiceSignals>()
-export const { on, fire } = diceSignals
+//const diceSignals = buildSignalAggregator<DiceSignals>()
+//export const { on, fire } = diceSignals
 /** initialize the button */
 initCloseButton('closebutton')
 

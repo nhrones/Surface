@@ -1,16 +1,26 @@
 /// <reference lib="dom" />
 import {
-   Text,
    windowCFG,
    ctx,
    ElementDescriptor,
    Location,
+   signals,
    View
 } from '../deps.ts'
 
-import { on, fire  } from '../main.ts'
+import Text from './Text.ts'
 
-import { SCORE_CFG, PossibleColor } from '../cfg.ts'
+//import { on, fire  } from '../main.ts'
+
+//TODO  add cfg to ctor?
+//import { SCORE_CFG, PossibleColor } from '../cfg.ts'
+export const SCORE_CFG = {
+   size: {
+       "width": 95,
+       "height": 75
+   }
+}
+export const PossibleColor = 'cyan';
 
 import { buildRightScore, buildLeftScore } from '../ViewModels/pathFactory.ts'
 
@@ -38,9 +48,9 @@ export default class ScoreButton implements View {
 
    upperText = ""
    lowerText = ""
-   upperName: Text.default | null = null;
-   lowerName: Text.default | null = null;
-   scoreBox: Text.default | null = null;
+   upperName: Text | null = null;
+   lowerName: Text | null = null;
+   scoreBox: Text | null = null;
 
    /** Creates an instance of a virtual ScoreButton. */
    constructor(el: ElementDescriptor) {
@@ -64,7 +74,7 @@ export default class ScoreButton implements View {
       //                bind signals
       //================================================
 
-      on('UpdateScoreElement', this.index.toString(),
+      signals.on('UpdateScoreElement', this.index.toString(),
          (data: {
             index: number,
             renderAll: boolean,
@@ -96,15 +106,15 @@ export default class ScoreButton implements View {
       if (this.isLeftHanded) { // twos fours sixs
          s.path = buildRightScore(s.location, s.size)
         
-         s.upperName = new Text.default({ kind: 'text', idx: -1, tabOrder: 0, id: s.name + '-upperText', text: s.upperText, 
+         s.upperName = new Text({ kind: 'text', idx: -1, tabOrder: 0, id: s.name + '-upperText', text: s.upperText, 
          location: { left: left + 40, top: top + 10 }, 
          size: { width: 55, height: 30 }, color: s.color, bind: false })
          
-         s.lowerName = new Text.default({ kind: 'text', idx: -1, tabOrder: 0, id: s.name + '-lowerText', text: s.lowerText, 
+         s.lowerName = new Text({ kind: 'text', idx: -1, tabOrder: 0, id: s.name + '-lowerText', text: s.lowerText, 
          location: { left: left + 40, top: top + 40 }, 
          size: { width: 55, height: 30 }, color: s.color, bind: false })
          
-         s.scoreBox = new Text.default({ kind: 'text', idx: -1, tabOrder: 0, id: s.name + '-score', text: '', 
+         s.scoreBox = new Text({ kind: 'text', idx: -1, tabOrder: 0, id: s.name + '-score', text: '', 
          location: { left: left + 5 , top: top + 50 }, 
          size: { width: 24, height: 24 }, color: s.color, padding: 10, bind: false })
          
@@ -113,15 +123,15 @@ export default class ScoreButton implements View {
       else { // ones threes fives
          s.path = buildLeftScore(s.location, s.size)
          
-         s.upperName = new Text.default({ kind: 'text', idx: -1, tabOrder: 0, id: s.name + '-upperText', text: s.upperText,  
+         s.upperName = new Text({ kind: 'text', idx: -1, tabOrder: 0, id: s.name + '-upperText', text: s.upperText,  
             location: { left: left + 10, top: top + 10 },
             size: { width: 55, height: 30 }, color: s.color, bind: false })
          
-         s.lowerName = new Text.default({ kind: 'text', idx: -1, tabOrder: 0, id: s.name + '-lowerText', text: s.lowerText, 
+         s.lowerName = new Text({ kind: 'text', idx: -1, tabOrder: 0, id: s.name + '-lowerText', text: s.lowerText, 
             location: { left: left + 10, top: top + 40 }, 
             size: { width: 55, height: 30 }, color: s.color, bind: false })
          
-         s.scoreBox = new Text.default({ kind: 'text', idx: -1, tabOrder: 0, id: s.name + '-score', text: '', 
+         s.scoreBox = new Text({ kind: 'text', idx: -1, tabOrder: 0, id: s.name + '-score', text: '', 
             location: { left: left + 70 , top: top + 3 }, 
             size: { width: 24, height: 24 }, color: s.color, padding: 10, bind: false })
       }
@@ -129,7 +139,7 @@ export default class ScoreButton implements View {
 
    /** called from Surface/canvasEvents when this element has been touched */
    touched() {
-      fire('ScoreButtonTouched', this.index.toString(), this.index)
+      signals.fire('ScoreButtonTouched', this.index.toString(), this.index)
    }
 
    /** 

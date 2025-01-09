@@ -17,7 +17,7 @@ var initCloseButton = /* @__PURE__ */ __name((id) => {
 }, "initCloseButton");
 
 // ../../Components/ViewModels/constants.ts
-var HAIRSPACE = "\u202F";
+var HAIRSPACE = "\u200A";
 var CARETBAR = "|";
 var PLACEHOLDER = "\u200B";
 
@@ -1219,7 +1219,7 @@ var TextArea = class extends Container {
     ctx.textBaseline = "alphabetic";
     ctx.save();
     if (this.focused === true) {
-      if (tickCount === 30) caretChar = PLACEHOLDER; //HAIRSPACE;
+      if (tickCount === 30) caretChar = HAIRSPACE;
       if (tickCount === 0) caretChar = CARETBAR;
     } else {
       caretChar = "";

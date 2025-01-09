@@ -1,18 +1,23 @@
 /// <reference lib="dom" />
 import { ctx } from '../deps.ts'
-import { on, fire } from '../main.ts'
+//import { on, fire } from '../main.ts'
 import {
     ElementDescriptor,
     Location,
+    signals,
     View
 } from '../deps.ts'
 
 import type { } from '../deps.ts'
 
-import { DieIndex } from '../diceGameTypes.ts'
-import { DIE_CFG } from '../cfg.ts'
+import { DieIndex } from "../../Framework/src/signals/coreEventTypes.ts" //'../diceGameTypes.ts'
+//TODO import { DIE_CFG } from '../cfg.ts'
 import { buildDieFaces } from '../ViewModels/dieFactory.ts'
-
+export const DIE_CFG = {
+   size: { "width":70, "height": 70 },
+   radius: 10,
+   color: "white"
+}
 let needToBuild = true
 
 /** a class that creates instances of virtual Die    
@@ -71,7 +76,7 @@ export default class Die implements View {
       //                bind signals
       //================================================
 
-      on('UpdateDie', this.index.toString(), (
+      signals.on('UpdateDie', this.index.toString(), (
          data: { 
             index: number, 
             value: number, 
@@ -92,7 +97,7 @@ export default class Die implements View {
    /** called from Surface/canvasEvents when this element has been touched */
    touched() {
       // inform Dice with index data
-      fire(`DieTouched`, "", ({ index: this.index as DieIndex }))
+      signals.fire(`DieTouched`, "", ({ index: this.index as DieIndex }))
    }
 
    update() {
