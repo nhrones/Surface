@@ -103,8 +103,8 @@ export class TextEditor implements Editor {
       })
 
       // Input eventhandler -> data: string
-      signals.on(`WindowInput`, this.id, (evt: InputEvent) => {
-         insertChars(this, evt.data as string)
+      signals.on(`WindowInput`, this.id, (key: string) => {
+         insertChars(this, key as string)
       })
 
       // KeyDown eventhandler for: enter, backspace, delete, arrows, shiftKey, ctrlKey  

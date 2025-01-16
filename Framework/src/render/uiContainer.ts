@@ -19,11 +19,11 @@ let factories: Map<string, any>
  */
 export function containerInit(
    canvas: HTMLCanvasElement,
-   cfg: Configuration,
-   manifest: Manifest
+   cfg: Configuration
 ) {
+
    // initialize our execution context  
-   initCFG(canvas, cfg, manifest)
+   initCFG(canvas, cfg)
 
    // sets shared host member references 
    setupRenderContext(canvas) 

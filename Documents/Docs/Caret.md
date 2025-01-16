@@ -1,0 +1,2 @@
+## Caret
+The caret is the flashing cursor that's typically shown in a text editor to show the current insert position. As Surface-TextArea provides editing capabilities, this would include the ability to calculate where the caret should be displayed.

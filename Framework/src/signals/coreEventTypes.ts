@@ -45,7 +45,7 @@ export type CoreEvents = {
    },
    
    /** Window Input signal */
-   WindowInput: InputEvent,
+   WindowInput: string,
 
    /** Window KeyDown signal */
    WindowKeyDown: KeyboardEvent,

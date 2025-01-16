@@ -1,8 +1,8 @@
 /// <reference lib="dom" />
-//import { buildSignalAggregator } from "./deps.ts"
 import { initCloseButton, containerInit, hydrateUI, render } from "./deps.ts";
 import * as PlaySound from './ViewModels/sounds.ts'
 import { App, appInstance } from './ViewModels/diceGame.ts';
+
 /** a type that describes a Player object */
 export type Player = {
     id: string
@@ -12,17 +12,10 @@ export type Player = {
     score: number
     lastScore: string
 }
-//import type { DiceSignals } from "./diceGameTypes.ts";
 
 // Import configuration files
 import { cfg } from "./cfg.ts";
-import manifest from './view_manifest.ts'
 
-/** 
- * Use the factory function to create a new SignalAggregator service 
- */
-//const diceSignals = buildSignalAggregator<DiceSignals>()
-//export const { on, fire } = diceSignals
 /** initialize the button */
 initCloseButton('closebutton')
 
@@ -32,13 +25,12 @@ const context = new AudioContext();
 PlaySound.init(context)
 
 /** Our only DOM element -- a single canvas */
-const cannvy = document.getElementById('surface') as HTMLCanvasElement
+const canvasElem = document.getElementById('surface') as HTMLCanvasElement
 
 // Initialize the Host Container 
 containerInit(
-   cannvy,
-   cfg,
-   manifest
+   canvasElem,
+   cfg
 )
 
 // Initialize our App (main viewmodel) 

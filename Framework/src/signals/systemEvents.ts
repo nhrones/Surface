@@ -3,7 +3,7 @@
 
 import { activeNodes } from '../render/activeNodes.ts'
 import { canvas, ctx, hasVisiblePopup } from '../render/renderContext.ts'
-
+import { DEV } from "../constants.ts"
 import type { View } from '../types.ts';
 import { signals } from './signals.ts'
 
@@ -11,7 +11,7 @@ import { signals } from './signals.ts'
 //                Sytem Events Module
 //  Watch for all host generated events.
 //  When appropriate, propagate these host events
-//  to our central signalAggregator - events. 
+//  to our central signalAggregator - signals. 
 //
 //  When an event targets an active node, based on
 //  the event type, set the active nodes state to 
@@ -42,18 +42,30 @@ let focusedNode: View | null = null
  */
 export function initHostEvents(): void {
 
-   // handle all host `input` events 
-   addEventListener("input", (evt: any) => {
-      // look for a focused node, if none, just ignore the event
-      if (focusedNode !== null) {
-         // we'll fire this event directly to amy focused node
-         signals.fire('WindowInput', focusedNode.name, evt)
-      }
-   })
+   // // handle all host `keypress` events 
+   // addEventListener("keypress", (evt: KeyboardEvent) => {
+   //    if (DEV) console.info("keypress", evt)
+   //    // look for a focused node, if none, just ignore the event
+   //    if (focusedNode !== null) {
+   //       // we'll fire this event directly to amy focused node
+   //       signals.fire('WindowInput', focusedNode.name, evt)
+   //    }
+   // })
 
    // handler for `keydown` -- enter backspace, delete, etc. 
    addEventListener('keydown', (evt: any) => {
+      if (DEV) console.info("keydown", evt)
       let focusNum = 0
+
+      // look for a focused node, if none, just ignore the event
+      if (focusedNode !== null) {
+         // only send actual keys not others
+         if (evt.key.length < 2) {
+            // we'll fire this event directly to amy focused node
+            signals.fire('WindowInput', focusedNode.name, evt.key)
+         }
+      }
+
       // handle Tab key
       if (evt.code === 'Tab') {
          if (focusedNode !== null) {
@@ -87,6 +99,7 @@ export function initHostEvents(): void {
 
    // register a handler for our canvas mousedown event
    addEventListener('mousedown', (evt: MouseEvent) => {
+      if (DEV) console.info("mousedown", evt)
       evt.preventDefault()
       if (evt.button === left) {
          if (hasVisiblePopup === false) {
@@ -161,7 +174,7 @@ function handleMouseMove(evt: MouseEvent,) {
 }
 
 /** 
- * Handler for both, canvas-mouse-Click and canvas-Touch events.    
+ * Handler for both, mouse-Click and Touch events.    
  * Uses the canvasContexts 'isPointInPath' method for hit-testing. 
  *     
  * If a hit is detected, we directly call the elements touched() method.    

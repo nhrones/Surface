@@ -1,0 +1,3 @@
+EventBus does not specify how components are structured; it specifies how they interact. EventBus leaves the concern about the internal structure of a component to the developer. 
+
+Describes the interface <name, payload> in the types file. 

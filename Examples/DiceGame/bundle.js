@@ -1439,15 +1439,13 @@ var windowCFG = {
   textColor: "black"
 };
 var elementDescriptors;
-var appManifest;
-var initCFG = /* @__PURE__ */ __name((theCanvas, cfg2, applicationManifest) => {
+var initCFG = /* @__PURE__ */ __name((theCanvas, cfg2) => {
   canvas = theCanvas;
   windowCFG = cfg2.winCFG;
   elementDescriptors = cfg2.nodes;
-  appManifest = applicationManifest;
 }, "initCFG");
 var getFactories = /* @__PURE__ */ __name(() => {
-  const baseUrl = new URL("./", appManifest.baseUrl).href;
+  const baseUrl = new URL("./", import.meta.url).href;
   const factories2 = /* @__PURE__ */ new Map();
   for (const [self2, module] of Object.entries(base_manifest_default.Views)) {
     const url = new URL(self2, baseUrl).href;
@@ -1457,17 +1455,6 @@ var getFactories = /* @__PURE__ */ __name(() => {
     const id2 = name.toLowerCase();
     const newView = { id: id2, name, url, component: module.default };
     factories2.set(id2, newView);
-  }
-  if (appManifest.Views) {
-    for (const [self2, module] of Object.entries(appManifest.Views)) {
-      const url = new URL(self2, baseUrl).href;
-      const path = url.substring(baseUrl.length).substring("Views".length);
-      const baseRoute = path.substring(1, path.length - 3);
-      const name = sanitizeName(baseRoute);
-      const id2 = name.toLowerCase();
-      const newView = { id: id2, name, url, component: module.default };
-      factories2.set(id2, newView);
-    }
   }
   return factories2;
 }, "getFactories");
@@ -1541,6 +1528,9 @@ var renderNodes = /* @__PURE__ */ __name(() => {
   }
 }, "renderNodes");
 
+// ../../Framework/src/constants.ts
+var DEV = true;
+
 // ../../Framework/src/signals/systemEvents.ts
 var left2 = 0;
 var x = 0;
@@ -1551,13 +1541,14 @@ var node = null;
 var hoveredNode = null;
 var focusedNode = null;
 function initHostEvents() {
-  addEventListener("input", (evt) => {
-    if (focusedNode !== null) {
-      signals.fire("WindowInput", focusedNode.name, evt);
-    }
-  });
   addEventListener("keydown", (evt) => {
+    if (DEV) console.info("keydown", evt);
     let focusNum = 0;
+    if (focusedNode !== null) {
+      if (evt.key.length < 2) {
+        signals.fire("WindowInput", focusedNode.name, evt.key);
+      }
+    }
     if (evt.code === "Tab") {
       if (focusedNode !== null) {
         const direction = evt.shiftKey ? -1 : 1;
@@ -1583,6 +1574,7 @@ function initHostEvents() {
     }
   });
   addEventListener("mousedown", (evt) => {
+    if (DEV) console.info("mousedown", evt);
     evt.preventDefault();
     if (evt.button === left2) {
       if (hasVisiblePopup === false) {
@@ -1691,8 +1683,8 @@ __name(focusNext, "focusNext");
 
 // ../../Framework/src/render/uiContainer.ts
 var factories;
-function containerInit(canvas2, cfg2, manifest2) {
-  initCFG(canvas2, cfg2, manifest2);
+function containerInit(canvas2, cfg2) {
+  initCFG(canvas2, cfg2);
   setupRenderContext(canvas2);
   initHostEvents();
 }
@@ -2896,26 +2888,15 @@ var cfg = {
   ]
 };
 
-// src/view_manifest.ts
-var manifest = {
-  Views: {
-    //"./Views/Die.ts": $0,
-    //"./Views/ScoreButton.ts": $1,
-  },
-  baseUrl: import.meta.url
-};
-var view_manifest_default = manifest;
-
 // src/main.ts
 initCloseButton("closebutton");
 var AudioContext = globalThis.AudioContext;
 var context2 = new AudioContext();
 init(context2);
-var cannvy = document.getElementById("surface");
+var canvasElem = document.getElementById("surface");
 containerInit(
-  cannvy,
-  cfg,
-  view_manifest_default
+  canvasElem,
+  cfg
 );
 App.init();
 hydrateUI();

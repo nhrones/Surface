@@ -31,20 +31,18 @@ let appManifest: Manifest
  */
 export const initCFG = (
    theCanvas: HTMLCanvasElement,
-   cfg: Configuration, 
-   applicationManifest: Manifest
+   cfg: Configuration
    ) => {
    canvas = theCanvas
    windowCFG = cfg.winCFG
    elementDescriptors = cfg.nodes
-   appManifest = applicationManifest
+   //appManifest = { Views: {}, baseUrl: import.meta.url }
 }
 
 export const fontColor = 'white'
 
 /** 
- * Build a set of View factories from both 
- * the `baseManifest` and the `appManifest.
+ * Build a set of View factories from the `baseManifest`.
  * `
  * This will add each View_constructor function to 
  * a Map to be used later to construct View instances.
@@ -52,8 +50,8 @@ export const fontColor = 'white'
 export const getFactories = () => {
 
    // Get the view_Manifest' base URL.
-   const baseUrl = new URL("./", appManifest.baseUrl).href;
-
+   //const baseUrl = new URL("./", appManifest.baseUrl).href;
+   const baseUrl = new URL("./", import.meta.url).href;
    const factories: Map<string, any> = new Map()
 
    //add base frameWork component constructors first
@@ -66,20 +64,6 @@ export const getFactories = () => {
       const newView = { id, name, url, component: module.default }
       factories.set(id, newView)
    }
-
-   // add any custom components from the application
-   if (appManifest.Views) {
-      for (const [self, module] of Object.entries(appManifest.Views)) {
-         const url = new URL(self, baseUrl).href;
-         const path = url.substring(baseUrl.length).substring("Views".length);
-         const baseRoute = path.substring(1, path.length - 3);
-         const name = sanitizeName(baseRoute);
-         const id = name.toLowerCase();
-         const newView = { id, name, url, component: module.default }
-         factories.set(id, newView)
-      }
-   }
-   // return the View_constructors collection (Map) 
    return factories
 }
 

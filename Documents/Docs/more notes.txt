@@ -1,0 +1,15 @@
+Chrome-Skia
+
+What happens inside Chrome is that Chrome generates its own representation of the 
+graphical image it wants to produce (called PaintOps), and then has a specialized 
+pass that walks this representation and generates a Skia program, applying some 
+optimization tricks.  
+ 
+Then, Skia itself also does optimization between its public API and its internals.    
+For example, deciding whether paints with clipping are implemented as actual paints 
+or via extra surfaces. (This mostly happens inside the GPU backend, which 
+translates Skia API calls to GrOp types.) 
+
+The input event hit testing and dispatching component executes hit tests to find 
+out which DOM element is targeted by an event, and runs the input event dispatching 
+algorithms and default behaviors.

@@ -4,9 +4,9 @@
    "version": "2.0.0",
    "tasks": [
       {
-         "label": "Build",
+         "label": "BUILD",
          "type": "shell",
-         "command": "Build"
+         "command": "build"
       }
    ]
 }

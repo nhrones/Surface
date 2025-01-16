@@ -9,7 +9,6 @@ import {
 
 // Unpack Configuration Files
 import { cfg } from "./cfg.ts";
-import manifest from './view_manifest.ts'
 
 const can = document.getElementById('surface') as HTMLCanvasElement
 
@@ -17,7 +16,6 @@ const can = document.getElementById('surface') as HTMLCanvasElement
 containerInit(
    can,  
    cfg,
-   manifest,
 )
 
 /** initialize the close button */
